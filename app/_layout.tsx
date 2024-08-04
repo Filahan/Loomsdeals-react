@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { auth } from './config/Firebase';
-import LoginScreen from './(LoginScreen)/LoginScreen';
-import HomeScreen from './(Home)/HomeScreen';
+import LoginScreen from './(Login)/LoginScreen';
+import HomeScreen from './(Main)/HomeScreen';
+import LandingScreen from './(Landing)/LandingScreen';
+import Main from './(Main)/_layout';
 
 const Stack = createStackNavigator();
 
@@ -25,9 +27,13 @@ const Layout = () => {
   return (
     <Stack.Navigator>
       {isAuthenticated ? (
-        <Stack.Screen name="(Home)" component={HomeScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="(Main)" component={Main} options={{ headerShown: false }}/>
     ) : (
-        <Stack.Screen name="(LoginScreen)" component={LoginScreen} options={{ headerShown: false }}/>
+      <>
+      <Stack.Screen name="(Landing)" component={LandingScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="(Login)" component={LoginScreen} options={{ headerShown: false }}/>
+        </>
+        
       )}
     </Stack.Navigator>
   );
