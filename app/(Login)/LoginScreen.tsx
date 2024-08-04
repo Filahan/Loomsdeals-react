@@ -29,11 +29,11 @@ export default function Example() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#e8ecf4' }}>
+    <SafeAreaView style={{ flex: 1}}>
       <View style={styles.container}>
       <TouchableOpacity
           onPress={() => {
-            router.replace('/LandingScreen');
+            router.back();
         }}>          
         
           <Text style={styles.return}>

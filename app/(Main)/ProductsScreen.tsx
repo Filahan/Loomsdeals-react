@@ -1,6 +1,5 @@
 // HomeScreen.js
 import { auth } from '../config/Firebase';
-
 import React from 'react';
 import {
   StyleSheet,
@@ -11,14 +10,14 @@ import {
   TextInput,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Header from './components/header';
+import Products from './components/products';
 
-export default function HomeScreen() {
+export default function ProductsScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         <View>
-          <Header/>
+          {/* <Header/> */}
           <View style={styles.search}>
             <View style={styles.searchInput}>
               
@@ -32,7 +31,7 @@ export default function HomeScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              placeholder="Rechercher un produit ou un magasin"
+              placeholder="Rechercher un produit ou un magazin"
 
               placeholderTextColor="#848484"
               returnKeyType="done"
@@ -58,7 +57,7 @@ export default function HomeScreen() {
 
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
-            {/* Replace with your content */}
+            <Products/>
           </View>
         </View>
       </View>
@@ -96,7 +95,6 @@ const styles = StyleSheet.create({
   input: {
     height: 44,
     backgroundColor: '#f0f6fb',
-
     paddingLeft: 44,
     paddingRight: 24,
     borderRadius: 12,
@@ -105,7 +103,7 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   inputWrapper: {
-    marginTop: 15,
+    marginTop:15,
     position: 'relative',
     width: '100%',
   },

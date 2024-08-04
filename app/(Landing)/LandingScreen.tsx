@@ -36,7 +36,7 @@ export default function Example() {
 
         <TouchableOpacity
           onPress={() => {
-            router.replace('/LoginScreen');
+            router.push('/LoginScreen');
         }}>
           <View style={styles.button}>
             <Text style={styles.buttonText}>Let's go</Text>
