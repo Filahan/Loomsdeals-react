@@ -10,7 +10,6 @@ import {
   TextInput,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Stores from './components/Stores';
 
 export default function StoresScreen() {
   return (
@@ -57,7 +56,6 @@ export default function StoresScreen() {
 
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
-            <Stores/>
             {/* Replace with your content */}
           </View>
         </View>
@@ -147,9 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
+    // borderWidth: 4,
+    // borderColor: '#e5e7eb',
+    // borderStyle: 'dashed',
     borderRadius: 9,
     flexGrow: 1,
     flexShrink: 1,

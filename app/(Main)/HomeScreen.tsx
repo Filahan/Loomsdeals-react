@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Header from './components/header';
+import Catalogues from './components/Catalogues';
 
 export default function HomeScreen() {
   return (
@@ -23,11 +24,6 @@ export default function HomeScreen() {
             <View style={styles.searchInput}>
               
               <View style={styles.inputWrapper}>
-                {/* <TextInput
-                  placeholder="Enter tracking code"
-                  placeholderTextColor="#9eadba"
-                  style={styles.input} /> */}
-                
                 <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -58,6 +54,8 @@ export default function HomeScreen() {
 
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
+          <Catalogues/>
+
             {/* Replace with your content */}
           </View>
         </View>
@@ -148,10 +146,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
-    borderRadius: 9,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,

@@ -1,20 +1,22 @@
-// firebase.js
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDhX8qqrP2Koa8xShBuEAMDCpezPSQ7O9o",
-  authDomain: "socialspot-io.firebaseapp.com",
-  projectId: "socialspot-io",
-  storageBucket: "socialspot-io.appspot.com",
-  messagingSenderId: "526802865717",
-  appId: "1:526802865717:web:10c37f5d54031a37f0ab7c",
-  measurementId: "G-3P9NBLCJJC"
+  apiKey: "AIzaSyAGD4v9UO0PkQpTuVUewWCH-9K0ovpitDw",
+  authDomain: "promappio.firebaseapp.com",
+  projectId: "promappio",
+  storageBucket: "promappio.appspot.com",
+  messagingSenderId: "565061825795",
+  appId: "1:565061825795:web:946b77ed2599edc5a6e536",
+  measurementId: "G-7VS814PZ2T"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const appName = 'Promappio';  // Custom name for the app instance
+const app = !getApps().length ? initializeApp(firebaseConfig, appName) : getApp(appName);
+console.log('Existing Firebase Apps:', getApps());
+
 const auth = getAuth(app);
 
 export { auth, signInWithEmailAndPassword, signOut };
