@@ -1,34 +1,30 @@
-// HomeScreen.js
-import { auth } from '../config/Firebase';
-
 import React from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
-  TouchableOpacity,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Header from './components/header';
-import Catalogues from './components/Catalogues';
+import Catalogues from './components/Home/Catalogues';
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View>
-          <Header/>
-          <View style={styles.search}>
+        <Header />
+        <View style={styles.search}>
             <View style={styles.searchInput}>
               
               <View style={styles.inputWrapper}>
+                
                 <TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              placeholder="Rechercher un produit ou un magasin"
+              placeholder="Rechercher un produit ou un magazin"
 
               placeholderTextColor="#848484"
               returnKeyType="done"
@@ -43,43 +39,29 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}>
-
-            </TouchableOpacity>
           </View>
-        </View>
-
-        <View style={styles.placeholder}>
-          <View style={styles.placeholderInset}>
-          <Catalogues/>
-
-            {/* Replace with your content */}
-          </View>
-        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Catalogues />
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
+    flex: 1,
     padding: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
-  title: {
-    fontSize: 27,
-    fontWeight: '700',
-    color: '#222',
-    marginTop: 24,
-    marginBottom: 16,
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 24,
   },
-
-  /** Search */
   search: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -88,13 +70,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    marginRight: 12,
+    marginBottom: 30,
   },
   /** Input */
   input: {
     height: 44,
     backgroundColor: '#f0f6fb',
-
     paddingLeft: 44,
     paddingRight: 24,
     borderRadius: 12,
@@ -103,7 +84,7 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   inputWrapper: {
-    marginTop: 15,
+    marginTop:15,
     position: 'relative',
     width: '100%',
   },
@@ -117,37 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  /** Button */
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    backgroundColor: '#222',
-    borderColor: '#222',
-  },
-  btnText: {
-    fontSize: 17,
-    lineHeight: 24,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  /** Placeholder */
-  placeholder: {
+  scrollContainer: {
     flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    height: 400,
-    marginTop: 24,
-    padding: 0,
-    backgroundColor: 'transparent',
-  },
-  placeholderInset: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
 });

@@ -3,10 +3,10 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from "./HomeScreen"
 import StoresScreen from "./StoresScreen"
-import ProductsScreen from "./ProductsScreen"
+// import ProductsScreen from "./ProductsScreen"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Feather from 'react-native-vector-icons/Feather';
+// import Feather from 'react-native-vector-icons/Feather';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +43,7 @@ const TabNavigator = () => {
       }}
       component={StoresScreen}
     />
-    <Tab.Screen
+    {/* <Tab.Screen
       name="Produits"
       options={{
         title: 'Produits',
@@ -57,7 +57,7 @@ const TabNavigator = () => {
         ),
       }}
       component={ProductsScreen}
-    />
+    /> */}
   </Tab.Navigator>
   );
 };

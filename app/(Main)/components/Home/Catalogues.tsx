@@ -50,10 +50,9 @@ export default function Catalogues() {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.content}>
+<View ><Text style={styles.StoreTitle}>Tous les catalogues</Text></View>
 
-
-<ScrollView contentContainerStyle={styles.content}>
   <View style={styles.row}>
     {places.map(({ id, catalog_img, store_img, name, dates }, index) => {
       const isSaved = saved.includes(id);
@@ -113,7 +112,6 @@ export default function Catalogues() {
       );
     })}
   </View>
-</ScrollView>
 
     </SafeAreaView>
   );
@@ -195,9 +193,8 @@ const styles = StyleSheet.create({
   cardstore_img: {
     width: 40,
     height: 40,
-    borderRadius:20,
+    borderRadius:200,
     marginRight:50,
-    // backgroundColor:"red"
   },
   cardBody: {
     padding: 12,
@@ -209,6 +206,14 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 14,
+    fontWeight: '500',
+    color: '#232425',
+    marginRight: 'auto',
+  },
+
+  StoreTitle: {
+    fontSize: 18,
+    marginBottom: 10,
     fontWeight: '500',
     color: '#232425',
     marginRight: 'auto',

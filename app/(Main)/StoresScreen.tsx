@@ -10,6 +10,7 @@ import {
   TextInput,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import Stores from './components/Stores/Stores';
 
 export default function StoresScreen() {
   return (
@@ -21,10 +22,6 @@ export default function StoresScreen() {
             <View style={styles.searchInput}>
               
               <View style={styles.inputWrapper}>
-                {/* <TextInput
-                  placeholder="Enter tracking code"
-                  placeholderTextColor="#9eadba"
-                  style={styles.input} /> */}
                 
                 <TextInput
               autoCapitalize="none"
@@ -44,20 +41,13 @@ export default function StoresScreen() {
                 </View>
               </View>
             </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}>
-
-            </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
-            {/* Replace with your content */}
-          </View>
+            <Stores/>
+            </View>
         </View>
       </View>
     </SafeAreaView>
