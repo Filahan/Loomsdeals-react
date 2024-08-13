@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Header from './components/header';
+import Header from './components/Home/header';
 import Catalogues from './components/Home/Catalogues';
 
 export default function HomeScreen() {
@@ -24,7 +24,7 @@ export default function HomeScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              placeholder="Rechercher un produit ou un magazin"
+              placeholder="Rechercher un produit ou un magasin"
 
               placeholderTextColor="#848484"
               returnKeyType="done"

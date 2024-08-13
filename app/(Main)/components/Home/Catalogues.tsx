@@ -15,6 +15,7 @@ const places = [
   {
     id: 1,
     catalog_img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
+    store_name: 'store',
     store_img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80", // Use the imported SVG component here
     name: 'Marbella, Spain',
     dates: 'Apr 23 - May 5',
@@ -22,6 +23,7 @@ const places = [
   {
     id: 2,
     catalog_img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
+    store_name: 'store',
     store_img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     name: 'Baveno, Italy',
     dates: 'Apr 25 - May 5',
@@ -29,6 +31,7 @@ const places = [
   {
     id: 3,
     catalog_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
+    store_name: 'store',
     store_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
     name: 'Tucson, Arizona',
     dates: 'Apr 22 - May 4',
@@ -51,7 +54,7 @@ export default function Catalogues() {
 
   return (
     <SafeAreaView style={styles.content}>
-<View ><Text style={styles.StoreTitle}>Tous les catalogues</Text></View>
+<View ><Text style={styles.StoreTitle}>Explorer les catalogues</Text></View>
 
   <View style={styles.row}>
     {places.map(({ id, catalog_img, store_img, name, dates }, index) => {

@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { auth } from '../../config/Firebase';
+import { auth } from '../config/Firebase';
 
 export default function Settings() {
   const [form, setForm] = useState({

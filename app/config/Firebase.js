@@ -1,7 +1,8 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-
-// Your web app's Firebase configuration
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth, initializeAuth, getReactNativePersistence, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAGD4v9UO0PkQpTuVUewWCH-9K0ovpitDw",
   authDomain: "promappio.firebaseapp.com",
@@ -12,11 +13,22 @@ const firebaseConfig = {
   measurementId: "G-7VS814PZ2T"
 };
 
-// Initialize Firebase
-const appName = 'Promappio';  // Custom name for the app instance
-const app = !getApps().length ? initializeApp(firebaseConfig, appName) : getApp(appName);
-console.log('Existing Firebase Apps:', getApps());
+// Custom name for the Firebase app instance
+const appName = 'Promappio';
 
-const auth = getAuth(app);
+// Initialize Firebase app
+const app = getApps().length === 0 
+  ? initializeApp(firebaseConfig, appName) 
+  : getApp(appName);
 
-export { auth, signInWithEmailAndPassword, signOut };
+// const auth = initializeAuth(app, {
+//     persistence: getReactNativePersistence(AsyncStorage)
+//   });
+const auth =  getApps().length === 0 
+? initializeApp(firebaseConfig, appName) 
+: initializeAuth(app);
+// Initialize Firestore
+const db = getFirestore(app);
+
+// Export Auth, Firestore, and authentication methods
+export { auth, signInWithEmailAndPassword, signOut, db };

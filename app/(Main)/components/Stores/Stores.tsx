@@ -1,108 +1,150 @@
-
-import React, { useCallback, useState } from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  Image,
-  Text,
-} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../config/Firebase'; // Adjust the path as needed
 
-const places = [
-  {
-    id: 1,
-    store_img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80", // Use the imported SVG component here
-    name: 'Marbella, Spain',
-  },
-  {
-    id: 2,
-    store_img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Baveno, Italy',
-  },
-  {
-    id: 3,
-    store_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    name: 'Tucson, Arizona',
-  },
-  {
-    id: 4,
-    store_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    name: 'Tucson, Arizona',
-  },
-];
+interface Lesson {
+  url: string;
+  name: string;
+}
 
 export default function Stores() {
-  const [saved, setSaved] = useState([]);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleSave = useCallback(
-    id => {
-      if (saved.includes(id)) {
-        setSaved(saved.filter(val => val !== id));
-      } else {
-        setSaved([...saved, id]);
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'shops'));
+
+        if (querySnapshot?.docs?.length) {
+          const fetchedLessons: Lesson[] = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+              url: data?.url ?? '',
+              name: data?.name ?? 'Unnamed Store',
+            };
+          });
+          setLessons(fetchedLessons);
+        } else {
+          console.error("No documents found in the 'shops' collection.");
+        }
+      } catch (error) {
+        console.error("Error fetching lessons: ", error);
+      } finally {
+        setLoading(false);
       }
-    },
-    [saved],
-  );
+    };
+
+    fetchLessons();
+  }, []);
 
   return (
-<SafeAreaView style={{ flex: 1 }}>
-<ScrollView contentContainerStyle={styles.content}>
-  <View style={styles.row}>
-    {places.map(({ id, store_img, name }, index) => {
-      const isSaved = saved.includes(id);
-
-      return (
-        <TouchableOpacity
-          key={id}
-          style={styles.cardWrapper} // Add this style
-          onPress={() => {
-            // handle onPress
-          }}>
-            <Image
+    <SafeAreaView style={{ backgroundColor: '#fff' }}>
+      {loading ? (
+        <ScrollView contentContainerStyle={styles.container}>
+{/*           
+          <SkeletonContent
+       	// containerStyle={{flex: 1, width: 300}}
+        // isLoading={loading}
+    /> */}
+        </ScrollView>
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          <View><Text style={styles.StoreTitle}>Tous les magasins</Text></View>
+          {lessons.map(({ name, url }, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                // handle onPress
+              }}>
+              <View style={styles.card}>
+                <Image
                   alt=""
                   resizeMode="cover"
-                  style={styles.logo_img}
-                  source={{ uri: store_img }}
-                />            
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-</ScrollView>
-
+                  style={styles.cardImg}
+                  source={{ uri: url }} />
+                <View>
+                  <Text style={styles.cardTitle}>{name}</Text>
+                </View>
+                <View style={styles.cardAction}>
+                  <FeatherIcon
+                    color="#9ca3af"
+                    name="chevron-right"
+                    size={22} />
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  /** Header */
-  logo_img: {
-    width: "100%",
-    aspectRatio: 1,
-    borderRadius: 9999,
-    marginRight: 5,
-    borderWidth: 3,  
-    borderColor: '#E7E7E7', 
+  container: {
+    paddingTop: 30
   },
-
-  content: {
-    flexGrow: 1,
-    // flexDirection: 'row',
-    flexWrap: 'wrap',
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1d1d1d',
+    marginBottom: 12,
   },
-  row: {
+  /** Card */
+  card: {
+    paddingVertical: 14,
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  cardImg: {
+    width: 60,
+    height: 60,
+    borderRadius: 9999,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: '#E7E7E7',
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#000',
+    marginBottom: 10,
+  },
+  cardStats: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardWrapper: {
-    width: '23%', // or 50% if you want no spacing between cards
-    margin: 1, // or 50% if you want no spacing between cards
+  cardStatsItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  cardStatsItemText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#636a73',
+    marginLeft: 2,
+  },
+  cardAction: {
+    marginLeft: 'auto',
+  },
+  StoreTitle: {
+    fontSize: 18,
     marginBottom: 10,
+    fontWeight: '500',
+    color: '#232425',
+    marginRight: 'auto',
+  },
+  skeletonContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingVertical: 14,
   },
 });
