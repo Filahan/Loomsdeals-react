@@ -1,101 +1,121 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Image, RefreshControl } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../config/Firebase'; // Adjust the path as needed
+import { MotiView } from 'moti';
 
 interface Lesson {
   url: string;
   name: string;
 }
 
-export default function Stores() {
+export default function Stores({ searchTerm }: { searchTerm: string }) {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const fetchLessons = useCallback(async () => {
+    try {
+      setLoading(true);
+      const querySnapshot = await getDocs(collection(db, 'shops'));
+
+      if (querySnapshot.docs.length) {
+        const fetchedLessons: Lesson[] = querySnapshot.docs.map(doc => ({
+          url: doc.data().url || '',
+          name: doc.data().name || 'Unnamed Store',
+        }));
+        setLessons(fetchedLessons);
+      }
+    } catch (error) {
+      console.error("Error fetching lessons: ", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false); // Reset refreshing state
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchLessons = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'shops'));
-
-        if (querySnapshot?.docs?.length) {
-          const fetchedLessons: Lesson[] = querySnapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-              url: data?.url ?? '',
-              name: data?.name ?? 'Unnamed Store',
-            };
-          });
-          setLessons(fetchedLessons);
-        } else {
-          console.error("No documents found in the 'shops' collection.");
-        }
-      } catch (error) {
-        console.error("Error fetching lessons: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchLessons();
-  }, []);
+  }, [fetchLessons]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchLessons();
+  }, [fetchLessons]);
+
+  const renderSkeleton = () => (
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      showsVerticalScrollIndicator={false}
+    >
+      {Array(20).fill(null).map((_, index) => (
+        <MotiView
+          key={index}
+          from={{ opacity: 0.5 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1000, loop: true }}
+          style={styles.skeletonContainer}
+        >
+          <View style={styles.skeletonItem} />
+          <View style={styles.skeletonText} />
+        </MotiView>
+      ))}
+    </ScrollView>
+  );
+
+  const renderStores = () => {
+    const filteredLessons = lessons.filter(lesson =>
+      lesson.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        showsVerticalScrollIndicator={false}
+      >
+        {filteredLessons.map(({ name, url }, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              // handle onPress
+            }}
+          >
+            <View style={styles.card}>
+              <Image
+                resizeMode="cover"
+                style={styles.cardImg}
+                source={{ uri: url }}
+              />
+              <View>
+                <Text style={styles.cardTitle}>{name}</Text>
+              </View>
+              <View style={styles.cardAction}>
+                <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: '#fff' }}>
-      {loading ? (
-        <ScrollView contentContainerStyle={styles.container}>
-{/*           
-          <SkeletonContent
-       	// containerStyle={{flex: 1, width: 300}}
-        // isLoading={loading}
-    /> */}
-        </ScrollView>
-      ) : (
-        <ScrollView contentContainerStyle={styles.container}>
-          <View><Text style={styles.StoreTitle}>Tous les magasins</Text></View>
-          {lessons.map(({ name, url }, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                // handle onPress
-              }}>
-              <View style={styles.card}>
-                <Image
-                  alt=""
-                  resizeMode="cover"
-                  style={styles.cardImg}
-                  source={{ uri: url }} />
-                <View>
-                  <Text style={styles.cardTitle}>{name}</Text>
-                </View>
-                <View style={styles.cardAction}>
-                  <FeatherIcon
-                    color="#9ca3af"
-                    name="chevron-right"
-                    size={22} />
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      )}
+      {loading ? renderSkeleton() : renderStores()}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30
+    paddingTop: 10,
+    flexGrow: 1,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#1d1d1d',
-    marginBottom: 12,
-  },
-  /** Card */
   card: {
-    paddingVertical: 14,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -112,39 +132,27 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#000',
-    marginBottom: 10,
-  },
-  cardStats: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  cardStatsItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 8,
-  },
-  cardStatsItemText: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: '#636a73',
-    marginLeft: 2,
   },
   cardAction: {
     marginLeft: 'auto',
   },
-  StoreTitle: {
-    fontSize: 18,
-    marginBottom: 10,
-    fontWeight: '500',
-    color: '#232425',
-    marginRight: 'auto',
-  },
   skeletonContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
     paddingVertical: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  skeletonItem: {
+    width: 60,
+    height: 60,
+    borderRadius: 9999,
+    backgroundColor: '#E0E0E0',
+  },
+  skeletonText: {
+    width: '60%',
+    height: 20,
+    borderRadius: 4,
+    backgroundColor: '#E0E0E0',
+    marginLeft: 12,
   },
 });

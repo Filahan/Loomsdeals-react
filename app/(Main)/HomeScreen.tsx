@@ -39,7 +39,7 @@ export default function HomeScreen() {
               </View>
             </View>
 
-          </View>
+          </View>    
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Catalogues />
         </ScrollView>

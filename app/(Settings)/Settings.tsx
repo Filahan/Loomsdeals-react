@@ -20,7 +20,6 @@ export default function Settings() {
   });
   const handleLogout = async () => {
     try {
-      console.log("Hello")
       await auth.signOut();
     } catch (err) {
       console.error(err.message);

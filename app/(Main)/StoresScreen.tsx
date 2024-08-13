@@ -1,75 +1,83 @@
-// HomeScreen.js
-import { auth } from '../config/Firebase';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   View,
-  Text,
-  TouchableOpacity,
   TextInput,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import Header from './components/Home/header';
 import Stores from './components/Stores/Stores';
 
-export default function StoresScreen() {
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.container}>
-        <View>
-          {/* <Header/> */}
-          <View style={styles.search}>
-            <View style={styles.searchInput}>
-              
-              <View style={styles.inputWrapper}>
-                
-                <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              placeholder="Rechercher un produit ou un magazin"
+export default function HomeScreen() {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [key, setKey] = useState(0); // Ajouter un état pour la clé
 
-              placeholderTextColor="#848484"
-              returnKeyType="done"
-              style={styles.input}
-               />
-                <View style={styles.inputIcon}>
-                  <FeatherIcon
-                    color="#9eadba"
-                    name="search"
-                    size={16} />
-                </View>
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    // Réinitialiser la clé pour forcer le rechargement du composant
+    setKey(prevKey => prevKey + 1);
+
+    setRefreshing(false);
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea} key={key}>
+      <View style={styles.container}>
+        <Header />
+        <View style={styles.search}>
+          <View style={styles.searchInput}>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                placeholder="Rechercher un magasin"
+                placeholderTextColor="#848484"
+                returnKeyType="done"
+                style={styles.input}
+                value={searchTerm}
+                onChangeText={setSearchTerm}
+              />
+              <View style={styles.inputIcon}>
+                <FeatherIcon
+                  color="#9eadba"
+                  name="search"
+                  size={16} />
               </View>
             </View>
           </View>
         </View>
-
-        <View style={styles.placeholder}>
-          <View style={styles.placeholderInset}>
-            <Stores/>
-            </View>
-        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          <Stores searchTerm={searchTerm} />
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
+    flex: 1,
     padding: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
-  title: {
-    fontSize: 27,
-    fontWeight: '700',
-    color: '#222',
-    marginTop: 24,
-    marginBottom: 16,
-  },
-
-  /** Search */
   search: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,9 +86,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    marginRight: 12,
   },
-  /** Input */
   input: {
     height: 44,
     backgroundColor: '#f0f6fb',
@@ -92,7 +98,7 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   inputWrapper: {
-    marginTop:15,
+    marginTop: 15,
     position: 'relative',
     width: '100%',
   },
@@ -106,36 +112,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  /** Button */
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    backgroundColor: '#222',
-    borderColor: '#222',
-  },
-  btnText: {
-    fontSize: 17,
-    lineHeight: 24,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  /** Placeholder */
-  placeholder: {
+  scrollContainer: {
     flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    height: 4000,
-    padding: 0,
-  },
-  placeholderInset: {
-    borderRadius: 9,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
 });
