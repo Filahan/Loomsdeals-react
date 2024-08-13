@@ -18,7 +18,7 @@ export default function Stores({ searchTerm }: { searchTerm: string }) {
   const fetchLessons = useCallback(async () => {
     try {
       setLoading(true);
-      const querySnapshot = await getDocs(collection(db, 'shops'));
+      const querySnapshot = await getDocs(collection(db, 'stores'));
 
       if (querySnapshot.docs.length) {
         const fetchedLessons: Lesson[] = querySnapshot.docs.map(doc => ({

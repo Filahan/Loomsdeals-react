@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,37 +9,46 @@ import {
   Text,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import { db } from '../../../config/Firebase'; // Adjust the path as needed
+import { collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { MotiView } from 'moti';
 
-const places = [
-  {
-    id: 1,
-    catalog_img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    store_name: 'store',
-    store_img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80", // Use the imported SVG component here
-    name: 'Marbella, Spain',
-    dates: 'Apr 23 - May 5',
-  },
-  {
-    id: 2,
-    catalog_img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    store_name: 'store',
-    store_img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Baveno, Italy',
-    dates: 'Apr 25 - May 5',
-  },
-  {
-    id: 3,
-    catalog_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    store_name: 'store',
-    store_img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    name: 'Tucson, Arizona',
-    dates: 'Apr 22 - May 4',
-  },
-];
-
-export default function Catalogues() {
+const Catalogues = () => {
   const [saved, setSaved] = useState([]);
+  const [catalogues, setCatalogues] = useState([]);
+  const [loading, setLoading] = useState(true); // State for loading
+
+  useEffect(() => {
+    const fetchCatalogues = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'catalogues'));
+        const fetchedCatalogues = querySnapshot.docs.map(doc => (doc.data() ));
+
+        const updatedCatalogues = await Promise.all(fetchedCatalogues.map(async (catalogue) => {
+          const updatedCatalogue = { ...catalogue, catalogues: await Promise.all(catalogue.catalogues.map(async (cat) => {
+            if (cat.store) {
+              const storeDocRef = doc(db, cat.store); // Use cat.store to fetch the correct store
+              const docSnapshot = await getDoc(storeDocRef);
+              return { ...cat, storeData: docSnapshot.exists() ? docSnapshot.data() : null };
+            }
+            return cat;
+          })) };
+
+          return updatedCatalogue.catalogues;
+        }));
+
+        setCatalogues(updatedCatalogues);
+        setLoading(false); // Set loading to false after data is fetched
+
+      } catch (error) {
+        console.error('Error fetching catalogues: ', error);
+        setLoading(false); // Set loading to false if there's an error
+      }
+    };
+
+    fetchCatalogues();
+  }, []);
 
   const handleSave = useCallback(
     id => {
@@ -52,78 +61,98 @@ export default function Catalogues() {
     [saved],
   );
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.skeletonRow}>
+          {Array(9).fill(null).map((_, index) => (
+            <MotiView
+              key={index}
+              from={{ opacity: 0.5 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1000, loop: true }}
+              style={styles.skeletonItem}
+            />
+          ))}
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.content}>
-<View ><Text style={styles.StoreTitle}>Explorer les catalogues</Text></View>
+      <View>
+        <Text style={styles.StoreTitle}>Explorer les catalogues</Text>
+      </View>
 
-  <View style={styles.row}>
-    {places.map(({ id, catalog_img, store_img, name, dates }, index) => {
-      const isSaved = saved.includes(id);
+      <ScrollView
+        contentContainerStyle={styles.row}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        {catalogues.map((catalogueGroup, groupIndex) => {
+          return catalogueGroup.map((catalogue, catalogueIndex) => {
+            const { link, title, start_date, end_date, storeData } = catalogue;
+            const isSaved = saved.includes(catalogueIndex.toString());
 
-      return (
-        <TouchableOpacity
-          key={id}
-          style={styles.cardWrapper} // Add this style
-          onPress={() => {
-            // handle onPress
-          }}>
-          <View style={styles.card}>
-            <View style={styles.cardLikeWrapper}>
-            <TouchableOpacity >
+            return (
+              <TouchableOpacity
+                key={catalogueIndex}
+                style={styles.cardWrapper}
+                onPress={() => {
+                  // handle onPress
+                }}>
+                <View style={styles.card}>
+                  <View style={styles.cardLikeWrapper}>
+                    <TouchableOpacity>
+                      <Image
+                        resizeMode="cover"
+                        style={styles.cardlogo_img}
+                        source={{ uri: storeData ? storeData.url : 'default-url' }}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSave(catalogueIndex.toString())}>
+                      <View style={styles.cardLike}>
+                        <FontAwesome
+                          color={isSaved ? '#ea266d' : '#222'}
+                          name="heart"
+                          solid={isSaved}
+                          size={20}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
 
-            <Image
-                  alt=""
-                  resizeMode="cover"
-                  style={styles.cardlogo_img}
-                  source={{ uri: store_img }}
-                />
-          </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleSave(id)}>
-                <View style={styles.cardLike}>
-                  <FontAwesome
-                    color={isSaved ? '#ea266d' : '#222'}
-                    name="heart"
-                    solid={isSaved}
-                    size={20}
-                  />
+                  <View style={styles.cardTop}>
+                    <Image
+                      resizeMode="cover"
+                      style={styles.cardcatalog_img}
+                      source={{ uri: link }}
+                    />
+                  </View>
+
+                  <View style={styles.cardBody}>
+                    <View style={styles.cardHeader}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.cardDates}>
+                          {start_date ? `From: ${start_date}` : ''} - {end_date ? `To: ${end_date}` : ''}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                 </View>
               </TouchableOpacity>
-            </View>
-
-            <View style={styles.cardTop}>
-              <Image
-                alt=""
-                resizeMode="cover"
-                style={styles.cardcatalog_img}
-                source={{ uri: catalog_img }}
-              />
-            </View>
-
-            <View style={styles.cardBody}>
-            <Text style={styles.cardTitle}>{name}</Text>
-
-              <View style={styles.cardHeader}>
-
-                
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.cardDates}>{dates}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      );
-    })}
-  </View>
-
+            );
+          });
+        })}
+      </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   /** Header */
   header: {
-    // paddingHorizontal: 16,
     marginBottom: 12,
   },
   headerTop: {
@@ -150,10 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginBottom: 16,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
@@ -162,10 +188,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
     top: 12,
-    flexDirection: 'row', // Align children horizontally
-    justifyContent: 'space-between', // Space them out
-    width: '100%', // Ensure they occupy the full width
-    paddingHorizontal: 12, // Add padding if needed
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 12,
   },
   cardLike: {
     width: 40,
@@ -190,14 +216,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 5,
-    borderWidth: 2,      // Adjust the width of the border as needed
-    borderColor: 'white', // Set the color of the border to white
-  },
-  cardstore_img: {
-    width: 40,
-    height: 40,
-    borderRadius:200,
-    marginRight:50,
+    borderWidth: 2,
+    borderColor: 'white',
   },
   cardBody: {
     padding: 12,
@@ -213,20 +233,12 @@ const styles = StyleSheet.create({
     color: '#232425',
     marginRight: 'auto',
   },
-
   StoreTitle: {
     fontSize: 18,
     marginBottom: 10,
     fontWeight: '500',
     color: '#232425',
     marginRight: 'auto',
-  },
-  cardStars: {
-    marginLeft: 2,
-    marginRight: 4,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#232425',
   },
   cardDates: {
     marginTop: 4,
@@ -235,7 +247,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    // flexDirection: 'row',
     flexWrap: 'wrap',
   },
   row: {
@@ -244,7 +255,30 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardWrapper: {
-    width: '48%', // or 50% if you want no spacing between cards
+    width: '48%',
     marginBottom: 10,
   },
+  container: {
+    flex: 1,
+  },
+  skeletonRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  skeletonItem: {
+    width: '48%', // Adjust as needed
+    height: 200,
+    marginBottom: 10,
+    padding: 16,
+    borderRadius: 10, // Rounded corners
+    backgroundColor: '#f5f5f5', // Light background color
+  },
+  text: {
+    fontSize: 16,
+    color: '#000', // Text color
+  },
 });
+
+export default Catalogues;
+``

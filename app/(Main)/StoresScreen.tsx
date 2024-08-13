@@ -18,10 +18,7 @@ export default function HomeScreen() {
 
   const onRefresh = () => {
     setRefreshing(true);
-
-    // Réinitialiser la clé pour forcer le rechargement du composant
     setKey(prevKey => prevKey + 1);
-
     setRefreshing(false);
   };
 
