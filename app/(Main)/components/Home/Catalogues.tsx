@@ -13,6 +13,7 @@ import { db } from '../../../config/Firebase'; // Adjust the path as needed
 import { collection, getDocs } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
+import { router } from 'expo-router';
 
 const Catalogues = () => {
   const [saved, setSaved] = useState([]);
@@ -91,8 +92,9 @@ const Catalogues = () => {
         showsHorizontalScrollIndicator={false}
       >
         {catalogues.map((catalogueGroup, groupIndex) => {
+
           return catalogueGroup.map((catalogue, catalogueIndex) => {
-            const { link, title, start_date, end_date, storeData } = catalogue;
+            const { link, title, start_date, end_date, storeData, img } = catalogue;
             const isSaved = saved.includes(catalogueIndex.toString());
 
             return (
@@ -100,7 +102,7 @@ const Catalogues = () => {
                 key={catalogueIndex}
                 style={styles.cardWrapper}
                 onPress={() => {
-                  // handle onPress
+                router.navigate("/Catalogue") 
                 }}>
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
@@ -125,17 +127,16 @@ const Catalogues = () => {
 
                   <View style={styles.cardTop}>
                     <Image
-                      resizeMode="cover"
+                      resizeMode="contain"
                       style={styles.cardcatalog_img}
-                      source={{ uri: link }}
+                      source={{ uri: img }}
                     />
                   </View>
-
                   <View style={styles.cardBody}>
                     <View style={styles.cardHeader}>
                       <View style={{ flex: 1 }}>
                         <Text style={styles.cardDates}>
-                          {start_date ? `From: ${start_date}` : ''} - {end_date ? `To: ${end_date}` : ''}
+                          {start_date ? `Du ${start_date}` : ''}, {end_date ? `au ${end_date}` : ''}
                         </Text>
                       </View>
                     </View>
@@ -228,14 +229,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 10,
     fontWeight: '500',
     color: '#232425',
     marginRight: 'auto',
   },
   StoreTitle: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 15,
     fontWeight: '500',
     color: '#232425',
     marginRight: 'auto',
