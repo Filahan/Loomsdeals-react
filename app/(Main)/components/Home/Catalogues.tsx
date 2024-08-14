@@ -185,9 +185,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 8,
     backgroundColor: '#fff',
+    borderColor: '#e0e0e0', // Light grey for a more subtle border
     marginBottom: 16,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   cardBody: {
-    padding: 12,
+    padding: 10,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -242,11 +243,11 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   StoreTitle: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: '600',
+    flexGrow: 1,
+    // letterSpacing: 0.4,
     marginBottom: 15,
-    fontWeight: '500',
-    color: '#232425',
-    marginRight: 'auto',
   },
   cardDates: {
     marginTop: 4,
@@ -264,7 +265,6 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     width: '48%',
-    marginBottom: 10,
   },
   container: {
     flex: 1,

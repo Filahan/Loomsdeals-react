@@ -261,14 +261,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 19,
-    fontWeight: '600',
-    color: '#000',
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#4A4A4A',
     textAlign: 'center',
-  },
+    flexGrow: 1,
+    letterSpacing: 1.2,
+},
   /** Content */
   content: {
     paddingHorizontal: 16,

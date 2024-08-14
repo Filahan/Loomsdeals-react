@@ -60,11 +60,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headerTitle: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
+        fontSize: 20,
+        fontWeight: '700',
+        color: '#4A4A4A',
         textAlign: 'center',
         flexGrow: 1,
+        letterSpacing: 1.2,
     },
     content: {
         flex: 1,
