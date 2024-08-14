@@ -21,7 +21,7 @@ interface Catalogue {
   title: string;
   start_date?: string;
   end_date?: string;
-  storeData?: { url?: string };
+  store?: { url?: string, id?: string  };
   img: string;
 }
 
@@ -56,7 +56,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
             if (cat.store) {
               const storeDocRef = doc(db, cat.store);
               const docSnapshot = await getDoc(storeDocRef);
-              return { ...cat, storeData: docSnapshot.exists() ? docSnapshot.data() : null };
+              return { ...cat, store: docSnapshot.exists() ? docSnapshot.data() : null };
             }
             return cat;
           })) };
@@ -110,7 +110,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
       >
         {catalogues.map((catalogueGroup, groupIndex) =>
           catalogueGroup.map((catalogue, catalogueIndex) => {
-            const { link, title, start_date, end_date, storeData, img } = catalogue;
+            const { link, title, start_date, end_date, store, img } = catalogue;
             const isSaved = saved.includes(catalogueIndex.toString());
 
             return (
@@ -126,11 +126,19 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
               >
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                      router.push({
+                        pathname: '/StoreScreen',
+                        params: { 
+                          store_id: store.id, 
+                          url: store.url }
+                      });
+                    }}>
                       <Image
                         resizeMode="cover"
                         style={styles.cardlogo_img}
-                        source={{ uri: storeData ? storeData.url : 'default-url' }}
+                        source={{ uri: store ? store.url : '' }}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleSave(catalogueIndex.toString())}>
