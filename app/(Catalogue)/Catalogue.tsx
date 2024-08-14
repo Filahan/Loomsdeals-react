@@ -1,102 +1,98 @@
-import { router, useGlobalSearchParams, useLocalSearchParams, useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import PDFViewer from './PDFViewer'; // Ensure the path is correct
+import PDFViewer from './PDFViewer'; // Assure-toi que le chemin est correct
+import { Chip } from 'react-native-paper'; // Import Chip component
+import { router, useGlobalSearchParams } from 'expo-router';
 
+// Ajoute cette section pour la date d'expiration
+const ExpirationDate = ({ date }) => (
+  <View style={styles.expirationContainer}>
+    <FeatherIcon name="calendar" size={20} color="#002D62" />
+    <Text style={styles.expirationText}>Date d'expiration: {date}</Text>
+  </View>
+);
 
+export default function Catalogue() {
+    const { link } = useGlobalSearchParams();
+    const expirationDate = '31/12'; // Exemple de date
 
-export default function Catalogue({req}) {
-
-    // const itemId = router.query.itemId;
-    const {link} = useGlobalSearchParams();
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffff' }}>
-        <View style={styles.header}>
-         <View style={styles.headerAction}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <FeatherIcon color="#000" name="arrow-left" size={24} />
-         </TouchableOpacity>
-        </View>
-
-      <Text numberOfLines={1} style={styles.headerTitle}>
-         Catalogue
-       </Text>
-
-       <View style={[styles.headerAction, { alignItems: 'flex-end' }]}>
-         <TouchableOpacity onPress={() => { /* handle onPress */ }}>
-            <FeatherIcon color="#000" name="more-vertical" size={24} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={[styles.section, { paddingTop: 4 }]}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.profile}>
-          </View>
-        </View>
-     <PDFViewer uri={link} />    
-     </SafeAreaView>
-  );
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.headerAction} onPress={() => router.back()}>
+                    <FeatherIcon color="#000" name="arrow-left" size={24} />
+                </TouchableOpacity>
+                <Text numberOfLines={1} style={styles.headerTitle}>
+                    Catalogue
+                </Text>
+                <TouchableOpacity style={styles.headerAction} >
+                </TouchableOpacity>
+            </View>
+            <View style={styles.content}>
+                <View style={styles.section}>
+                    {/* Ajoute le composant ExpirationDate ici */}
+                    <ExpirationDate date={expirationDate} />
+                </View>
+                <PDFViewer uri={link} />
+            </View>
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
-  /** Header */
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 16,
-  },
-  headerAction: {
-    width: 40,
-    height: 40,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 19,
-    fontWeight: '600',
-    color: '#000',
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    textAlign: 'center',
-  },
-  /** Content */
-  content: {
-    paddingHorizontal: 16,
-  },
-  /** Section */
-  section: {
-    paddingVertical: 12,
-  },
-  sectionTitle: {
-    margin: 8,
-    marginLeft: 12,
-    fontSize: 13,
-    letterSpacing: 0.33,
-    fontWeight: '500',
-    color: '#a69f9f',
-    textTransform: 'uppercase',
-  },
-  sectionBody: {
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
+    container: {
+        flex: 1,
+        backgroundColor: '#ffffff',
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  profile: {
-    margin: 12,
-    backgroundColor: '#f8f8f8',
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+            },
+    headerAction: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#333',
+        textAlign: 'center',
+        flexGrow: 1,
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+    },
+    section: {
+        paddingVertical: 12,
+    },
+    pdfViewer: {
+        flex: 1,
+        marginTop: 8,
+    },
+    expirationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+        padding: 10,
+        borderRadius: 5,
+        marginVertical: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    expirationText: {
+        marginLeft: 10,
+        fontSize: 13,
+        color: '#333',
+    },
 });
