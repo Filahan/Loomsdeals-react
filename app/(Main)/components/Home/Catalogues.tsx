@@ -105,7 +105,9 @@ const Catalogues = () => {
                 onPress={() => {
                   router.push({
                     pathname: '/Catalogue',
-                    params: { link: link }
+                    params: { 
+                      link: link, 
+                      end_date: end_date }
                   });
                 }}
                 >
@@ -141,7 +143,7 @@ const Catalogues = () => {
                     <View style={styles.cardHeader}>
                       <View style={{ flex: 1 }}>
                         <Text style={styles.cardDates}>
-                          {start_date ? `Du ${start_date}` : ''}, {end_date ? `au ${end_date}` : ''}
+                          {start_date ? `Du ${start_date}` : ''} {end_date ? `au ${end_date}` : ''}
                         </Text>
                       </View>
                     </View>

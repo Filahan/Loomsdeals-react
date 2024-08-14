@@ -14,29 +14,30 @@ const ExpirationDate = ({ date }) => (
 );
 
 export default function Catalogue() {
-    const { link } = useGlobalSearchParams();
-    const expirationDate = '31/12'; // Exemple de date
+    const { link, end_date } = useGlobalSearchParams();
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.headerAction} onPress={() => router.back()}>
-                    <FeatherIcon color="#000" name="arrow-left" size={24} />
-                </TouchableOpacity>
-                <Text numberOfLines={1} style={styles.headerTitle}>
-                    Catalogue
-                </Text>
-                <TouchableOpacity style={styles.headerAction} >
-                </TouchableOpacity>
-            </View>
-            <View style={styles.content}>
+        <View style={styles.header}>
+            <TouchableOpacity style={styles.headerAction} onPress={() => router.back()}>
+                <FeatherIcon color="#000" name="arrow-left" size={24} />
+            </TouchableOpacity>
+            <Text numberOfLines={1} style={styles.headerTitle}>
+                Catalogue
+            </Text>
+            <TouchableOpacity style={styles.headerAction}>
+                {/* Add functionality if needed */}
+            </TouchableOpacity>
+        </View>
+        <View style={styles.content}>
+            {end_date && (
                 <View style={styles.section}>
-                    {/* Ajoute le composant ExpirationDate ici */}
-                    <ExpirationDate date={expirationDate} />
+                    <ExpirationDate date={end_date} />
                 </View>
-                <PDFViewer uri={link} />
-            </View>
-        </SafeAreaView>
+            )}
+            <PDFViewer uri={link} />
+        </View>
+    </SafeAreaView>
     );
 }
 
