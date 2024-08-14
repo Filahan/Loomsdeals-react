@@ -14,6 +14,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 const Catalogues = () => {
   const [saved, setSaved] = useState([]);
@@ -102,8 +103,12 @@ const Catalogues = () => {
                 key={catalogueIndex}
                 style={styles.cardWrapper}
                 onPress={() => {
-                router.navigate("/Catalogue") 
-                }}>
+                  router.push({
+                    pathname: '/Catalogue',
+                    params: { link: link }
+                  });
+                }}
+                >
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
                     <TouchableOpacity>
