@@ -102,7 +102,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
   }
 
   return (
-    <SafeAreaView style={styles.content}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.row}
         showsVerticalScrollIndicator={false}
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    marginTop: 10,
   },
   skeletonRow: {
     flexDirection: 'row',

@@ -10,15 +10,16 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Header from './components/Home/header';
 import Catalogues from './components/Home/CataloguesList';
 import { router } from 'expo-router';
+import Slider from './components/Home/Slider';
 
 const myImage = require('../asserts/shopslogos/logo.jpg');
 
-// Créez vos différentes scènes pour les onglets
 const FirstRoute = () => (
   <ScrollView
     contentContainerStyle={styles.scrollContainer}
@@ -31,57 +32,62 @@ const FirstRoute = () => (
     }
     showsVerticalScrollIndicator={false}
   >
-    <Catalogues store_id="" />
+      {/* <Slider/> */}
   </ScrollView>
 );
 
 const SecondRoute = () => (
   <View style={styles.scene}>
-    <Text>Contenu du deuxième onglet</Text>
+    <Catalogues store_id="" />
   </View>
 );
 
 export default function HomeScreen() {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 'first', title: 'Catalogues' },
-    { key: 'second', title: 'Autre' },
-    { key: 'third', title: 'Autre' },
-
+    { key: 'first', title: '', icon: 'fire-flame-curved' },
+    { key: 'second', title: 'Catalogues' },
   ]);
 
   const renderScene = SceneMap({
     first: FirstRoute,
     second: SecondRoute,
-    third: SecondRoute,
   });
 
   const renderTabBar = (props) => (
     <TabBar
-    {...props}
-    indicatorStyle={{
-      backgroundColor: '#002D62', // Couleur de la ligne
-      height: 1, // Hauteur de la ligne
-    }}    
-    style={{ backgroundColor: 'white' }} // Style for the tab bar background
-    renderLabel={({ route, focused }) => (
-      <View style={[styles.tabItem, focused && styles.tabActive]}>
-        <Text style={[styles.tabText, focused && styles.tabActiveText]}>
-          {route.title}
-        </Text>
-      </View>
-    )}
-  />
+      {...props}
+      indicatorStyle={{
+        backgroundColor: '#002D62', // Couleur de la ligne
+        height: 1, // Hauteur de la ligne
+      }}    
+      style={{ backgroundColor: 'white' }} // Style for the tab bar background
+      renderLabel={({ route, focused }) => {
+        const iconName = routes.find(r => r.key === route.key)?.icon;
+        return (
+          <View style={[styles.tabItem, focused && styles.tabActive]}>
+            <FontAwesome6
+              name={iconName}
+              size={20}
+              color={focused ? '#002D62' : '#6b7280'}
+            />
+            {route.title  &&
+            <Text style={[styles.tabText, focused && styles.tabActiveText]}>
+              {route.title}
+            </Text>}
+          </View>
+        );
+      }}
+    />
   );
 
   return (
     <SafeAreaView style={styles.safeArea}>
-        <Image source={myImage} 
+      <Image source={myImage} 
         resizeMode="contain"
-        style={styles.logo} />
+        style={styles.logo} 
+      />
       <View style={styles.container}>
-        {/* <Header /> */}
-
         <View style={styles.search}>
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
@@ -104,12 +110,12 @@ export default function HomeScreen() {
             </View>
           </View>
           <TouchableOpacity
-        onPress={() => router.push("/Settings")}
-        style={{ marginRight: 'auto' }}>
-        <View style={styles.action}>
-          <FeatherIcon color="#002D62" name="user" size={22} />
-        </View>
-      </TouchableOpacity>
+            onPress={() => router.push("/Settings")}
+            style={{ marginRight: 'auto' }}>
+            <View style={styles.action}>
+              <FeatherIcon color="#002D62" name="user" size={22} />
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.tabContainer}>
           <TabView
@@ -129,7 +135,6 @@ const styles = StyleSheet.create({
   logo:{
     height:30,
     alignItems: 'flex-start',  // Aligne horizontalement à gauche
-
   },
   safeArea: {
     flex: 1,
@@ -159,7 +164,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   inputWrapper: {
-    // marginTop: 15,
     position: 'relative',
     width: '100%',
   },
@@ -186,6 +190,7 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
@@ -193,16 +198,16 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize: 13,
-    paddingLeft:10,
-    paddingRight:10,
+    paddingLeft: 10,
+    paddingRight: 10,
     fontWeight: '600',
     color: '#6b7280',
   },
   tabActive: {
-    // backgroundColor: 'orange',
+    // backgroundColor: '#f0f6fb', // Optionally add background color for active tab
   },
   tabActiveText: {
-    color: '002D62',
+    color: '#002D62',
   },
   action: {
     width: 44,

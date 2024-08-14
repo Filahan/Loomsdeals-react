@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Header from './components/Home/header';
 import Stores from './components/Stores/StoresList';
 import { router } from 'expo-router';
 
