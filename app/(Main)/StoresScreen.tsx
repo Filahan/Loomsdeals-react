@@ -6,10 +6,12 @@ import {
   TextInput,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Header from './components/Home/header';
 import Stores from './components/Stores/StoresList';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -24,8 +26,9 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea} key={key}>
+      
       <View style={styles.container}>
-        <Header />
+
         <View style={styles.search}>
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
@@ -48,6 +51,13 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
+          <TouchableOpacity
+        onPress={() => router.push("/Settings")}
+        style={{ marginRight: 'auto' }}>
+        <View style={styles.action}>
+          <FeatherIcon color="#002D62" name="user" size={22} />
+        </View>
+      </TouchableOpacity>
         </View>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -95,7 +105,6 @@ const styles = StyleSheet.create({
     color: '#222',
   },
   inputWrapper: {
-    marginTop: 15,
     position: 'relative',
     width: '100%',
   },
@@ -111,5 +120,14 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+  },
+  action: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    marginHorizontal: 5,
+    backgroundColor: '#f0f6fb',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

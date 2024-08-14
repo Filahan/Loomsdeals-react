@@ -159,7 +159,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
                       source={{ uri: img }}
                     />
                   </View>
-                  <View style={styles.cardBody}>
+                  {/* <View style={styles.cardBody}>
                     <View style={styles.cardHeader}>
                       <View style={{ flex: 1 }}>
                         <Text style={styles.cardDates}>
@@ -167,7 +167,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
                         </Text>
                       </View>
                     </View>
-                  </View>
+                  </View> */}
                 </View>
               </TouchableOpacity>
             );
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
+    borderWidth:1
   },
   cardLikeWrapper: {
     position: 'absolute',
@@ -243,8 +244,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 5,
-    borderWidth: 2,
-    borderColor: 'white',
   },
   cardBody: {
     padding: 10,

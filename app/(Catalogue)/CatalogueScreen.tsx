@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 17,
         fontWeight: '700',
         color: '#4A4A4A',
         textAlign: 'center',
