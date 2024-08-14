@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Header from './components/Home/header';
-import Stores from './components/Stores/Stores';
+import Stores from './components/Stores/StoresList';
 
 export default function HomeScreen() {
   const [searchTerm, setSearchTerm] = useState<string>('');

@@ -13,7 +13,7 @@ const ExpirationDate = ({ date }) => (
   </View>
 );
 
-export default function Catalogue() {
+export default function CatalogueScreen() {
     const { link, end_date } = useGlobalSearchParams();
 
     return (
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        width: '100%',
         paddingHorizontal: 16,
-        paddingVertical: 8,
-            },
+      },
     headerAction: {
         width: 40,
         height: 40,
@@ -97,4 +97,22 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#333',
     },
+     placeholder: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    height: 400,
+    marginTop: 24,
+    padding: 0,
+    backgroundColor: 'transparent',
+  },
+  placeholderInset: {
+    borderWidth: 4,
+    borderColor: '#e5e7eb',
+    borderStyle: 'dashed',
+    borderRadius: 9,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
 });

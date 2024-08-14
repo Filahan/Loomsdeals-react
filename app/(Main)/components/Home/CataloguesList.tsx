@@ -10,27 +10,51 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import { db } from '../../../config/Firebase'; // Adjust the path as needed
-import { collection, getDocs } from 'firebase/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 
-const Catalogues = () => {
-  const [saved, setSaved] = useState([]);
-  const [catalogues, setCatalogues] = useState([]);
-  const [loading, setLoading] = useState(true); // State for loading
+interface Catalogue {
+  catalogues: any;
+  link: string;
+  title: string;
+  start_date?: string;
+  end_date?: string;
+  storeData?: { url?: string };
+  img: string;
+}
+
+interface CataloguesListProps {
+  store_id: string;
+}
+
+const CataloguesList: React.FC<CataloguesListProps> = ({ store_id }) => {
+  const [saved, setSaved] = useState<string[]>([]);
+  const [catalogues, setCatalogues] = useState<Catalogue[][]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCatalogues = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'catalogues'));
-        const fetchedCatalogues = querySnapshot.docs.map(doc => (doc.data() ));
+        let querySnapshot;
+
+        if (store_id) {
+          const storeQuery = query(
+            collection(db, 'catalogues'),
+            where('store', '==', store_id)
+          );
+          querySnapshot = await getDocs(storeQuery);
+        } else {
+          querySnapshot = await getDocs(collection(db, 'catalogues'));
+        }
+
+        const fetchedCatalogues = querySnapshot.docs.map(doc => doc.data()) as Catalogue[];
 
         const updatedCatalogues = await Promise.all(fetchedCatalogues.map(async (catalogue) => {
           const updatedCatalogue = { ...catalogue, catalogues: await Promise.all(catalogue.catalogues.map(async (cat) => {
             if (cat.store) {
-              const storeDocRef = doc(db, cat.store); // Use cat.store to fetch the correct store
+              const storeDocRef = doc(db, cat.store);
               const docSnapshot = await getDoc(storeDocRef);
               return { ...cat, storeData: docSnapshot.exists() ? docSnapshot.data() : null };
             }
@@ -41,26 +65,22 @@ const Catalogues = () => {
         }));
 
         setCatalogues(updatedCatalogues);
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
 
       } catch (error) {
         console.error('Error fetching catalogues: ', error);
-        setLoading(false); // Set loading to false if there's an error
+        setLoading(false);
       }
     };
 
     fetchCatalogues();
-  }, []);
+  }, [store_id]);
 
   const handleSave = useCallback(
-    id => {
-      if (saved.includes(id)) {
-        setSaved(saved.filter(val => val !== id));
-      } else {
-        setSaved([...saved, id]);
-      }
+    (id: string) => {
+      setSaved(prevSaved => prevSaved.includes(id) ? prevSaved.filter(val => val !== id) : [...prevSaved, id]);
     },
-    [saved],
+    [],
   );
 
   if (loading) {
@@ -83,18 +103,13 @@ const Catalogues = () => {
 
   return (
     <SafeAreaView style={styles.content}>
-      <View>
-        <Text style={styles.StoreTitle}>Explorer les catalogues</Text>
-      </View>
-
       <ScrollView
         contentContainerStyle={styles.row}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {catalogues.map((catalogueGroup, groupIndex) => {
-
-          return catalogueGroup.map((catalogue, catalogueIndex) => {
+        {catalogues.map((catalogueGroup, groupIndex) =>
+          catalogueGroup.map((catalogue, catalogueIndex) => {
             const { link, title, start_date, end_date, storeData, img } = catalogue;
             const isSaved = saved.includes(catalogueIndex.toString());
 
@@ -104,13 +119,11 @@ const Catalogues = () => {
                 style={styles.cardWrapper}
                 onPress={() => {
                   router.push({
-                    pathname: '/Catalogue',
-                    params: { 
-                      link: link, 
-                      end_date: end_date }
+                    pathname: '/CatalogueScreen',
+                    params: { link, end_date },
                   });
                 }}
-                >
+              >
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
                     <TouchableOpacity>
@@ -131,7 +144,6 @@ const Catalogues = () => {
                       </View>
                     </TouchableOpacity>
                   </View>
-
                   <View style={styles.cardTop}>
                     <Image
                       resizeMode="contain"
@@ -151,15 +163,14 @@ const Catalogues = () => {
                 </View>
               </TouchableOpacity>
             );
-          });
-        })}
+          })
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  /** Header */
   header: {
     marginBottom: 12,
   },
@@ -180,12 +191,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1d1d1d',
   },
-  /** Card */
   card: {
     position: 'relative',
     borderRadius: 8,
     backgroundColor: '#fff',
-    borderColor: '#e0e0e0', // Light grey for a more subtle border
+    borderColor: '#e0e0e0',
     marginBottom: 16,
     shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
@@ -236,17 +246,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardTitle: {
-    fontSize: 10,
-    fontWeight: '500',
-    color: '#232425',
-    marginRight: 'auto',
-  },
   StoreTitle: {
     fontSize: 16,
     fontWeight: '600',
     flexGrow: 1,
-    // letterSpacing: 0.4,
     marginBottom: 15,
   },
   cardDates: {
@@ -275,18 +278,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   skeletonItem: {
-    width: '48%', // Adjust as needed
+    width: '48%',
     height: 200,
     marginBottom: 10,
     padding: 16,
-    borderRadius: 10, // Rounded corners
-    backgroundColor: '#f5f5f5', // Light background color
+    borderRadius: 10,
+    backgroundColor: '#f5f5f5',
   },
   text: {
     fontSize: 16,
-    color: '#000', // Text color
+    color: '#000',
   },
 });
 
-export default Catalogues;
-``
+export default CataloguesList;

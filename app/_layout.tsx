@@ -6,7 +6,9 @@ import LoginScreen from './(Login)/LoginScreen';
 import LandingScreen from './(Landing)/LandingScreen';
 import Main from './(Main)/_layout';
 import Settings from './(Settings)/Settings';
-import Catalogue from './(Catalogue)/Catalogue';
+import CatalogueScreen from './(Catalogue)/CatalogueScreen';
+import StoreScreen from './(Store)/StoreScreen';
+
 const Stack = createStackNavigator();
 
 const Layout = () => {
@@ -30,7 +32,8 @@ const Layout = () => {
         <>
         <Stack.Screen name="(Main)" component={Main} options={{ headerShown: false }}/>
         <Stack.Screen name="(Settings)" component={Settings} options={{ headerShown: false }}/>
-        <Stack.Screen name="(Catalogue)" component={Catalogue} options={{ headerShown: false }}/>
+        <Stack.Screen name="(Catalogue)" component={CatalogueScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="(Store)" component={StoreScreen} options={{ headerShown: false }}/>
 
         </>
 

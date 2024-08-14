@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Header from './components/Home/header';
-import Catalogues from './components/Home/Catalogues';
+import Catalogues from './components/Home/CataloguesList';
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -56,7 +56,7 @@ export default function HomeScreen() {
           }
           showsVerticalScrollIndicator={false}
         >
-          <Catalogues />
+          <Catalogues store_id=""/>
         </ScrollView>
       </View>
     </SafeAreaView>

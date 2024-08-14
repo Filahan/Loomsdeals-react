@@ -4,10 +4,12 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
+import { router } from 'expo-router';
 
 interface Lesson {
   url: string;
   name: string;
+  id: string;
 }
 
 export default function Stores({ searchTerm }: { searchTerm: string }) {
@@ -24,6 +26,7 @@ export default function Stores({ searchTerm }: { searchTerm: string }) {
         const fetchedLessons: Lesson[] = querySnapshot.docs.map(doc => ({
           url: doc.data().url || '',
           name: doc.data().name || 'Unnamed Store',
+          id: doc.data().id || '',
         }));
         setLessons(fetchedLessons);
       }
@@ -76,11 +79,16 @@ export default function Stores({ searchTerm }: { searchTerm: string }) {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         showsVerticalScrollIndicator={false}
       >
-        {filteredLessons.map(({ name, url }, index) => (
+        {filteredLessons.map(({ name, url, id }, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => {
-              // handle onPress
+              router.push({
+                pathname: '/StoreScreen',
+                params: { 
+                  store_id: id, 
+                  url: url }
+              });
             }}
           >
             <View style={styles.card}>
@@ -110,6 +118,27 @@ export default function Stores({ searchTerm }: { searchTerm: string }) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 16,
+  },
+  headerAction: {
+    width: 40,
+    height: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#4A4A4A',
+    textAlign: 'center',
+    flexGrow: 1,
+    letterSpacing: 1.2,
+},
   container: {
     paddingTop: 10,
     flexGrow: 1,
