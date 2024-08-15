@@ -17,7 +17,7 @@ export default function Example() {
     <SafeAreaView style={styles.container}>
       <View style={styles.hero}>
         <Image
-          source={{ uri: 'https://assets.withfra.me/Landing.3.png' }}
+          source={{ uri: 'https://storage.googleapis.com/promappio.appspot.com/assets/Landing_img.jpg' }}
           style={styles.heroImage}
           resizeMode="contain"
         />
@@ -25,16 +25,15 @@ export default function Example() {
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <Text style={styles.title}>
-            Save grocery money {'\n'}with{' '}
+          Économisez de l'argent {'\n'}avec{' '}
             <View style={styles.appName}>
-              <Text style={styles.appNameText}>Promapp</Text>
+              <Text style={styles.appNameText}>Loum</Text>
             </View>
           </Text>
-          <Text style={styles.text}>
-          Find the best grocery deals and save money by comparing discounts at nearby stores. </Text>       
-          </View>
-
-        <TouchableOpacity
+          {/* <Text style={styles.text}>
+          Find the best grocery deals and save money by comparing discounts at nearby stores. </Text>        */}
+          
+          <TouchableOpacity
           onPress={() => {
             router.push('/LoginScreen');
         }}>
@@ -43,6 +42,9 @@ export default function Example() {
           </View>
         </TouchableOpacity>
       </View>
+          </View>
+
+        
     </SafeAreaView>
   );
 }
@@ -68,7 +70,7 @@ const styles = StyleSheet.create({
   },
   /** Hero */
   hero: {
-    backgroundColor: '#d8dffe',
+    backgroundColor: '#fff2dd',
     margin: 12,
     borderRadius: 16,
     padding: 16,
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: '#002D62',
     borderColor: '#002D62',
-    marginBottom:10
+    marginTop: 60
   },
   buttonText: {
     fontSize: 15,

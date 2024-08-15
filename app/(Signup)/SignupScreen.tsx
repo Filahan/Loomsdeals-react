@@ -1,3 +1,4 @@
+// SignUp.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -9,19 +10,25 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { auth, createUserWithEmailAndPassword } from '../config/Firebase';
 import { router } from 'expo-router';
-import { auth, signInWithEmailAndPassword } from '../config/Firebase';
 
-export default function SignIn() {
+export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas.');
+      return;
+    }
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to the home page or another protected route
-      router.push('/home'); // assuming '/home' is the route for the home page
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Optionally, redirect the user to the login page or home page
+      router.push('/login'); // assuming '/login' is the route for the login page
     } catch (err) {
       setError(err.message);
     }
@@ -44,7 +51,7 @@ export default function SignIn() {
         <KeyboardAwareScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>
-              Se connecter à <Text style={{ color: '#002D62' }}>Loom</Text>
+              S'inscrire à <Text style={{ color: '#002D62' }}>Loom</Text>
             </Text>
           </View>
 
@@ -79,28 +86,34 @@ export default function SignIn() {
                 value={password} />
             </View>
 
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>Confirmer le mot de passe</Text>
+
+              <TextInput
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                onChangeText={setConfirmPassword}
+                placeholder="********"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                secureTextEntry={true}
+                value={confirmPassword} />
+            </View>
+
             <View style={styles.formAction}>
               <TouchableOpacity
-                onPress={handleLogin}>
+                onPress={handleSignUp}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>Se connecter</Text>
+                  <Text style={styles.btnText}>S'inscrire</Text>
                 </View>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={() => router.push('/ForgotPasswordScreen')}>
-              <Text style={styles.formLink}>Mot de passe oublié ?</Text>
-            </TouchableOpacity>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
           </View>
         </KeyboardAwareScrollView>
 
-        <TouchableOpacity
-          style={{ marginTop: 'auto' }}>
-          <Text style={styles.formFooter}>
-            Vous n'avez pas de compte ?{' '}
-            <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/SignupScreen')}>S'inscrire</Text>
-          </Text>
-        </TouchableOpacity>
+        
       </View>
     </SafeAreaView>
   );
@@ -135,12 +148,6 @@ const styles = StyleSheet.create({
   formAction: {
     marginTop: 4,
     marginBottom: 16,
-  },
-  formLink: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#002D62',
-    textAlign: 'center',
   },
   formFooter: {
     fontSize: 15,
@@ -195,4 +202,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 10,
+  }
 });

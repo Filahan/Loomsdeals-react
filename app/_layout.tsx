@@ -8,7 +8,9 @@ import Main from './(Main)/_layout';
 import Settings from './(Settings)/Settings';
 import CatalogueScreen from './(Catalogue)/CatalogueScreen';
 import StoreScreen from './(Store)/StoreScreen';
-import Category from './(Category)/CategoryScreen';
+import CategoryScreen from './(Category)/CategoryScreen';
+import SignupScreen from './(Signup)/SignupScreen';
+import ForgotPasswordScreen from './(ForgotPassword)/ForgotPasswordScreen';
 
 const Stack = createStackNavigator();
 
@@ -35,7 +37,7 @@ const Layout = () => {
         <Stack.Screen name="(Settings)" component={Settings} options={{ headerShown: false }}/>
         <Stack.Screen name="(Catalogue)" component={CatalogueScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="(Store)" component={StoreScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="(Category)" component={Category} options={{ headerShown: false }}/>
+        <Stack.Screen name="(Category)" component={CategoryScreen} options={{ headerShown: false }}/>
 
         </>
 
@@ -43,6 +45,9 @@ const Layout = () => {
       <>
       <Stack.Screen name="(Landing)" component={LandingScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="(Login)" component={LoginScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="(Signup)" component={SignupScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="(ForgotPassword)" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
+      
         </>
         
       )}
