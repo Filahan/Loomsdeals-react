@@ -4,7 +4,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router, useGlobalSearchParams } from 'expo-router';
 import CataloguesList from '../(Main)/components/Home/CataloguesList';
 
-export default function StoreScreen() {
+export default function Catégorie() {
   const { store_id, url } = useGlobalSearchParams();
   const [refreshing, setRefreshing] = useState(false);
   const [key, setKey] = useState(0); // Ajouter un état pour la clé
@@ -17,7 +17,7 @@ export default function StoreScreen() {
 
   // Ensure url is a string and defined
   const imageUrl = typeof url === 'string' ? url : '';
-  const store = typeof store_id === 'string' ? store_id : '';
+  const logo = typeof store_id === 'string' ? store_id : '';
 
   return (
     <SafeAreaView style={styles.container} key={key}>
@@ -48,7 +48,7 @@ export default function StoreScreen() {
         </View>
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
-            <CataloguesList store_id={store} category='' />
+            <CataloguesList store_id={logo} />
           </View>
         </View>
       </ScrollView>

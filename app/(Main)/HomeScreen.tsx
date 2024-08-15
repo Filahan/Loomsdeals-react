@@ -17,13 +17,13 @@ import Header from './components/Home/header';
 import Catalogues from './components/Home/CataloguesList';
 import { router } from 'expo-router';
 import Slider from './components/Home/Slider';
+import StoresCatCaroussel from './components/Home/StoresCatCaroussel'; // Assure-toi que le chemin est correct
 
 const myImage = require('../asserts/shopslogos/logo.jpg');
 
 const FirstRoute = () => (
   <ScrollView
     contentContainerStyle={styles.scrollContainer}
-    style={{ marginTop: 20 }}
     refreshControl={
       <RefreshControl
         refreshing={false}
@@ -32,13 +32,20 @@ const FirstRoute = () => (
     }
     showsVerticalScrollIndicator={false}
   >
-      {/* <Slider/> */}
+          <StoresCatCaroussel />
+
+      <Slider/>
+      <Text numberOfLines={1} style={styles.CataloguesTitle}>
+          Les catalogues
+      </Text>
+
+      <Catalogues store_id="" category="" />
+
   </ScrollView>
 );
 
 const SecondRoute = () => (
   <View style={styles.scene}>
-    <Catalogues store_id="" />
   </View>
 );
 
@@ -46,7 +53,7 @@ export default function HomeScreen() {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'first', title: '', icon: 'fire-flame-curved' },
-    { key: 'second', title: 'Catalogues' },
+    { key: 'second', title: 'Autres' },
   ]);
 
   const renderScene = SceneMap({
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 24,
+    padding: 15,
     paddingTop:10
   },
   search: {
@@ -218,4 +225,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  CataloguesTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#4A4A4A',
+    flexGrow: 1,
+    letterSpacing: 0.4,
+},
 });

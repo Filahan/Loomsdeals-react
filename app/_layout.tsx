@@ -8,6 +8,7 @@ import Main from './(Main)/_layout';
 import Settings from './(Settings)/Settings';
 import CatalogueScreen from './(Catalogue)/CatalogueScreen';
 import StoreScreen from './(Store)/StoreScreen';
+import Category from './(Category)/CategoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const Layout = () => {
         <Stack.Screen name="(Settings)" component={Settings} options={{ headerShown: false }}/>
         <Stack.Screen name="(Catalogue)" component={CatalogueScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="(Store)" component={StoreScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="(Category)" component={Category} options={{ headerShown: false }}/>
 
         </>
 

@@ -4,8 +4,8 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router, useGlobalSearchParams } from 'expo-router';
 import CataloguesList from '../(Main)/components/Home/CataloguesList';
 
-export default function StoreScreen() {
-  const { store_id, url } = useGlobalSearchParams();
+export default function CategoryScreen() {
+  const { category_id, url } = useGlobalSearchParams();
   const [refreshing, setRefreshing] = useState(false);
   const [key, setKey] = useState(0); // Ajouter un état pour la clé
 
@@ -17,7 +17,7 @@ export default function StoreScreen() {
 
   // Ensure url is a string and defined
   const imageUrl = typeof url === 'string' ? url : '';
-  const store = typeof store_id === 'string' ? store_id : '';
+  const category = typeof category_id === 'string' ? category_id : '';
 
   return (
     <SafeAreaView style={styles.container} key={key}>
@@ -48,7 +48,7 @@ export default function StoreScreen() {
         </View>
         <View style={styles.placeholder}>
           <View style={styles.placeholderInset}>
-            <CataloguesList store_id={store} category='' />
+            <CataloguesList category={category} store_id='' />
           </View>
         </View>
       </ScrollView>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   avatarImg: {
     width: 80,
     height: 80,
-    borderRadius: 50,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: '#E7E7E7',
   },
@@ -117,9 +117,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
     borderRadius: 9,
     padding: 10,
     flexGrow: 1,
