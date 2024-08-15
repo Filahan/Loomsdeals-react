@@ -43,7 +43,7 @@ const Layout = () => {
 
     ) : (
       <>
-      <Stack.Screen name="(Landing)" component={LandingScreen} options={{ headerShown: false }}/>
+      {/* <Stack.Screen name="(Landing)" component={LandingScreen} options={{ headerShown: false }}/> */}
       <Stack.Screen name="(Login)" component={LoginScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="(Signup)" component={SignupScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="(ForgotPassword)" component={ForgotPasswordScreen} options={{ headerShown: false }}/>

@@ -30,7 +30,7 @@ export default function SignIn() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             router.back();
           }}>
@@ -40,7 +40,7 @@ export default function SignIn() {
               name="arrow-left"
               size={24} />
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <KeyboardAwareScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>
