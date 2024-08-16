@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, View, Text, TouchableOpacity, Image, RefreshControl } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router, useGlobalSearchParams } from 'expo-router';
-import CataloguesList from '../(Main)/components/Home/CataloguesList';
+import CataloguesList from '../components/CataloguesList';
 
 export default function CategoryScreen() {
   const { category_id, url } = useGlobalSearchParams();

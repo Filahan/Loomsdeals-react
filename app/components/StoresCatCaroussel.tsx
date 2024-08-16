@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../config/Firebase'; // Adjust the path as needed
+import { db } from '../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 

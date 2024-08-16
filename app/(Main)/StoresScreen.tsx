@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Stores from './components/Stores/StoresList';
+import Stores from '../components/StoresList';
 import { router } from 'expo-router';
 
 export default function HomeScreen() {

@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import { db } from '../../../config/Firebase';
+import { db } from '../config/Firebase';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';

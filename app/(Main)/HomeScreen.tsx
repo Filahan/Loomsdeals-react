@@ -13,11 +13,10 @@ import {
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import Header from './components/Home/header';
-import Catalogues from './components/Home/CataloguesList';
+import Catalogues from '../components/CataloguesList';
 import { router } from 'expo-router';
-import Slider from './components/Home/Slider';
-import StoresCatCaroussel from './components/Home/StoresCatCaroussel'; // Assure-toi que le chemin est correct
+import Slider from '../components/Slider';
+import StoresCatCaroussel from '../components/StoresCatCaroussel'; // Assure-toi que le chemin est correct
 
 const myImage = require('../asserts/shopslogos/logo.jpg');
 
