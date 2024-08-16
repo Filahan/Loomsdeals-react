@@ -16,55 +16,55 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Catalogues from '../components/CataloguesList';
 import { router } from 'expo-router';
 import Slider from '../components/Slider';
-import StoresCatCaroussel from '../components/StoresCatCaroussel'; // Assure-toi que le chemin est correct
+import StoresCatCaroussel from '../components/StoresCatCaroussel'; // Ensure path is correct
 
 const myImage = require('../asserts/shopslogos/logo.jpg');
 
-const FirstRoute = () => (
-  <ScrollView
-    contentContainerStyle={styles.scrollContainer}
-    refreshControl={
-      <RefreshControl
-        refreshing={false}
-        onRefresh={() => {}}
-      />
-    }
-    showsVerticalScrollIndicator={false}
-  >
-        <Slider/>
-
-  
-  </ScrollView>
-);
-
-const SecondRoute = () => (
-  <ScrollView
-  contentContainerStyle={styles.scrollContainer}
-  refreshControl={
-    <RefreshControl
-      refreshing={false}
-      onRefresh={() => {}}
-    />
-  }
-  showsVerticalScrollIndicator={false}
->
-        <StoresCatCaroussel />
-
-    <Text numberOfLines={1} style={styles.CataloguesTitle}>
-        Les catalogues
-    </Text>
-
-    <Catalogues store_id="" category="" />
-
-</ScrollView>
-);
-
 export default function HomeScreen() {
   const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'first', title: '', icon: 'fire-flame-curved' },
-    { key: 'second', title: 'Catégories ' },
-  ]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [key, setKey] = useState(0);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setKey(prevKey => prevKey + 1); // Update key to force re-render
+    setRefreshing(false);
+    // setTimeout(() => setRefreshing(false), 1000); // Adjust time as needed
+  };
+
+  const FirstRoute = () => (
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+      showsVerticalScrollIndicator={false}
+    >
+      <Slider />
+    </ScrollView>
+  );
+
+  const SecondRoute = () => (
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+      showsVerticalScrollIndicator={false}
+    >
+      <StoresCatCaroussel />
+      <Text numberOfLines={1} style={styles.CataloguesTitle}>
+        Les catalogues
+      </Text>
+      <Catalogues store_id="" category="" />
+    </ScrollView>
+  );
 
   const renderScene = SceneMap({
     first: FirstRoute,
@@ -75,10 +75,10 @@ export default function HomeScreen() {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: '#002D62', // Couleur de la ligne
-        height: 1, // Hauteur de la ligne
-      }}    
-      style={{ backgroundColor: 'white' }} // Style for the tab bar background
+        backgroundColor: '#002D62', // Indicator color
+        height: 1, // Indicator height
+      }}
+      style={{ backgroundColor: 'white' }} // Tab bar background
       renderLabel={({ route, focused }) => {
         const iconName = routes.find(r => r.key === route.key)?.icon;
         return (
@@ -88,22 +88,25 @@ export default function HomeScreen() {
               size={20}
               color={focused ? '#002D62' : '#6b7280'}
             />
-            {route.title  &&
-            <Text style={[styles.tabText, focused && styles.tabActiveText]}>
-              {route.title}
-            </Text>}
+            {route.title &&
+              <Text style={[styles.tabText, focused && styles.tabActiveText]}>
+                {route.title}
+              </Text>
+            }
           </View>
         );
       }}
     />
   );
 
+  const [routes] = useState([
+    { key: 'first', title: '', icon: 'fire-flame-curved' },
+    { key: 'second', title: 'Catégories ' },
+  ]);
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <Image source={myImage} 
-        resizeMode="contain"
-        style={styles.logo} 
-      />
+    <SafeAreaView style={styles.safeArea} key={key}>
+      <Image source={myImage} resizeMode="contain" style={styles.logo} />
       <View style={styles.container}>
         <View style={styles.search}>
           <View style={styles.searchInput}>
@@ -149,9 +152,9 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  logo:{
-    height:30,
-    alignItems: 'flex-start',  // Aligne horizontalement à gauche
+  logo: {
+    height: 30,
+    alignItems: 'flex-start',  // Align horizontally to the left
   },
   safeArea: {
     flex: 1,
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    paddingTop:10
+    paddingTop: 10
   },
   search: {
     flexDirection: 'row',
@@ -241,5 +244,5 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
     flexGrow: 1,
     letterSpacing: 0.4,
-},
+  },
 });

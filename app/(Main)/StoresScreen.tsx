@@ -25,7 +25,7 @@ export default function HomeScreen() {
     setRefreshing(true);
     setKey(prevKey => prevKey + 1); // Update key to force re-render
     // Simulate an async operation and then set refreshing to false
-    setTimeout(() => setRefreshing(false), 1000); // Adjust time as needed
+    setRefreshing(false);
   };
 
   return (
