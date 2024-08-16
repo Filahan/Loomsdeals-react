@@ -7,27 +7,31 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
+  Text,
+  Image
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Stores from '../components/StoresList';
+import Stores from '../components/StoresList'; // Ensure the path is correct
 import { router } from 'expo-router';
+
+const myImage = require('../asserts/shopslogos/logo.jpg');
 
 export default function HomeScreen() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [key, setKey] = useState(0); // Ajouter un état pour la clé
+  const [key, setKey] = useState(0); // State for key to force re-render
 
   const onRefresh = () => {
     setRefreshing(true);
-    setKey(prevKey => prevKey + 1);
-    setRefreshing(false);
+    setKey(prevKey => prevKey + 1); // Update key to force re-render
+    // Simulate an async operation and then set refreshing to false
+    setTimeout(() => setRefreshing(false), 1000); // Adjust time as needed
   };
 
   return (
     <SafeAreaView style={styles.safeArea} key={key}>
-      
+      <Image source={myImage} resizeMode="contain" style={styles.logo} />
       <View style={styles.container}>
-
         <View style={styles.search}>
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
@@ -35,7 +39,7 @@ export default function HomeScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                placeholder="Rechercher un magasin"
+                placeholder="Rechercher un produit ou un magasin"
                 placeholderTextColor="#848484"
                 returnKeyType="done"
                 style={styles.input}
@@ -51,12 +55,12 @@ export default function HomeScreen() {
             </View>
           </View>
           <TouchableOpacity
-        onPress={() => router.push("/Settings")}
-        style={{ marginRight: 'auto' }}>
-        <View style={styles.action}>
-          <FeatherIcon color="#002D62" name="user" size={22} />
-        </View>
-      </TouchableOpacity>
+            onPress={() => router.push("/Settings")}
+            style={{ marginRight: 'auto' }}>
+            <View style={styles.action}>
+              <FeatherIcon color="#002D62" name="user" size={22} />
+            </View>
+          </TouchableOpacity>
         </View>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -76,13 +80,18 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    height: 30,
+    alignItems: 'flex-start',  // Align horizontally to the left
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
   },
   container: {
     flex: 1,
-    padding: 24,
+    padding: 15,
+    paddingTop: 10
   },
   search: {
     flexDirection: 'row',

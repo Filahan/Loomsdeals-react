@@ -31,28 +31,39 @@ const FirstRoute = () => (
     }
     showsVerticalScrollIndicator={false}
   >
-          <StoresCatCaroussel />
+        <Slider/>
 
-      <Slider/>
-      <Text numberOfLines={1} style={styles.CataloguesTitle}>
-          Les catalogues
-      </Text>
-
-      <Catalogues store_id="" category="" />
-
+  
   </ScrollView>
 );
 
 const SecondRoute = () => (
-  <View style={styles.scene}>
-  </View>
+  <ScrollView
+  contentContainerStyle={styles.scrollContainer}
+  refreshControl={
+    <RefreshControl
+      refreshing={false}
+      onRefresh={() => {}}
+    />
+  }
+  showsVerticalScrollIndicator={false}
+>
+        <StoresCatCaroussel />
+
+    <Text numberOfLines={1} style={styles.CataloguesTitle}>
+        Les catalogues
+    </Text>
+
+    <Catalogues store_id="" category="" />
+
+</ScrollView>
 );
 
 export default function HomeScreen() {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'first', title: '', icon: 'fire-flame-curved' },
-    { key: 'second', title: 'Autres' },
+    { key: 'second', title: 'Catégories ' },
   ]);
 
   const renderScene = SceneMap({

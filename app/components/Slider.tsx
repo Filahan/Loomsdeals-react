@@ -46,12 +46,14 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height:200,
+
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
   },
   carouselContainer: {
+    // height:200,
     position: 'relative', // Ensure pagination is correctly positioned relative to the carousel
   },
   item: {

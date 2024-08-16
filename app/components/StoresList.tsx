@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View, Image, RefreshControl } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/Firebase'; // Adjust the path as needed
+import { db } from './../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 
