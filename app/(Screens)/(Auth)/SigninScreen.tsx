@@ -10,7 +10,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router } from 'expo-router';
-import { auth, signInWithEmailAndPassword } from '../config/Firebase';
+import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');

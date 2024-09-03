@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from "./(Home)/HomeScreen"
-import StoresScreen from "./(Stores)/StoresScreen"
+import SavedScreen from "./(Saved)/SavedScreen"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,7 +14,7 @@ const TabNavigator = () => {
     <Tab.Screen
       name="Home"
       options={{
-        title: 'Home',
+        title: '',
         headerShown: false,
         tabBarIcon: ({ focused }) => (
           <AntDesign
@@ -26,19 +27,19 @@ const TabNavigator = () => {
       component={HomeScreen}
     />
     <Tab.Screen
-      name="Magasins"
+      name="Saved"
       options={{
-        title: 'Magasins',
+        title: '',
         headerShown: false,
         tabBarIcon: ({ focused }) => (
-          <Ionicons
+          <MaterialIcons
             color={focused ? "#002D62" : "grey"}
-            name="storefront-outline"
+            name="save-alt"
             size={25}
           />
         ),
       }}
-      component={StoresScreen}
+      component={SavedScreen}
     />
     {/* <Tab.Screen
       name="Produits"

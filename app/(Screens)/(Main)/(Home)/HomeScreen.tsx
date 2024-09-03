@@ -13,12 +13,12 @@ import {
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import Catalogues from '../../components/CataloguesList';
+import Catalogues from '../../../components/CataloguesList';
 import { router } from 'expo-router';
-import Slider from '../../components/Slider';
-import StoresCatCaroussel from '../../components/StoresCatCaroussel'; // Ensure path is correct
+import Slider from '../../../components/Slider';
+import StoresCatCaroussel from '../../../components/StoresCatCaroussel'; // Ensure path is correct
 
-const myImage = require('../../asserts/shopslogos/logo.jpg');
+const myImage = require('../../../asserts/shopslogos/logo.jpg');
 
 export default function HomeScreen() {
   const [index, setIndex] = useState(0);

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { auth } from './config/Firebase';
-import Main from './(Main)/_layout';
-import Settings from './(Settings)/Settings';
-import CatalogueScreen from './(Catalogue)/CatalogueScreen';
-import StoreScreen from './(Store)/StoreScreen';
-import CategoryScreen from './(Main)/(Home)/CategoryScreen';
-import SigninScreen from './(Auth)/SigninScreen';
-import SignupScreen from './(Auth)/SignupScreen';
-import ForgotPasswordScreen from './(Auth)/ForgotPasswordScreen';
+import Main from './(Screens)/(Main)/_layout';
+import Settings from './(Screens)/(Settings)/Settings';
+import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
+import StoreScreen from './(Screens)/(Store)/StoreScreen';
+import CategoryScreen from './(Screens)/(Main)/(Home)/CategoryScreen';
+import SigninScreen from './(Screens)/(Auth)/SigninScreen';
+import SignupScreen from './(Screens)/(Auth)/SignupScreen';
+import ForgotPasswordScreen from './(Screens)/(Auth)/ForgotPasswordScreen';
 
 const Stack = createStackNavigator();
 
@@ -31,18 +31,18 @@ const Layout = () => {
     <Stack.Navigator>
       {isAuthenticated ? (
         <>
-          <Stack.Screen name="(Main)" component={Main} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Settings)" component={Settings} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Catalogue)" component={CatalogueScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Store)" component={StoreScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Main)/(Home)" component={CategoryScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Main)" component={Main} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Settings)/Settings" component={Settings} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Catalogue)/CatalogueScreen" component={CatalogueScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Store)/StoreScreen" component={StoreScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Main)/(Home)/CategoryScreen" component={CategoryScreen} options={{ headerShown: false }}/>
         </>
       ) : (
         <>
           {/* <Stack.Screen name="(Landing)" component={LandingScreen} options={{ headerShown: false }}/> */}
-          <Stack.Screen name="(Auth)/SigninScreen" component={SigninScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Auth)/SignupScreen" component={SignupScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Auth)/ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Auth)/SigninScreen" component={SigninScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Auth)/SignupScreen" component={SignupScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Auth)/ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ headerShown: false }}/>
         </>
       )}
     </Stack.Navigator>

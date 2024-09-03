@@ -1,4 +1,4 @@
-// SignUp.js
+// ForgotPassword.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -10,27 +10,23 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { auth, createUserWithEmailAndPassword } from '../config/Firebase';
+import { auth } from '../../config/Firebase'; // Assurez-vous que l'exportation est correcte dans Firebase.js
+import { sendPasswordResetEmail } from 'firebase/auth';
 import { router } from 'expo-router';
 
-export default function SignUp() {
+export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
-  const handleSignUp = async () => {
-    if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas.');
-      return;
-    }
-
+  const handlePasswordReset = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // Optionally, redirect the user to the login page or home page
-      router.push('/login'); // assuming '/login' is the route for the login page
+      await sendPasswordResetEmail(auth, email);
+      setMessage('Un e-mail de réinitialisation a été envoyé à votre adresse.');
+      setError('');
     } catch (err) {
       setError(err.message);
+      setMessage('');
     }
   };
 
@@ -51,7 +47,7 @@ export default function SignUp() {
         <KeyboardAwareScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>
-              S'inscrire à <Text style={{ color: '#002D62' }}>Loom</Text>
+              Réinitialiser le mot de passe
             </Text>
           </View>
 
@@ -72,48 +68,27 @@ export default function SignUp() {
               />
             </View>
 
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Mot de passe</Text>
-
-              <TextInput
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={setPassword}
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={password} />
-            </View>
-
-            <View style={styles.input}>
-              <Text style={styles.inputLabel}>Confirmer le mot de passe</Text>
-
-              <TextInput
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                onChangeText={setConfirmPassword}
-                placeholder="********"
-                placeholderTextColor="#6b7280"
-                style={styles.inputControl}
-                secureTextEntry={true}
-                value={confirmPassword} />
-            </View>
-
             <View style={styles.formAction}>
               <TouchableOpacity
-                onPress={handleSignUp}>
+                onPress={handlePasswordReset}>
                 <View style={styles.btn}>
-                  <Text style={styles.btnText}>S'inscrire</Text>
+                  <Text style={styles.btnText}>Envoyer l'e-mail</Text>
                 </View>
               </TouchableOpacity>
             </View>
 
+            {message ? <Text style={styles.message}>{message}</Text> : null}
             {error ? <Text style={styles.error}>{error}</Text> : null}
           </View>
         </KeyboardAwareScrollView>
 
-        
+        <TouchableOpacity
+          style={{ marginTop: 'auto' }}>
+          <Text style={styles.formFooter}>
+            Vous avez déjà un compte ?{' '}
+            <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/login')}>Se connecter</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -206,5 +181,10 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 10,
-  }
+  },
+  message: {
+    color: 'green',
+    textAlign: 'center',
+    marginTop: 10,
+  },
 });
