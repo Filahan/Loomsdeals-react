@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState }  from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   View,
+  useWindowDimensions,
   TextInput,
   ScrollView,
   RefreshControl,
@@ -18,58 +19,28 @@ import { router } from 'expo-router';
 import Slider from '../../../components/Slider';
 import StoresCatCaroussel from '../../../components/StoresCatCaroussel'; // Ensure path is correct
 import colors from "../../../theme"
+import Hometab from "./tabs/Hometab"
+import Cataloguestab from "./tabs/Cataloguestab"
 const myImage = require('../../../asserts/shopslogos/logo.png');
 
-export default function WelcomeScreen() {
-  const [index, setIndex] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
-  const [key, setKey] = useState(0);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    setKey(prevKey => prevKey + 1); // Update key to force re-render
-    setRefreshing(false);
-  };
+const FirstRoute = () => (
+<Hometab/>
+);
 
-  const FirstRoute = () => (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-      showsVerticalScrollIndicator={false}
-    >
-      <Slider />
-    </ScrollView>
-  );
+const SecondRoute = () => (
+  <Cataloguestab/>
+);
 
-  const SecondRoute = () => (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-      showsVerticalScrollIndicator={false}
-    >
-      <StoresCatCaroussel />
-      <Text numberOfLines={1} style={styles.CataloguesTitle}>
-        Les catalogues
-      </Text>
-      <Catalogues store_id="" category="" />
-    </ScrollView>
-  );
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
 
-  const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-  });
+export default function TabViewExample() {
+  const layout = useWindowDimensions();
 
+  const [index, setIndex] = React.useState(0);
   const renderTabBar = (props) => (
     <TabBar
       {...props}
@@ -103,8 +74,10 @@ export default function WelcomeScreen() {
     { key: 'second', title: 'Catalogues ' },
   ]);
 
+
   return (
-    <SafeAreaView style={styles.safeArea} key={key}>
+
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.logoContainer}>
         <Image source={myImage} resizeMode="contain" style={styles.logo} />
       </View>
@@ -112,6 +85,7 @@ export default function WelcomeScreen() {
         <View style={styles.search}>
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
+              
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -133,15 +107,17 @@ export default function WelcomeScreen() {
         </View>
         <View style={styles.tabContainer}>
           <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: 360 }}
-            renderTabBar={renderTabBar}
-          />
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      renderTabBar={renderTabBar}
+
+      />
         </View>
       </View>
     </SafeAreaView>
+    
   );
 }
 
@@ -196,14 +172,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  scene: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   tabContainer: {
     flex: 1,
   },
@@ -228,20 +196,6 @@ const styles = StyleSheet.create({
   tabActiveText: {
     color: colors.primary,
   },
-  action: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    marginHorizontal: 5,
-    backgroundColor: '#f0f6fb',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  CataloguesTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#4A4A4A',
-    flexGrow: 1,
-    letterSpacing: 0.4,
-  },
+
 });
+

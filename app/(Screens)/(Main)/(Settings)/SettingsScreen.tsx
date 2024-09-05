@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { auth } from '../../../config/Firebase';
+import colors from '../../../theme';
 
 export default function SettingsScreen() {
   const [form, setForm] = useState({
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
   /** Profile */
   profile: {
     padding: 12,
-    backgroundColor: '#f0f6fb',
+    backgroundColor: colors.secondary,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   },
   rowWrapper: {
     paddingLeft: 16,
-    backgroundColor: '#f0f6fb',
+    backgroundColor: colors.secondary,
     borderTopWidth: 1,
     borderColor: '#f0f0f0',
   },

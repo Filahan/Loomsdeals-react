@@ -5,7 +5,6 @@ import Main from './(Screens)/(Main)/_layout';
 import Settings from './(Screens)/(Main)/(Settings)/SettingsScreen';
 import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
 import StoreScreen from './(Screens)/(Store)/StoreScreen';
-import CategoryScreen from './(Screens)/(Main)/(Home)/CategoryScreen';
 import SigninScreen from './(Screens)/(Auth)/SigninScreen';
 import SignupScreen from './(Screens)/(Auth)/SignupScreen';
 import ForgotPasswordScreen from './(Screens)/(Auth)/ForgotPasswordScreen';
@@ -35,7 +34,6 @@ const Layout = () => {
           <Stack.Screen name="(Screens)/(Settings)/Settings" component={Settings} options={{ headerShown: false }}/>
           <Stack.Screen name="(Screens)/(Catalogue)/CatalogueScreen" component={CatalogueScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="(Screens)/(Store)/StoreScreen" component={StoreScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Screens)/(Main)/(Home)/CategoryScreen" component={CategoryScreen} options={{ headerShown: false }}/>
         </>
       ) : (
         <>

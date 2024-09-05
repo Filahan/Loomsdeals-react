@@ -4,6 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
+import colors from '../theme';
 
 const ImageList = () => {
   const [images, setImages] = useState([]);
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     height: 80,
     resizeMode: 'cover',
     borderRadius: 12,
-    borderColor: "#E0E0E0",
+    // borderColor: colors.primary,
     shadowRadius: 4,
     elevation: 4,
   },
