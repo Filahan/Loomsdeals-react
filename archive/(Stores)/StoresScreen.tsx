@@ -14,9 +14,9 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import Stores from '../../../components/StoresList'; // Ensure the path is correct
 import { router } from 'expo-router';
 
-const myImage = require('../../../asserts/shopslogos/logo.jpg');
+const myImage = require('../../../asserts/shopslogos/logo.png');
 
-export default function HomeScreen() {
+export default function SavedScreen() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [key, setKey] = useState(0); // State for key to force re-render

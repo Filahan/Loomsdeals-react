@@ -11,9 +11,9 @@ import {
   Image,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { auth } from '../../config/Firebase';
+import { auth } from '../../../config/Firebase';
 
-export default function Settings() {
+export default function SettingsScreen() {
   const [form, setForm] = useState({
     emailNotifications: true,
     pushNotifications: false,
@@ -26,39 +26,11 @@ export default function Settings() {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffff' }}>
-      <View style={styles.header}>
-        <View style={styles.headerAction}>
-          <TouchableOpacity
-            onPress={() => {
-              router.back()
-            }}>
-            <FeatherIcon
-              color="#000"
-              name="arrow-left"
-              size={24} />
-          </TouchableOpacity>
-        </View>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white'}}>
 
-        <Text numberOfLines={1} style={styles.headerTitle}>
-          Settings
-        </Text>
-
-        <View style={[styles.headerAction, { alignItems: 'flex-end' }]}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}>
-            <FeatherIcon
-              color="#000"
-              name="more-vertical"
-              size={24} />
-          </TouchableOpacity>
-        </View>
-      </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.section, { paddingTop: 4 }]}>
+        <View style={[styles.section, { paddingTop: 40 }]}>
           <Text style={styles.sectionTitle}>Account</Text>
 
           <View style={styles.sectionBody}>
@@ -239,7 +211,7 @@ export default function Settings() {
           </View>
         </View>
 
-        <Text style={styles.contentFooter}>App Version 1</Text>
+        <Text style={styles.contentFooter}>1.0.0</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -251,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
+    // width: '100%',
     paddingHorizontal: 16,
   },
   headerAction: {
@@ -306,7 +278,7 @@ const styles = StyleSheet.create({
   /** Profile */
   profile: {
     padding: 12,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f0f6fb',
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
@@ -343,7 +315,7 @@ const styles = StyleSheet.create({
   },
   rowWrapper: {
     paddingLeft: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f0f6fb',
     borderTopWidth: 1,
     borderColor: '#f0f0f0',
   },

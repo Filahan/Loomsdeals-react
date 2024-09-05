@@ -1,11 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from "./(Home)/HomeScreen"
+import WelcomeScreen from "./(Home)/WelcomeScreen"
 import SavedScreen from "./(Saved)/SavedScreen"
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import SettingScreen from "./(Settings)/SettingsScreen"
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import colors from "../../theme"
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -16,46 +18,53 @@ const TabNavigator = () => {
       options={{
         title: '',
         headerShown: false,
+        tabBarLabel: () => null, // Remove space for the label
         tabBarIcon: ({ focused }) => (
-          <AntDesign
-            color={focused ? "#002D62" : "grey"}
+          <Foundation
+            color={focused ? colors.primary : "grey"}
             name="home"
-            size={25}
+            size={27}
           />
         ),
       }}
-      component={HomeScreen}
+      component={WelcomeScreen}
     />
     <Tab.Screen
       name="Saved"
       options={{
         title: '',
         headerShown: false,
+        tabBarLabel: () => null, // Remove space for the label
         tabBarIcon: ({ focused }) => (
           <MaterialIcons
-            color={focused ? "#002D62" : "grey"}
+            color={focused ? colors.primary  : "grey"}
+            marginTop={6}
+
             name="save-alt"
-            size={25}
+            size={27}
           />
         ),
       }}
       component={SavedScreen}
     />
-    {/* <Tab.Screen
-      name="Produits"
+     <Tab.Screen
+      name="Settings"
       options={{
-        title: 'Produits',
+        title: '',
         headerShown: false,
-        tabBarIcon: ({ focused }) => (
-          <Feather
-            color={focused ? "#002D62" : "grey"}
-            name="grid"
-            size={25}
+        tabBarLabel: () => null, // Remove space for the label
+        tabBarIcon: ({ focused }) => (           
+          <FeatherIcon
+            color={focused ? colors.primary  : "grey"}
+            marginTop={6}
+
+            name="user"
+            size={27}
           />
         ),
       }}
-      component={ProductsScreen}
-    /> */}
+      component={SettingScreen}
+    />
   </Tab.Navigator>
   );
 };

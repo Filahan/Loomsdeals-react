@@ -12,6 +12,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router } from 'expo-router';
 import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
 
+import colors from "../../theme"
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -174,8 +175,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
-    borderWidth: 1,
-    borderColor: '#ffff',
+    borderWidth: 1.5,
+    borderColor: colors.primary,
     borderStyle: 'solid',
   },
   btn: {
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderWidth: 1,
-    backgroundColor: '#002D62',
+    backgroundColor: colors.primary,
     borderColor: '#002D62',
   },
   btnText: {

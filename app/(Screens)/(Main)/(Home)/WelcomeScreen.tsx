@@ -17,10 +17,10 @@ import Catalogues from '../../../components/CataloguesList';
 import { router } from 'expo-router';
 import Slider from '../../../components/Slider';
 import StoresCatCaroussel from '../../../components/StoresCatCaroussel'; // Ensure path is correct
+import colors from "../../../theme"
+const myImage = require('../../../asserts/shopslogos/logo.png');
 
-const myImage = require('../../../asserts/shopslogos/logo.jpg');
-
-export default function HomeScreen() {
+export default function WelcomeScreen() {
   const [index, setIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [key, setKey] = useState(0);
@@ -29,7 +29,6 @@ export default function HomeScreen() {
     setRefreshing(true);
     setKey(prevKey => prevKey + 1); // Update key to force re-render
     setRefreshing(false);
-    // setTimeout(() => setRefreshing(false), 1000); // Adjust time as needed
   };
 
   const FirstRoute = () => (
@@ -75,7 +74,7 @@ export default function HomeScreen() {
     <TabBar
       {...props}
       indicatorStyle={{
-        backgroundColor: '#002D62', // Indicator color
+        backgroundColor: colors.primary, // Indicator color
         height: 1, // Indicator height
       }}
       style={{ backgroundColor: 'white' }} // Tab bar background
@@ -86,7 +85,7 @@ export default function HomeScreen() {
             <FontAwesome6
               name={iconName}
               size={20}
-              color={focused ? '#002D62' : '#6b7280'}
+              color={focused ? colors.primary : '#6b7280'}
             />
             {route.title &&
               <Text style={[styles.tabText, focused && styles.tabActiveText]}>
@@ -101,12 +100,14 @@ export default function HomeScreen() {
 
   const [routes] = useState([
     { key: 'first', title: '', icon: 'fire-flame-curved' },
-    { key: 'second', title: 'Catégories ' },
+    { key: 'second', title: 'Catalogues ' },
   ]);
 
   return (
     <SafeAreaView style={styles.safeArea} key={key}>
-      <Image source={myImage} resizeMode="contain" style={styles.logo} />
+      <View style={styles.logoContainer}>
+        <Image source={myImage} resizeMode="contain" style={styles.logo} />
+      </View>
       <View style={styles.container}>
         <View style={styles.search}>
           <View style={styles.searchInput}>
@@ -122,20 +123,13 @@ export default function HomeScreen() {
               />
               <View style={styles.inputIcon}>
                 <FeatherIcon
-                  color="#9eadba"
+                  color={colors.primary}
                   name="search"
                   size={16}
                 />
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            onPress={() => router.push("/Settings")}
-            style={{ marginRight: 'auto' }}>
-            <View style={styles.action}>
-              <FeatherIcon color="#002D62" name="user" size={22} />
-            </View>
-          </TouchableOpacity>
         </View>
         <View style={styles.tabContainer}>
           <TabView
@@ -152,9 +146,14 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10
+  },
   logo: {
-    height: 30,
-    alignItems: 'flex-start',  // Align horizontally to the left
+    height: 27, // Smaller logo height
+    alignSelf: 'center', // Horizontally center the logo
   },
   safeArea: {
     flex: 1,
@@ -163,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    paddingTop: 10
+    paddingTop: 10,
   },
   search: {
     flexDirection: 'row',
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f6fb',
     paddingLeft: 44,
     paddingRight: 24,
-    borderRadius: 12,
+    borderRadius: 8,
     fontSize: 15,
     fontWeight: '500',
   },
@@ -217,17 +216,17 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   tabText: {
-    fontSize: 13,
+    fontSize: 14,
     paddingLeft: 10,
     paddingRight: 10,
     fontWeight: '600',
     color: '#6b7280',
   },
   tabActive: {
-    // backgroundColor: '#f0f6fb', // Optionally add background color for active tab
+    // Optionally add background color for active tab
   },
   tabActiveText: {
-    color: '#002D62',
+    color: colors.primary,
   },
   action: {
     width: 44,

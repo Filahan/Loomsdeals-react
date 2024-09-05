@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { auth } from './config/Firebase';
 import Main from './(Screens)/(Main)/_layout';
-import Settings from './(Screens)/(Settings)/Settings';
+import Settings from './(Screens)/(Main)/(Settings)/SettingsScreen';
 import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
 import StoreScreen from './(Screens)/(Store)/StoreScreen';
 import CategoryScreen from './(Screens)/(Main)/(Home)/CategoryScreen';

@@ -3,8 +3,6 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-const myImage = require('../../../asserts/shopslogos/logo.jpg');
-
 export default function SavedScreen() {
 
   return (
