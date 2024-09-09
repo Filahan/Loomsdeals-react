@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
-import colors from '../theme';
+import axios from 'axios';
 
 const ImageList = () => {
   const [images, setImages] = useState([]);
@@ -13,9 +13,9 @@ const ImageList = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'stores_categories'));
-        const fetchedImages = snapshot.docs.map(doc => doc.data());
-        setImages(fetchedImages);
+        let url = 'http://localhost:8000/stores_categories';
+        const response = await axios.get(url);
+        setImages(response.data);
       } catch (error) {
         console.error('Error fetching images: ', error);
       } finally {

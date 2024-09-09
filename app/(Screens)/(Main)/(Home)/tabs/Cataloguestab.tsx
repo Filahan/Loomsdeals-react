@@ -28,7 +28,7 @@ export default function Cataloguestab() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-               <StoresCatCaroussel />
+        <StoresCatCaroussel />
      <Text numberOfLines={1} style={styles.CataloguesTitle}>
        Les catalogues
      </Text>

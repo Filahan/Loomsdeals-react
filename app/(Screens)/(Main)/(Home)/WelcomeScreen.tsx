@@ -6,7 +6,6 @@ import {
   useWindowDimensions,
   TextInput,
   ScrollView,
-  RefreshControl,
   Text,
   TouchableOpacity,
   Image

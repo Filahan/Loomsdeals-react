@@ -13,6 +13,7 @@ import { db } from '../config/Firebase';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
+import axios from 'axios';
 
 interface Catalogue {
   catalogues: any;
@@ -37,30 +38,17 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
   useEffect(() => {
     const fetchCatalogues = async () => {
       try {
-        let querySnapshot;
-        const collectionRef = collection(db, 'catalogues');
-        
+        let url = 'http://localhost:8000/catalogues';
+        const store_id = "lidl"; // or however you get this value
+
+
         if (store_id) {
-          querySnapshot = await getDocs(query(collectionRef, where('store', '==', store_id)));
-        } else if (category) {
-          querySnapshot = await getDocs(query(collectionRef, where('category', '==', category)));
-        } else {
-          querySnapshot = await getDocs(collectionRef);
-        }
+          url += `/${store_id}`;
+        } 
 
-        const fetchedCatalogues = querySnapshot.docs.map(doc => doc.data() as Catalogue[]);
-        const updatedCatalogues = await Promise.all(fetchedCatalogues.map(async (catalogue) => {
-          const updatedCatalogue = { ...catalogue, catalogues: await Promise.all(catalogue.catalogues.map(async (cat) => {
-            if (cat.store) {
-              const docSnapshot = await getDoc(doc(db, cat.store));
-              return { ...cat, store: docSnapshot.exists() ? docSnapshot.data() : null };
-            }
-            return cat;
-          })) };
-          return updatedCatalogue.catalogues;
-        }));
+        const response = await axios.get(url);
 
-        setCatalogues(updatedCatalogues);
+        setCatalogues(response.data);
       } catch (error) {
         console.error('Error fetching catalogues:', error);
       } finally {
