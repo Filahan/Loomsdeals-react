@@ -31,21 +31,12 @@ export default function SignIn() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        {/* <TouchableOpacity
-          onPress={() => {
-            router.back();
-          }}>
-          <Text style={styles.return}>
-            <FeatherIcon
-              color="#000"
-              name="arrow-left"
-              size={24} />
-          </Text>
-        </TouchableOpacity> */}
         <KeyboardAwareScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>
-              Se connecter à <Text style={{ color: '#002D62' }}>Loom</Text>
+              Se connecter à   
+              <View style={styles.appName}><Text style={styles.appNameText}>Loum</Text></View>
+              
             </Text>
           </View>
 
@@ -140,29 +131,21 @@ const styles = StyleSheet.create({
   formLink: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#002D62',
+    color: colors.primary,
     textAlign: 'center',
   },
   formFooter: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     color: '#222',
     textAlign: 'center',
-    letterSpacing: 0.15,
-  },
-  return: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#222',
-    textAlign: 'left',
-    marginLeft: 15,
     letterSpacing: 0.15,
   },
   input: {
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -171,11 +154,11 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#fff',
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 9,
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
-    borderWidth: 1.5,
+    borderWidth: 0.5,
     borderColor: colors.primary,
     borderStyle: 'solid',
   },
@@ -183,12 +166,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 9,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderWidth: 1,
     backgroundColor: colors.primary,
-    borderColor: '#002D62',
+    borderColor: colors.primary,
   },
   btnText: {
     fontSize: 18,
@@ -196,4 +178,20 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  appName: {
+    backgroundColor: colors.secondary,
+    transform: [
+      {
+        rotate: '-7deg',
+      },
+    ],
+    paddingHorizontal: 6,
+    },
+  appNameText: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: colors.primary,
+  },
 });
+
+

@@ -90,7 +90,7 @@ export default function TabViewExample() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                placeholder="Rechercher un produit ou un magasin"
+                placeholder="Rechercher"
                 placeholderTextColor="#848484"
                 returnKeyType="done"
                 style={styles.input}
@@ -112,7 +112,7 @@ export default function TabViewExample() {
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
       renderTabBar={renderTabBar}
-
+      lazy
       />
         </View>
       </View>
