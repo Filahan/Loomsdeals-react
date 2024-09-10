@@ -5,6 +5,7 @@ import { db } from '../config/Firebase'; // Adjust the path as needed
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import axios from 'axios';
+import config from '../config/config';
 
 const ImageList = () => {
   const [images, setImages] = useState([]);
@@ -13,7 +14,7 @@ const ImageList = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        let url = 'http://localhost:8000/stores_categories';
+        let url = `${config.apiurl}/stores_categories`;
         const response = await axios.get(url);
         setImages(response.data);
       } catch (error) {

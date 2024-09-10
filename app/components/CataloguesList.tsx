@@ -14,6 +14,7 @@ import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firesto
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import axios from 'axios';
+import config from '../config/config';
 
 interface Catalogue {
   catalogues: any;
@@ -38,7 +39,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
   useEffect(() => {
     const fetchCatalogues = async () => {
       try {
-        let url = 'http://localhost:8000/catalogues';
+        let url = `${config.apiurl}/catalogues`;
         const store_id = "lidl"; // or however you get this value
 
 
