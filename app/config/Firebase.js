@@ -1,4 +1,3 @@
-// Firebase.js
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, setPersistence, initializeAuth, getReactNativePersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -23,12 +22,15 @@ const app = getApps().length === 0
   ? initializeApp(firebaseConfig, appName) 
   : getApp(appName);
 
-// Initialize Auth with persistence
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
-
-// const auth = initializeAuth(app)
+// Check if auth has already been initialized
+let auth;
+if (getAuth(app)) {
+  auth = getAuth(app);
+} else {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+  });
+}
 // Initialize Firestore
 const db = getFirestore(app);
 

@@ -6,7 +6,6 @@ import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import axios from 'axios';
 import config from '../config/config';
-import colors from '../theme';
 
 const ProductCatCarroussel = () => {
   const [images, setImages] = useState([]);

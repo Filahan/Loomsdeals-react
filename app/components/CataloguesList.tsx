@@ -9,15 +9,14 @@ import {
   Text,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { db } from '../config/Firebase';
-import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import axios from 'axios';
 import config from '../config/config';
+import { auth } from '../config/Firebase';
 
 interface Catalogue {
-  catalogues: any;
+  id: string;
   link: string;
   title: string;
   start_date?: string;
@@ -41,14 +40,11 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
       try {
         let url = `${config.apiurl}/catalogues`;
         const store_id = "lidl"; // or however you get this value
-
-
         if (store_id) {
           url += `/${store_id}`;
         } 
 
         const response = await axios.get(url);
-
         setCatalogues(response.data);
       } catch (error) {
         console.error('Error fetching catalogues:', error);
@@ -60,9 +56,28 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
     fetchCatalogues();
   }, [store_id, category]);
 
+  const saveCatalogue = async (catalogueId: string) => {
+    const userId = auth.currentUser.uid; // Get the current Firebase user ID
+
+    try {
+      await axios.post(`${config.apiurl}/save_catalogue/${userId}/${catalogueId}`);
+
+    } catch (error) {
+      console.error('Error saving catalogue:', error);
+    }
+  };
+
   const handleSave = useCallback(
-    (id: string) => setSaved(prevSaved => prevSaved.includes(id) ? prevSaved.filter(val => val !== id) : [...prevSaved, id]),
-    [],
+    async (index: string, id:string) => {
+      setSaved(prevSaved => {
+        const isSaved = prevSaved.includes(index);
+        if (!isSaved) {
+          saveCatalogue(id); 
+        }
+        return isSaved ? prevSaved.filter(val => val !== index) : [...prevSaved, index];
+      });
+    },
+    []
   );
 
   if (loading) {
@@ -91,7 +106,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         showsHorizontalScrollIndicator={false}
       >
         {catalogues.flat().map((catalogue, index) => {
-          const { link, store, img } = catalogue;
+          const {id, link, store, img } = catalogue;
           const isSaved = saved.includes(index.toString());
 
           return (
@@ -111,7 +126,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
                       />
                     </TouchableOpacity>
                   )}
-                  <TouchableOpacity onPress={() => handleSave(index.toString())}>
+                  <TouchableOpacity onPress={() => handleSave(index.toString(), id)}>
                     <View style={styles.cardLike}>
                       <MaterialIcons
                         color={isSaved ? '#ea266d' : '#222'}
@@ -162,8 +177,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   cardLike: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     borderRadius: 9999,
     backgroundColor: '#fff',
     alignItems: 'center',

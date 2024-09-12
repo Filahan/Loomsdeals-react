@@ -9,8 +9,9 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import colors from '../../../theme';
+import CataloguesList from '../../../components/CataloguesList';
+import ProductCard from '../../../components/ProductCard';
 
 export default function SavedScreen() {
   const savedItems = [
@@ -46,48 +47,16 @@ export default function SavedScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Mes sauvegardes</Text>
+        <Text style={styles.title}>Mes favoris</Text>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>
-
-          {savedCatalogues.length > 0 ? (
-            savedCatalogues.map((catalogue) => (
-              <View key={catalogue.id} style={styles.catalogueCard}>
-                <Image source={{ uri: catalogue.image }} style={styles.catalogueImage} />
-                <View style={styles.catalogueDetails}>
-                  <Text style={styles.catalogueTitle}>{catalogue.title}</Text>
-                </View>
-                <TouchableOpacity style={styles.iconButton}>
-                  <FeatherIcon name="eye" size={24} color={colors.primary} />
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.emptyMessage}>Aucun catalogue sauvegardé.</Text>
-          )}
-        </View>
-
-        <View style={styles.section}>
+          <CataloguesList store_id="" category=""  />
           <Text style={styles.sectionTitle}>Articles sauvegardés</Text>
-
-          {savedItems.length > 0 ? (
-            savedItems.map((item) => (
-              <View key={item.id} style={styles.itemCard}>
-                <Image source={{ uri: item.image }} style={styles.itemImage} />
-                <View style={styles.itemDetails}>
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.itemPrice}>{item.price}</Text>
-                </View>
-                <TouchableOpacity style={styles.iconButton}>
-                  <FeatherIcon name="shopping-cart" size={24} color={colors.primary} />
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.emptyMessage}>Aucun article sauvegardé.</Text>
-          )}
+          <ProductCard/>
         </View>
+
+    
       </ScrollView>
     </SafeAreaView>
   );

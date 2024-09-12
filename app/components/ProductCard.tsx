@@ -42,7 +42,6 @@ const ProductCard = ({ product }) => {
 const App = () => {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Articles sauvegardés</Text>
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
@@ -55,12 +54,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 6
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: colors.primary,
-    marginBottom: 20,
   },
   card: {
     flexDirection: 'row',
