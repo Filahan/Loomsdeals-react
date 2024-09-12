@@ -1,6 +1,6 @@
 import React from 'react';
-import { SafeAreaView, FlatList, Text, View, Image, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper'; // You might need to install react-native-paper if you haven't
+import { ScrollView, Text, View, Image, StyleSheet } from 'react-native';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 import colors from '../theme';
 
 const products = [
@@ -8,83 +8,100 @@ const products = [
     id: '1',
     title: 'Product 1',
     price: '29.99',
-    image: 'https://via.placeholder.com/300', // Replace with your image URL
+    image: 'https://via.placeholder.com/300',
   },
   {
     id: '2',
     title: 'Product 2',
     price: '49.99',
-    image: 'https://via.placeholder.com/300', // Replace with your image URL
+    image: 'https://via.placeholder.com/300',
   },
   {
-    id: '2',
-    title: 'Product 2',
-    price: '49.99',
-    image: 'https://via.placeholder.com/300', // Replace with your image URL
+    id: '3',
+    title: 'Product 3',
+    price: '59.99',
+    image: 'https://via.placeholder.com/300',
   },
-  // Add more products as needed
 ];
 
 const ProductCard = ({ product }) => {
   return (
-    <Card style={styles.card}>
+    <View style={styles.card}>
+      <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.cardContent}>
-        <Image source={{ uri: product.image }} style={styles.image} />
         <View style={styles.textContainer}>
           <Text style={styles.title}>{product.title}</Text>
           <Text style={styles.price}>${product.price}</Text>
         </View>
+        <Text></Text>
       </View>
-    </Card>
+    </View>
   );
 };
 
 const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <ProductCard product={item} />}
-        keyExtractor={(item) => item.id}
-      />
-    </SafeAreaView>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Articles sauvegardés</Text>
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+    padding: 6
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: colors.primary,
+    marginBottom: 20,
   },
   card: {
-    height:100,
-    marginVertical: 7,
-    marginHorizontal: 5,
-    borderRadius: 6,
-    elevation: 3,
-    overflow: 'hidden',
-    backgroundColor: colors.secondary
-  },
-  cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+    padding: 8,
+    borderRadius: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 6,
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  cardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   textContainer: {
-    marginLeft: 15,
     flex: 1,
   },
   title: {
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
   },
   price: {
-    fontSize: 13,
-    color: 'green',
-    marginTop: 5,
+    fontSize: 14,
+    color: '#888',
+    marginTop: 4,
   },
 });
 

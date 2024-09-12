@@ -6,8 +6,9 @@ import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import axios from 'axios';
 import config from '../config/config';
+import colors from '../theme';
 
-const StoresCatCaroussel = () => {
+const ProductCatCarroussel = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +60,9 @@ const StoresCatCaroussel = () => {
               }}
               style={styles.imageContainer}
             >
-              <Image source={{ uri: image.url }} style={styles.image} />
+              {/* <Image source={{ uri: image.url }} style={styles.image} /> */}
+              <Image style={styles.image} />
+
             </TouchableOpacity>
           ))
         )}
@@ -81,12 +84,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   image: {
-    width: 80,
-    height: 80,
+    backgroundColor: "#cecece",
+    width: 60,
+    height: 60,
     resizeMode: 'cover',
-    borderRadius: 12,
+    borderRadius: 1000,
     shadowRadius: 4,
     elevation: 4,
+
   },
   skeleton: {
     width: 80,
@@ -105,5 +110,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StoresCatCaroussel;
+export default ProductCatCarroussel;
 

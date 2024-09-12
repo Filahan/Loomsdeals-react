@@ -21,7 +21,7 @@ const TabNavigator = () => {
         tabBarLabel: () => null, // Remove space for the label
         tabBarIcon: ({ focused }) => (
           <Foundation
-            color={focused ? colors.primary : "grey"}
+            color={focused ? colors : "grey"}
             name="home"
             size={27}
           />
@@ -37,7 +37,7 @@ const TabNavigator = () => {
         tabBarLabel: () => null, // Remove space for the label
         tabBarIcon: ({ focused }) => (
           <MaterialIcons
-            color={focused ? colors.primary  : "grey"}
+            color={focused ? "#002D62" : "grey"}
             marginTop={6}
 
             name="save-alt"
@@ -55,7 +55,7 @@ const TabNavigator = () => {
         tabBarLabel: () => null, // Remove space for the label
         tabBarIcon: ({ focused }) => (           
           <FeatherIcon
-            color={focused ? colors.primary  : "grey"}
+            color={focused ? "#002D62" : "grey"}
             marginTop={6}
 
             name="user"

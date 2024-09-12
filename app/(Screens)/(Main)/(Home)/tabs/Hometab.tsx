@@ -10,6 +10,7 @@ import Slider from '../../../../components/Slider';
 import colors from '../../../../theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ProductCard from '../../../../components/ProductCard';
+import ProductCatCarroussel from '../../../../components/ProductCatCarroussel';
 
 export default function Hometab() {
   const [refreshing, setRefreshing] = React.useState(false);
@@ -31,6 +32,7 @@ export default function Hometab() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
+      <ProductCatCarroussel />
       <Slider />
       <View style={styles.headerContainer}>
         <FontAwesome5

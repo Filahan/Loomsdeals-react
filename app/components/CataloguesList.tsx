@@ -8,7 +8,7 @@ import {
   Image,
   Text,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { db } from '../config/Firebase';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { MotiView } from 'moti';
@@ -113,9 +113,9 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
                   )}
                   <TouchableOpacity onPress={() => handleSave(index.toString())}>
                     <View style={styles.cardLike}>
-                      <FontAwesome
+                      <MaterialIcons
                         color={isSaved ? '#ea266d' : '#222'}
-                        name="heart"
+                        name="save-alt"
                         solid={isSaved}
                         size={20}
                       />
