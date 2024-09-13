@@ -21,7 +21,7 @@ interface Catalogue {
   title: string;
   start_date?: string;
   end_date?: string;
-  store?: { url?: string, id?: string };
+  store?: { url?: string; id?: string };
   img: string;
 }
 
@@ -34,6 +34,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[][]>([]);
   const [loading, setLoading] = useState(true);
+  const userId = auth.currentUser?.uid; // Check for null/undefined user
 
   useEffect(() => {
     const fetchCatalogues = async () => {
@@ -41,7 +42,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         let url = `${config.apiurl}/catalogues`;
         if (store_id) {
           url += `/${store_id}`;
-        } 
+        }
 
         const response = await axios.get(url);
         setCatalogues(response.data);
@@ -52,31 +53,46 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
       }
     };
 
+    const fetchSavedCatalogues = async () => {
+      try {
+        if (!userId) {
+          throw new Error('User not authenticated');
+        }
+        let url = `${config.apiurl}/saved_catalogue/${userId}`;
+
+        const response = await axios.get(url);
+        setSaved(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.error('Error fetching saved catalogues:', error);
+        setSaved([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedCatalogues();
     fetchCatalogues();
-  }, [store_id, category]);
+  }, [store_id, category, userId]);
 
   const saveCatalogue = async (catalogueId: string) => {
-    const userId = auth.currentUser.uid; // Get the current Firebase user ID
-
     try {
       await axios.post(`${config.apiurl}/save_catalogue/${userId}/${catalogueId}`);
-
     } catch (error) {
       console.error('Error saving catalogue:', error);
     }
   };
 
   const handleSave = useCallback(
-    async (index: string, id:string) => {
+    async (id: string) => {
       setSaved(prevSaved => {
-        const isSaved = prevSaved.includes(index);
+        const isSaved = prevSaved.includes(id);
         if (!isSaved) {
           saveCatalogue(id); 
         }
-        return isSaved ? prevSaved.filter(val => val !== index) : [...prevSaved, index];
+        return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
       });
     },
-    []
+    [userId]
   );
 
   if (loading) {
@@ -105,8 +121,8 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         showsHorizontalScrollIndicator={false}
       >
         {catalogues.flat().map((catalogue, index) => {
-          const {id, link, store, img } = catalogue;
-          const isSaved = saved.includes(index.toString());
+          const { id, link, store, img } = catalogue;
+          const isSaved = saved.includes(id.toString());
 
           return (
             <TouchableOpacity
@@ -125,7 +141,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
                       />
                     </TouchableOpacity>
                   )}
-                  <TouchableOpacity onPress={() => handleSave(index.toString(), id)}>
+                  <TouchableOpacity onPress={() => handleSave(id)}>
                     <View style={styles.cardLike}>
                       <MaterialIcons
                         color={isSaved ? '#ea266d' : '#222'}
