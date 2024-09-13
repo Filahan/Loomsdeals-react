@@ -39,7 +39,6 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
     const fetchCatalogues = async () => {
       try {
         let url = `${config.apiurl}/catalogues`;
-        const store_id = "lidl"; // or however you get this value
         if (store_id) {
           url += `/${store_id}`;
         } 
