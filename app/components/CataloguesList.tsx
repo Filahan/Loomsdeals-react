@@ -58,9 +58,10 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         if (!userId) {
           throw new Error('User not authenticated');
         }
-        let url = `${config.apiurl}/saved_catalogue/${userId}`;
-
+        let url = `${config.apiurl}/saved_catalogues/${userId}`;
+        console.log(url)
         const response = await axios.get(url);
+        console.log(response.data)
         setSaved(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching saved catalogues:', error);
@@ -81,6 +82,14 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
       console.error('Error saving catalogue:', error);
     }
   };
+  const removeCatalogue = async (catalogueId: string) => {
+    try {
+      console.log(`${config.apiurl}/remove_saved_catalogue/${userId}/${catalogueId}`)
+      await axios.post(`${config.apiurl}/remove_saved_catalogue/${userId}/${catalogueId}`);
+    } catch (error) {
+      console.error('Error removing catalogue:', error);
+    }
+  };
 
   const handleSave = useCallback(
     async (id: string) => {
@@ -88,6 +97,10 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         const isSaved = prevSaved.includes(id);
         if (!isSaved) {
           saveCatalogue(id); 
+        }
+        else
+        {
+          removeCatalogue(id);
         }
         return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
       });
