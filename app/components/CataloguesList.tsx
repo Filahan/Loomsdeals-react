@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -26,45 +26,45 @@ interface Catalogue {
   img: string;
 }
 
-
-
 interface CataloguesListProps {
   category: string;
   store_id: string;
   saved_screen: string;
 }
 
-const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, saved_screen}) => {
-
+const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, saved_screen }) => {
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [loading, setLoading] = useState(true);
-  const userId = auth.currentUser?.uid; // Check for null/undefined user
-  useEffect(() => {
-    const fetchCataloguesData = async () => {
-      if (!userId) return;
+  const userId = auth.currentUser?.uid;
 
-      try {
-        const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
-        const savedResponse = await axios.get(savedUrl);
-        const savedList = Array.isArray(savedResponse.data) ? savedResponse.data : [];
-        setSaved(savedList);
+  const fetchCataloguesData = useCallback(async () => {
+    if (!userId) return;
 
-        let cataloguesUrl = `${config.apiurl}/catalogues`;
-        if (store_id) cataloguesUrl += `/${store_id}`;
-        if (saved_screen) cataloguesUrl += `/cat_id=${savedList}`;
+    try {
+      const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
+      const savedResponse = await axios.get(savedUrl);
+      const savedList = Array.isArray(savedResponse.data) ? savedResponse.data : [];
+      setSaved(savedList);
 
-        const cataloguesResponse = await axios.get(cataloguesUrl);
-        setCatalogues(cataloguesResponse.data);
-      } catch {
-        setSaved([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+      let cataloguesUrl = `${config.apiurl}/catalogues`;
+      if (store_id) cataloguesUrl += `/${store_id}`;
+      if (saved_screen) cataloguesUrl += `/cat_id=${savedList}`;
 
-    fetchCataloguesData();
+      const cataloguesResponse = await axios.get(cataloguesUrl);
+      setCatalogues(cataloguesResponse.data);
+    } catch {
+      setSaved([]);
+    } finally {
+      setLoading(false);
+    }
   }, [store_id, userId, saved_screen]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCataloguesData();
+    }, [fetchCataloguesData])
+  );
 
   const saveCatalogue = async (catalogueId: string) => {
     try {
@@ -73,30 +73,25 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
       console.error('Error saving catalogue:', error);
     }
   };
-  
+
   const removeCatalogue = async (catalogueId: string) => {
     try {
       await axios.delete(`${config.apiurl}/remove_saved_catalogue_id/${userId}/${catalogueId}`);
-      if (saved_screen){
-      setCatalogues((prevCatalogues) => prevCatalogues.filter(catalogue => catalogue.id !== catalogueId));
-    }
-
+      if (saved_screen) {
+        setCatalogues((prevCatalogues) => prevCatalogues.filter(catalogue => catalogue.id !== catalogueId));
+      }
     } catch (error) {
       console.error('Error removing catalogue:', error);
     }
   };
-  
-  
 
   const handleSave = useCallback(
     async (id: string) => {
       setSaved(prevSaved => {
         const isSaved = prevSaved.includes(id);
         if (!isSaved) {
-          saveCatalogue(id); 
-        }
-        else
-        {
+          saveCatalogue(id);
+        } else {
           removeCatalogue(id);
         }
         return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
