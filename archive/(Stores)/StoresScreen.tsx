@@ -11,7 +11,7 @@ import {
   Image
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import Stores from '../../../components/StoresList'; // Ensure the path is correct
+// import Stores from '../../../components/StoresList'; // Ensure the path is correct
 import { router } from 'expo-router';
 
 const myImage = require('../../../asserts/shopslogos/logo.png');

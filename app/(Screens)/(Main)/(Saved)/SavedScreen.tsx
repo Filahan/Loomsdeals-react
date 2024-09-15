@@ -6,8 +6,6 @@ import {
   ScrollView,
   View,
   Text,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
 import colors from '../../../theme';
 import Catalogues from '../../../components/CataloguesList';
@@ -15,35 +13,6 @@ import Catalogues from '../../../components/CataloguesList';
 import ProductCard from '../../../components/ProductCard';
 
 export default function SavedScreen() {
-  const savedItems = [
-    {
-      id: 1,
-      name: 'Nike Air Max 270',
-      price: '$150',
-      image: 'https://via.placeholder.com/150',
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S21',
-      price: '$799',
-      image: 'https://via.placeholder.com/150',
-    },
-  ];
-
-  const savedCatalogues = [
-    {
-      id: 1,
-      title: 'Lidl Catalogue - September',
-      image: 'https://via.placeholder.com/150',
-      link: 'https://example.com/lidl-sept',
-    },
-    {
-      id: 2,
-      title: 'Aldi Catalogue - August',
-      image: 'https://via.placeholder.com/150',
-      link: 'https://example.com/aldi-aug',
-    },
-  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,9 +21,17 @@ export default function SavedScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>
+          <View style={styles.placeholder}>
+          <View style={styles.placeholderInset}>
           <Catalogues store_id="" category=""  saved_screen="true" />
+          </View>
+        </View>
           <Text style={styles.sectionTitle}>Articles sauvegardés</Text>
+          <View style={styles.placeholder}>
+          <View style={styles.placeholderInset}>
           <ProductCard/>
+          </View>
+        </View>
         </View>
 
     
@@ -72,10 +49,11 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '600',
     color: colors.primary,
     marginBottom: 20,
+    textAlign: 'center'
   },
   section: {
     marginBottom: 30,
@@ -83,7 +61,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    // color: '#333',
     marginBottom: 10,
   },
   catalogueCard: {
@@ -160,5 +138,22 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 50,
+  },
+  placeholder: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    backgroundColor: 'transparent',
+  },
+  placeholderInset: {
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+    borderStyle: 'dashed',
+    padding: 6,
+    marginBottom:10,
+    borderRadius: 9,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
 });

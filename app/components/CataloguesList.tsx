@@ -15,6 +15,7 @@ import axios from 'axios';
 import config from '../config/config';
 import { auth } from '../config/Firebase';
 import { useFocusEffect } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 interface Catalogue {
   id: string;
@@ -36,77 +37,61 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [loading, setLoading] = useState(true);
+  const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
   const userId = auth.currentUser?.uid;
 
   const fetchCataloguesData = useCallback(async () => {
     if (!userId) return;
-  
-    setLoading(true); // Set loading to true when starting to fetch data
-  
+
+    setLoading(true);
+
     try {
       const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
       const { data: savedList = [] } = await axios.get(savedUrl);
       setSaved(savedList);
-  
-      // Build the catalogues URL
+
       let cataloguesUrl = `${config.apiurl}/catalogues`;
-      if (store_id) {
-        cataloguesUrl += `/${store_id}`;
-      }
-      if (saved_screen) {
-        cataloguesUrl += savedList.length ? `/cat_id=${savedList.join(',')}` : `/cat_id=0`;
-      }
-  
+      if (store_id) cataloguesUrl += `/${store_id}`;
+      if (saved_screen) cataloguesUrl += savedList.length ? `/cat_id=${savedList.join(',')}` : `/cat_id=0`;
+
       const { data: cataloguesData = [] } = await axios.get(cataloguesUrl);
       setCatalogues(cataloguesData);
-  
+
+      setEmptyMessage(saved_screen && !savedList.length ? 'No catalogues available in your saved list.' : null);
+
     } catch (error) {
       console.error('Error fetching catalogues data:', error);
-      setSaved([]); // Clear saved list on error
-      // Optionally, set an error state to show a message to the user
+      setSaved([]);
     } finally {
       setLoading(false);
     }
   }, [store_id, userId, saved_screen]);
-  
+
   useFocusEffect(
     useCallback(() => {
       fetchCataloguesData();
     }, [fetchCataloguesData])
   );
-  
-  const saveCatalogue = async (catalogueId: string) => {
-    try {
-      await axios.post(`${config.apiurl}/save_catalogue_id/${userId}/${catalogueId}`);
-    } catch (error) {
-      console.error('Error saving catalogue:', error);
-    }
-  };
-
-  const removeCatalogue = async (catalogueId: string) => {
-    try {
-      await axios.delete(`${config.apiurl}/remove_saved_catalogue_id/${userId}/${catalogueId}`);
-      if (saved_screen) {
-        setCatalogues((prevCatalogues) => prevCatalogues.filter(catalogue => catalogue.id !== catalogueId));
-      }
-    } catch (error) {
-      console.error('Error removing catalogue:', error);
-    }
-  };
 
   const handleSave = useCallback(
     async (id: string) => {
-      setSaved(prevSaved => {
-        const isSaved = prevSaved.includes(id);
-        if (!isSaved) {
-          saveCatalogue(id);
+      try {
+        const isSaved = saved.includes(id);
+        if (isSaved) {
+          await axios.delete(`${config.apiurl}/remove_saved_catalogue_id/${userId}/${id}`);
+          if (saved_screen) {
+            setCatalogues(prevCatalogues => prevCatalogues.filter(catalogue => catalogue.id !== id));
+          }
+          setSaved(prevSaved => prevSaved.filter(val => val !== id));
         } else {
-          removeCatalogue(id);
+          await axios.post(`${config.apiurl}/save_catalogue_id/${userId}/${id}`);
+          setSaved(prevSaved => [...prevSaved, id]);
         }
-        return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
-      });
+      } catch (error) {
+        console.error('Error saving/removing catalogue:', error);
+      }
     },
-    [userId]
+    [saved, saved_screen, userId]
   );
 
   if (loading) {
@@ -134,48 +119,55 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {catalogues.flat().map((catalogue, index) => {
-          const { id, link, store, img } = catalogue;
-          const isSaved = saved.includes(id.toString());
-          return (
-            <TouchableOpacity
-              key={index}
-              style={styles.cardWrapper}
-              onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link, end_date: catalogue.end_date } })}
-            >
-              <View style={styles.card}>
-                <View style={styles.cardLikeWrapper}>
-                  {store && (
-                    <TouchableOpacity onPress={() => router.push({ pathname: '/StoreScreen', params: { store_id: store.id, url: store.url } })}>
-                      <Image
-                        resizeMode="cover"
-                        style={styles.cardlogo_img}
-                        source={{ uri: store.url }}
-                      />
+        {emptyMessage ? (
+          
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyMessage}>{emptyMessage}</Text>
+          </View>
+        ) : (
+          catalogues.map((catalogue) => {
+            if (!catalogue) return null;
+            const { id, link, store, img } = catalogue;
+            const isSaved = saved.includes(id.toString());
+            return (
+              <TouchableOpacity
+                key={id}
+                style={styles.cardWrapper}
+                onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link, end_date: catalogue.end_date } })}
+              >
+                <View style={styles.card}>
+                  <View style={styles.cardLikeWrapper}>
+                    {store && (
+                      <TouchableOpacity onPress={() => router.push({ pathname: '/StoreScreen', params: { store_id: store.id, url: store.url } })}>
+                        <Image
+                          resizeMode="cover"
+                          style={styles.cardlogo_img}
+                          source={{ uri: store.url }}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity onPress={() => handleSave(id)}>
+                      <View style={styles.cardLike}>
+                        <MaterialIcons
+                          color={isSaved ? '#ea266d' : '#222'}
+                          name="save-alt"
+                          size={20}
+                        />
+                      </View>
                     </TouchableOpacity>
-                  )}
-                  <TouchableOpacity onPress={() => handleSave(id)}>
-                    <View style={styles.cardLike}>
-                      <MaterialIcons
-                        color={isSaved ? '#ea266d' : '#222'}
-                        name="save-alt"
-                        solid={isSaved}
-                        size={20}
-                      />
-                    </View>
-                  </TouchableOpacity>
+                  </View>
+                  <View style={styles.cardTop}>
+                    <Image
+                      resizeMode="contain"
+                      style={styles.cardcatalog_img}
+                      source={{ uri: img }}
+                    />
+                  </View>
                 </View>
-                <View style={styles.cardTop}>
-                  <Image
-                    resizeMode="contain"
-                    style={styles.cardcatalog_img}
-                    source={{ uri: img }}
-                  />
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
+              </TouchableOpacity>
+            );
+          })
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -193,7 +185,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
-    borderWidth: 1
+    borderWidth: 1,
   },
   cardLikeWrapper: {
     position: 'absolute',
@@ -252,6 +244,16 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     width: '48%',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyMessage: {
+    fontSize: 16,
+    color: '#888',
   },
 });
 
