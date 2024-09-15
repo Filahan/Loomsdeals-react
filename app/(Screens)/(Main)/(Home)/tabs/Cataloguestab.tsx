@@ -32,7 +32,7 @@ export default function Cataloguestab() {
      <Text numberOfLines={1} style={styles.CataloguesTitle}>
        Les catalogues
      </Text>
-     <Catalogues store_id="" category="" />
+     <Catalogues store_id="" category=""  saved_screen="" />
     </ScrollView>
   );
 }

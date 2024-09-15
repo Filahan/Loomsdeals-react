@@ -14,6 +14,7 @@ import { router } from 'expo-router';
 import axios from 'axios';
 import config from '../config/config';
 import { auth } from '../config/Firebase';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Catalogue {
   id: string;
@@ -25,71 +26,67 @@ interface Catalogue {
   img: string;
 }
 
+
+
 interface CataloguesListProps {
   category: string;
   store_id: string;
+  saved_screen: string;
 }
 
-const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) => {
+const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, saved_screen}) => {
+
   const [saved, setSaved] = useState<string[]>([]);
-  const [catalogues, setCatalogues] = useState<Catalogue[][]>([]);
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [loading, setLoading] = useState(true);
   const userId = auth.currentUser?.uid; // Check for null/undefined user
-
   useEffect(() => {
-    const fetchCatalogues = async () => {
-      try {
-        let url = `${config.apiurl}/catalogues`;
-        if (store_id) {
-          url += `/${store_id}`;
-        }
+    const fetchCataloguesData = async () => {
+      if (!userId) return;
 
-        const response = await axios.get(url);
-        setCatalogues(response.data);
-      } catch (error) {
-        console.error('Error fetching catalogues:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchSavedCatalogues = async () => {
       try {
-        if (!userId) {
-          throw new Error('User not authenticated');
-        }
-        let url = `${config.apiurl}/saved_catalogues/${userId}`;
-        console.log(url)
-        const response = await axios.get(url);
-        console.log(response.data)
-        setSaved(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-        console.error('Error fetching saved catalogues:', error);
+        const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
+        const savedResponse = await axios.get(savedUrl);
+        const savedList = Array.isArray(savedResponse.data) ? savedResponse.data : [];
+        setSaved(savedList);
+
+        let cataloguesUrl = `${config.apiurl}/catalogues`;
+        if (store_id) cataloguesUrl += `/${store_id}`;
+        if (saved_screen) cataloguesUrl += `/cat_id=${savedList}`;
+
+        const cataloguesResponse = await axios.get(cataloguesUrl);
+        setCatalogues(cataloguesResponse.data);
+      } catch {
         setSaved([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSavedCatalogues();
-    fetchCatalogues();
-  }, [store_id, category, userId]);
+    fetchCataloguesData();
+  }, [store_id, userId, saved_screen]);
 
   const saveCatalogue = async (catalogueId: string) => {
     try {
-      await axios.post(`${config.apiurl}/save_catalogue/${userId}/${catalogueId}`);
+      await axios.post(`${config.apiurl}/save_catalogue_id/${userId}/${catalogueId}`);
     } catch (error) {
       console.error('Error saving catalogue:', error);
     }
   };
+  
   const removeCatalogue = async (catalogueId: string) => {
     try {
-      console.log(`${config.apiurl}/remove_saved_catalogue/${userId}/${catalogueId}`)
-      await axios.post(`${config.apiurl}/remove_saved_catalogue/${userId}/${catalogueId}`);
+      await axios.delete(`${config.apiurl}/remove_saved_catalogue_id/${userId}/${catalogueId}`);
+      if (saved_screen){
+      setCatalogues((prevCatalogues) => prevCatalogues.filter(catalogue => catalogue.id !== catalogueId));
+    }
+
     } catch (error) {
       console.error('Error removing catalogue:', error);
     }
   };
+  
+
 
   const handleSave = useCallback(
     async (id: string) => {
@@ -97,9 +94,12 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         const isSaved = prevSaved.includes(id);
         if (!isSaved) {
           saveCatalogue(id); 
+
         }
         else
         {
+          setCatalogues(prevCatalogues => [...prevCatalogues, { id, link: '', title: '', img: '', start_date: '', end_date: '', store: {} }]); // Adjust as needed
+
           removeCatalogue(id);
         }
         return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
@@ -136,7 +136,6 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id }) =
         {catalogues.flat().map((catalogue, index) => {
           const { id, link, store, img } = catalogue;
           const isSaved = saved.includes(id.toString());
-
           return (
             <TouchableOpacity
               key={index}

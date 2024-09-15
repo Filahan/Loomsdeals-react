@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import colors from '../../../theme';
-import CataloguesList from '../../../components/CataloguesList';
+import Catalogues from '../../../components/CataloguesList';
 import ProductCard from '../../../components/ProductCard';
 
 export default function SavedScreen() {
@@ -51,7 +51,7 @@ export default function SavedScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>
-          <CataloguesList store_id="" category=""  />
+          <Catalogues store_id="" category=""  saved_screen="true" />
           <Text style={styles.sectionTitle}>Articles sauvegardés</Text>
           <ProductCard/>
         </View>
