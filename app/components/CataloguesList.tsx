@@ -40,32 +40,41 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
 
   const fetchCataloguesData = useCallback(async () => {
     if (!userId) return;
-
+  
+    setLoading(true); // Set loading to true when starting to fetch data
+  
     try {
       const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
-      const savedResponse = await axios.get(savedUrl);
-      const savedList = Array.isArray(savedResponse.data) ? savedResponse.data : [];
+      const { data: savedList = [] } = await axios.get(savedUrl);
       setSaved(savedList);
-
+  
+      // Build the catalogues URL
       let cataloguesUrl = `${config.apiurl}/catalogues`;
-      if (store_id) cataloguesUrl += `/${store_id}`;
-      if (saved_screen) cataloguesUrl += `/cat_id=${savedList}`;
-
-      const cataloguesResponse = await axios.get(cataloguesUrl);
-      setCatalogues(cataloguesResponse.data);
-    } catch {
-      setSaved([]);
+      if (store_id) {
+        cataloguesUrl += `/${store_id}`;
+      }
+      if (saved_screen) {
+        cataloguesUrl += savedList.length ? `/cat_id=${savedList.join(',')}` : `/cat_id=0`;
+      }
+  
+      const { data: cataloguesData = [] } = await axios.get(cataloguesUrl);
+      setCatalogues(cataloguesData);
+  
+    } catch (error) {
+      console.error('Error fetching catalogues data:', error);
+      setSaved([]); // Clear saved list on error
+      // Optionally, set an error state to show a message to the user
     } finally {
       setLoading(false);
     }
   }, [store_id, userId, saved_screen]);
-
+  
   useFocusEffect(
     useCallback(() => {
       fetchCataloguesData();
     }, [fetchCataloguesData])
   );
-
+  
   const saveCatalogue = async (catalogueId: string) => {
     try {
       await axios.post(`${config.apiurl}/save_catalogue_id/${userId}/${catalogueId}`);
