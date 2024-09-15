@@ -86,7 +86,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
     }
   };
   
-
+  
 
   const handleSave = useCallback(
     async (id: string) => {
@@ -94,12 +94,9 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         const isSaved = prevSaved.includes(id);
         if (!isSaved) {
           saveCatalogue(id); 
-
         }
         else
         {
-          setCatalogues(prevCatalogues => [...prevCatalogues, { id, link: '', title: '', img: '', start_date: '', end_date: '', store: {} }]); // Adjust as needed
-
           removeCatalogue(id);
         }
         return isSaved ? prevSaved.filter(val => val !== id) : [...prevSaved, id];
