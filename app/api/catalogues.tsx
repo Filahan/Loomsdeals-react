@@ -4,16 +4,18 @@ import { createClient } from '@supabase/supabase-js';
 // Create Supabase client
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Function to get all catalogues
 async function getAllCatalogues() {
     try {
         const { data, error } = await supabase
             .from('catalogues')
-            .select('*');
-
+            .select(`
+                *,
+                stores (url)
+            `);
         if (error) {
             throw new Error(`Error fetching catalogues: ${error.message}`);
         }
+        console.log(data)
 
         return data;
     } catch (err) {
@@ -32,7 +34,10 @@ async function getCataloguesByIds(cataloguesIds) {
         const cataloguesIdList = cataloguesIds.split(',').map(id => id.trim());
         const { data, error } = await supabase
             .from('catalogues')
-            .select('*')
+            .select(`
+                *,
+                stores (url)
+            `)
             .in('id', cataloguesIdList);
 
         if (error) {

@@ -11,7 +11,7 @@ import ForgotPasswordScreen from './(Screens)/(Auth)/ForgotPasswordScreen';
 const Stack = createStackNavigator();
 
 const Layout = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -22,7 +22,7 @@ const Layout = () => {
   }, []);
 
   if (isAuthenticated === null) {
-    return null; // or a loading spinner
+    return null; 
   }
 
   return (

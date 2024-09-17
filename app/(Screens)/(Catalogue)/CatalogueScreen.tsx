@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import PDFViewer from '../../components/PDFViewer'; // Assure-toi que le chemin est correct
-import { Chip } from 'react-native-paper'; // Import Chip component
 import { router, useGlobalSearchParams } from 'expo-router';
 
 // Ajoute cette section pour la date d'expiration
@@ -26,7 +25,6 @@ export default function CatalogueScreen() {
                 Catalogue
             </Text>
             <TouchableOpacity style={styles.headerAction}>
-                {/* Add functionality if needed */}
             </TouchableOpacity>
         </View>
         <View style={styles.content}>

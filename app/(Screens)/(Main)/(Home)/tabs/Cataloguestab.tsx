@@ -4,7 +4,8 @@ import {
   SafeAreaView,
   Text,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  View
 } from 'react-native';
 import StoresCatCaroussel from '../../../../components/StoresCatCaroussel'; // Ensure path is correct
 import Catalogues from '../../../../components/CataloguesList';
@@ -27,11 +28,13 @@ export default function Cataloguestab() {
    key={key}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        }
+      >
         <StoresCatCaroussel />
      <Text numberOfLines={1} style={styles.CataloguesTitle}>
        Les catalogues
      </Text>
+     <View></View>
      <Catalogues store_id="" category=""  saved_screen="" />
     </ScrollView>
   );
@@ -41,6 +44,7 @@ export default function Cataloguestab() {
 const styles = StyleSheet.create({
   
   CataloguesTitle: {
+    marginHorizontal:15,
     fontSize: 17,
     fontWeight: '600',
     color: colors.primary,

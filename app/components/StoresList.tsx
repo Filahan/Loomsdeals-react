@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
   },
   container: {
+
     paddingTop: 10,
     flexGrow: 1,
   },

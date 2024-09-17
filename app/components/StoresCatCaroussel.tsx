@@ -73,6 +73,8 @@ const StoresCatCaroussel = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    left:10
+
   },
   scrollContainer: {
     flexDirection: 'row',

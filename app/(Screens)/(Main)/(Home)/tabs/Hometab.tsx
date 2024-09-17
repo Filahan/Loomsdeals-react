@@ -35,6 +35,7 @@ export default function Hometab() {
       <ProductCatCarroussel />
       <Slider />
       <View style={styles.headerContainer}>
+
         <FontAwesome5
           name="fire-alt"
           size={20}
@@ -42,10 +43,11 @@ export default function Hometab() {
           style={styles.icon}
         />
         <Text numberOfLines={1} style={styles.DealsTitle}>
+
           Deals
         </Text>
       </View>
-      <ProductCard/>
+      <ProductCard />
     </ScrollView>
   );
 }
@@ -58,6 +60,8 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 10, // Adjust padding as needed
   },
   icon: {
+    marginHorizontal: 15,
+
     marginRight: 3, // Space between icon and text
   },
   DealsTitle: {

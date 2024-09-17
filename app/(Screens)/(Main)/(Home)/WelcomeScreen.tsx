@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -20,11 +20,11 @@ const myImage = require('../../../asserts/shopslogos/logo.png');
 
 
 const FirstRoute = () => (
-<Hometab/>
+  <Hometab />
 );
 
 const SecondRoute = () => (
-  <Cataloguestab/>
+  <Cataloguestab />
 );
 
 const renderScene = SceneMap({
@@ -42,6 +42,8 @@ export default function TabViewExample() {
       indicatorStyle={{
         backgroundColor: colors.primary, // Indicator color
         height: 1, // Indicator height
+        paddingHorizontal: 15
+
       }}
       style={{ backgroundColor: 'white' }} // Tab bar background
       renderLabel={({ route, focused }) => {
@@ -80,19 +82,19 @@ export default function TabViewExample() {
         <View style={styles.search}>
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
-              
+
               <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
-                placeholder="Rechercher"
+                placeholder="Rechercher..."
                 placeholderTextColor="#848484"
                 returnKeyType="done"
                 style={styles.input}
               />
               <View style={styles.inputIcon}>
                 <FeatherIcon
-                  color={colors.primary}
+                  color="#848484"
                   name="search"
                   size={16}
                 />
@@ -102,17 +104,17 @@ export default function TabViewExample() {
         </View>
         <View style={styles.tabContainer}>
           <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      renderTabBar={renderTabBar}
-      lazy
-      />
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width }}
+            renderTabBar={renderTabBar}
+            lazy
+          />
         </View>
       </View>
     </SafeAreaView>
-    
+
   );
 }
 
@@ -132,25 +134,28 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 15,
     paddingTop: 10,
   },
   search: {
-    flexDirection: 'row',
+    marginHorizontal: 15,
+    position: 'relative',
+    backgroundColor: colors.secondary,
+    borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
   searchInput: {
+
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
   },
   input: {
-    height: 44,
-    backgroundColor: '#f0f6fb',
-    paddingLeft: 44,
-    paddingRight: 24,
-    borderRadius: 8,
-    fontSize: 15,
+    paddingVertical: 10,
+    paddingLeft: 34,
+    width: '100%',
+    fontSize: 16,
     fontWeight: '500',
   },
   inputWrapper: {
@@ -159,13 +164,13 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     position: 'absolute',
-    width: 44,
-    height: 44,
     top: 0,
-    left: 0,
     bottom: 0,
+    left: 0,
+    width: 34,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 2,
   },
   tabContainer: {
     flex: 1,

@@ -14,14 +14,16 @@ import { auth } from '../config/Firebase';
 import { useFocusEffect } from '@react-navigation/native';
 import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../api/catalogues';
+import colors from '../theme';
 
 interface Catalogue {
   id: string;
   link: string;
   title: string;
-  start_date?: string;
-  end_date?: string;
-  store?: { url?: string; id?: string };
+  start_date: string;
+  end_date: string;
+  stores: { url: string; };
+  store: string;
   img: string;
 }
 
@@ -145,7 +147,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         ) : (
           catalogues.map((catalogue) => {
             if (!catalogue) return null;
-            const { id, link, store, img } = catalogue;
+            const { id, link, store, img, stores } = catalogue;
             const isSaved = saved.includes(id.toString());
             return (
               <TouchableOpacity
@@ -156,11 +158,11 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
                     {store && (
-                      <TouchableOpacity onPress={() => router.push({ pathname: '/StoreScreen', params: { store_id: store.id, url: store.url } })}>
+                      <TouchableOpacity>
                         <Image
                           resizeMode="cover"
                           style={styles.cardlogo_img}
-                          source={{ uri: store.url }}
+                          source={{ uri: stores.url }}
                         />
                       </TouchableOpacity>
                     )}
@@ -239,6 +241,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   container: {
+    marginHorizontal:15,
     flex: 1,
     marginTop: 10,
   },
