@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -39,7 +39,6 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
   const userId = auth.currentUser?.uid;
 
   const fetchCataloguesData = useCallback(async () => {
-    if (!userId) return;
 
     setLoading(true);
 
@@ -58,7 +57,6 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
       }
 
       setCatalogues(cataloguesData);
-      setEmptyMessage(saved_screen && !savedList.length ? 'No catalogues available in your saved list.' : null);
 
     } catch (error) {
       console.error('Error fetching catalogues data:', error);
@@ -71,11 +69,28 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
 
 
 
+  const getsavedlist = useCallback(async () => {
+    try {
+      const savedList = await getSavedCatalogueIds(userId);
+      setSaved(savedList);
+    } catch (error) {
+      console.error('Error fetching catalogues data:', error);
+      setSaved([]);
+    } finally {
+    }
+  }, [userId, saved_screen]); // Removed store_id as it's not used in this function
+
+
   useFocusEffect(
     useCallback(() => {
-      fetchCataloguesData();
-    }, [fetchCataloguesData])
+      if (saved_screen) fetchCataloguesData();
+      else getsavedlist();
+    }, [getsavedlist])
   );
+
+  useEffect(() => {
+    fetchCataloguesData();
+  }, [fetchCataloguesData]);
 
   const handleSave = useCallback(
     async (id: string) => {
