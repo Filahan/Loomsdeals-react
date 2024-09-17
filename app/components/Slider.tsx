@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { MotiView } from 'moti';
@@ -20,8 +20,8 @@ const App = () => {
   return (
     <View style={styles.container}>
       <Carousel
-        loop={false}
-        width={width * 0.9}
+        loop={true} // Set to true for continuous looping
+        width={width} // Full width of the screen
         height={200}
         data={images}
         onSnapToItem={setCurrentIndex}
@@ -42,6 +42,7 @@ const App = () => {
             />
           </View>
         )}
+        style={styles.carousel}
       />
       <View style={styles.pagination}>
         {images.map((_, index) => (
@@ -68,13 +69,14 @@ const styles = StyleSheet.create({
   item: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 15,
     overflow: 'hidden',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+    marginHorizontal: 20, // Space between items
   },
   image: {
     width: '100%',
@@ -102,6 +104,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderWidth: 2,
     borderColor: '#6b7280',
+  },
+  carousel: {
+    paddingHorizontal: 100, // Add padding to accommodate spacing
   },
 });
 

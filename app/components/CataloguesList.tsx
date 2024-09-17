@@ -6,16 +6,14 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Text,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
-import axios from 'axios';
-import config from '../config/config';
 import { auth } from '../config/Firebase';
 import { useFocusEffect } from '@react-navigation/native';
-import LottieView from 'lottie-react-native';
+import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../api/saved';
+import { getAllCatalogues, getCataloguesByIds } from '../api/catalogues';
 
 interface Catalogue {
   id: string;
@@ -46,26 +44,32 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
     setLoading(true);
 
     try {
-      const savedUrl = `${config.apiurl}/saved_catalogues_ids/${userId}`;
-      const { data: savedList = [] } = await axios.get(savedUrl);
+      const savedList = await getSavedCatalogueIds(userId);
       setSaved(savedList);
 
-      let cataloguesUrl = `${config.apiurl}/catalogues`;
-      if (store_id) cataloguesUrl += `/${store_id}`;
-      if (saved_screen) cataloguesUrl += savedList.length ? `/cat_id=${savedList.join(',')}` : `/cat_id=0`;
+      let cataloguesData: Catalogue[] = [];
 
-      const { data: cataloguesData = [] } = await axios.get(cataloguesUrl);
+      if (saved_screen) {
+        cataloguesData = await getCataloguesByIds(savedList.join(','));
+      }
+      else {
+        cataloguesData = await getAllCatalogues();
+
+      }
+
       setCatalogues(cataloguesData);
-
       setEmptyMessage(saved_screen && !savedList.length ? 'No catalogues available in your saved list.' : null);
 
     } catch (error) {
       console.error('Error fetching catalogues data:', error);
       setSaved([]);
+      setCatalogues([]); // Clear catalogues in case of error
     } finally {
       setLoading(false);
     }
-  }, [store_id, userId, saved_screen]);
+  }, [userId, saved_screen]); // Removed store_id as it's not used in this function
+
+
 
   useFocusEffect(
     useCallback(() => {
@@ -78,13 +82,13 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
       try {
         const isSaved = saved.includes(id);
         if (isSaved) {
-          await axios.delete(`${config.apiurl}/remove_saved_catalogue_id/${userId}/${id}`);
+          await removeSavedCatalogueId(userId, id)
           if (saved_screen) {
             setCatalogues(prevCatalogues => prevCatalogues.filter(catalogue => catalogue.id !== id));
           }
           setSaved(prevSaved => prevSaved.filter(val => val !== id));
         } else {
-          await axios.post(`${config.apiurl}/save_catalogue_id/${userId}/${id}`);
+          await (saveCatalogueId(userId, id))
           setSaved(prevSaved => [...prevSaved, id]);
         }
       } catch (error) {
@@ -120,9 +124,8 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         showsHorizontalScrollIndicator={false}
       >
         {emptyMessage ? (
-          
+
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyMessage}>{emptyMessage}</Text>
           </View>
         ) : (
           catalogues.map((catalogue) => {
@@ -249,7 +252,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
   },
   emptyMessage: {
     fontSize: 16,

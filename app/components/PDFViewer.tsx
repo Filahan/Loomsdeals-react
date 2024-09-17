@@ -6,17 +6,17 @@ export default function PDFViewer({ uri }) {
   const [loading, setLoading] = useState(true);
 
   return (
-<View style={styles.content}>
-      
+    <View style={styles.content}>
+
       <WebView
         style={styles.webview}
         source={{ uri }}
         onLoadStart={() => setLoading(true)}
         onLoadEnd={() => setLoading(false)}
-        
+
       />
-      {loading &&   <ActivityIndicator style={styles.spinner} size="large" color="#002D62" />
-    }
+      {loading && <ActivityIndicator style={styles.spinner} size="large" color="#002D62" />
+      }
     </View>
   );
 }

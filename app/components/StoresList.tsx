@@ -85,9 +85,10 @@ export default function Stores({ searchTerm }: { searchTerm: string }) {
             onPress={() => {
               router.push({
                 pathname: '/StoreScreen',
-                params: { 
-                  store_id: id, 
-                  url: url }
+                params: {
+                  store_id: id,
+                  url: url
+                }
               });
             }}
           >
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexGrow: 1,
     letterSpacing: 1.2,
-},
+  },
   container: {
     paddingTop: 10,
     flexGrow: 1,

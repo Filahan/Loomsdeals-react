@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/Firebase'; // Adjust the path as needed
+import { View, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
-import axios from 'axios';
-import config from '../config/config';
+import { getStoresCategories } from '../api/stores_categories';
+
+interface ImageType {
+  id: string;
+  url: string;
+}
 
 const StoresCatCaroussel = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<ImageType[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        let url = `${config.apiurl}/stores_categories`;
-        const response = await axios.get(url);
-        setImages(response.data);
+        const data = await getStoresCategories();
+        setImages(data);
       } catch (error) {
         console.error('Error fetching images: ', error);
       } finally {
@@ -26,7 +27,6 @@ const StoresCatCaroussel = () => {
 
     fetchImages();
   }, []);
-
 
   return (
     <View style={styles.container}>
@@ -52,9 +52,10 @@ const StoresCatCaroussel = () => {
               onPress={() => {
                 router.push({
                   pathname: '/CategoryScreen',
-                  params: { 
-                    category_id: image.id, 
-                    url: image.url }
+                  params: {
+                    category_id: image.id,
+                    url: image.url
+                  }
                 });
               }}
               style={styles.imageContainer}
@@ -106,4 +107,3 @@ const styles = StyleSheet.create({
 });
 
 export default StoresCatCaroussel;
-
