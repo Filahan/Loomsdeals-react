@@ -33,6 +33,61 @@ interface CataloguesListProps {
   saved_screen: string;
 }
 
+// Externalize the functions
+const fetchCataloguesData = async (userId, saved_screen, setSaved, setCatalogues, setLoading) => {
+  setLoading(true);
+  try {
+    const savedList = await getSavedCatalogueIds(userId);
+    setSaved(savedList);
+
+    let cataloguesData: Catalogue[] = [];
+
+    if (saved_screen) {
+      cataloguesData = await getCataloguesByIds(savedList.join(','));
+    } else {
+      cataloguesData = await getAllCatalogues();
+    }
+
+    setCatalogues(cataloguesData);
+  } catch (error) {
+    console.error('Error fetching catalogues data:', error);
+    setSaved([]);
+    setCatalogues([]); // Clear catalogues in case of error
+  } finally {
+    setLoading(false);
+  }
+};
+
+const getsavedlist = async (userId, setSaved) => {
+  try {
+    const savedList = await getSavedCatalogueIds(userId);
+    setSaved(savedList);
+  } catch (error) {
+    console.error('Error fetching saved catalogues data:', error);
+    setSaved([]);
+  }
+};
+
+// Handle useFocusEffect
+const handleFocusEffect = (fetchCataloguesData, getsavedlist, saved_screen) => {
+  useFocusEffect(
+    useCallback(() => {
+      if (saved_screen) {
+        fetchCataloguesData();
+      } else {
+        getsavedlist();
+      }
+    }, [fetchCataloguesData, getsavedlist, saved_screen])
+  );
+};
+
+// Handle useEffect
+const handleUseEffect = (fetchCataloguesData) => {
+  useEffect(() => {
+    fetchCataloguesData();
+  }, [fetchCataloguesData]);
+};
+
 const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, saved_screen }) => {
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
@@ -40,72 +95,25 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
   const userId = auth.currentUser?.uid;
 
-  const fetchCataloguesData = useCallback(async () => {
+  const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, saved_screen, setSaved, setCatalogues, setLoading), [userId, saved_screen]);
+  const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
 
-    setLoading(true);
-
-    try {
-      const savedList = await getSavedCatalogueIds(userId);
-      setSaved(savedList);
-
-      let cataloguesData: Catalogue[] = [];
-
-      if (saved_screen) {
-        cataloguesData = await getCataloguesByIds(savedList.join(','));
-      }
-      else {
-        cataloguesData = await getAllCatalogues();
-
-      }
-
-      setCatalogues(cataloguesData);
-
-    } catch (error) {
-      console.error('Error fetching catalogues data:', error);
-      setSaved([]);
-      setCatalogues([]); // Clear catalogues in case of error
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, saved_screen]); // Removed store_id as it's not used in this function
-
-
-
-  const getsavedlist = useCallback(async () => {
-    try {
-      const savedList = await getSavedCatalogueIds(userId);
-      setSaved(savedList);
-    } catch (error) {
-      console.error('Error fetching catalogues data:', error);
-      setSaved([]);
-    } finally {
-    }
-  }, [userId, saved_screen]); // Removed store_id as it's not used in this function
-
-
-  useFocusEffect(
-    useCallback(() => {
-      if (saved_screen) fetchCataloguesData();
-      else getsavedlist();
-    }, [getsavedlist])
-  );
-
-  useEffect(() => {
-    fetchCataloguesData();
-  }, [fetchCataloguesData]);
+  // Use extracted hooks
+  handleFocusEffect(fetchCatalogues, fetchSaved, saved_screen);
+  handleUseEffect(fetchCatalogues);
 
   const handleSave = useCallback(
     async (id: string) => {
       try {
         const isSaved = saved.includes(id);
         if (isSaved) {
-          await removeSavedCatalogueId(userId, id)
+          await removeSavedCatalogueId(userId, id);
           if (saved_screen) {
             setCatalogues(prevCatalogues => prevCatalogues.filter(catalogue => catalogue.id !== id));
           }
           setSaved(prevSaved => prevSaved.filter(val => val !== id));
         } else {
-          await (saveCatalogueId(userId, id))
+          await saveCatalogueId(userId, id);
           setSaved(prevSaved => [...prevSaved, id]);
         }
       } catch (error) {
@@ -141,7 +149,6 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         showsHorizontalScrollIndicator={false}
       >
         {emptyMessage ? (
-
           <View style={styles.emptyContainer}>
           </View>
         ) : (

@@ -7,6 +7,7 @@ import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
 import SigninScreen from './(Screens)/(Auth)/SigninScreen';
 import SignupScreen from './(Screens)/(Auth)/SignupScreen';
 import ForgotPasswordScreen from './(Screens)/(Auth)/ForgotPasswordScreen';
+import SearchScreen from './(Screens)/(Main)/(Search)/SearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,7 @@ const Layout = () => {
           <Stack.Screen name="(Screens)/(Main)" component={Main} options={{ headerShown: false }}/>
           <Stack.Screen name="(Screens)/(Settings)/Settings" component={Settings} options={{ headerShown: false }}/>
           <Stack.Screen name="(Screens)/(Catalogue)/CatalogueScreen" component={CatalogueScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Search)/SearchScreen" component={SearchScreen} options={{ headerShown: false }}/>
         </>
       ) : (
         <>

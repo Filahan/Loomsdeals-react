@@ -15,8 +15,6 @@ async function getAllCatalogues() {
         if (error) {
             throw new Error(`Error fetching catalogues: ${error.message}`);
         }
-        console.log(data)
-
         return data;
     } catch (err) {
         console.error(err.message);
