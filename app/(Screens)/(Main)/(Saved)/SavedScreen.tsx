@@ -1,5 +1,5 @@
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -11,8 +11,77 @@ import colors from '../../../theme';
 import Catalogues from '../../../components/CataloguesList';
 
 import ProductCard from '../../../components/ProductCard';
+import { getSavedCatalogueIds } from '../../../api/saved';
+import { getAllCatalogues, getCataloguesByIds } from '../../../api/catalogues';
+import { auth } from '../../../config/Firebase';
+
+interface Catalogue {
+  id: string;
+  link: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  stores: { url: string; };
+  store: string;
+  img: string;
+}
+
+// Externalize the functions
+const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) => {
+  setLoading(true);
+  try {
+    const savedList = await getSavedCatalogueIds(userId);
+    setSaved(savedList);
+
+    let cataloguesData: Catalogue[] = [];
+
+    cataloguesData = await getCataloguesByIds(savedList.join(','));
+
+    setCatalogues(cataloguesData);
+  } catch (error) {
+    console.error('Error fetching catalogues data:', error);
+    setSaved([]);
+    setCatalogues([]); // Clear catalogues in case of error
+  } finally {
+    setLoading(false);
+  }
+};
+
+const getsavedlist = async (userId, setSaved) => {
+  try {
+    const savedList = await getSavedCatalogueIds(userId);
+    setSaved(savedList);
+  } catch (error) {
+    console.error('Error fetching saved catalogues data:', error);
+    setSaved([]);
+  }
+};
+
+const handleFocusEffect = (fetchCataloguesData, getsavedlist) => {
+  useFocusEffect(
+    useCallback(() => {
+      fetchCataloguesData();
+    }, [fetchCataloguesData, getsavedlist])
+  );
+};
+
+const handleUseEffect = (fetchCataloguesData) => {
+  useEffect(() => {
+    fetchCataloguesData();
+  }, [fetchCataloguesData]);
+};
 
 export default function SavedScreen() {
+  const [saved, setSaved] = useState<string[]>([]);
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [loading, setLoading] = useState(true);
+  const userId = auth.currentUser?.uid;
+
+  const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, setSaved, setCatalogues, setLoading), [userId, "yes"]);
+  const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
+
+  handleFocusEffect(fetchCatalogues, fetchSaved);
+  handleUseEffect(fetchCatalogues);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -22,19 +91,19 @@ export default function SavedScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>
           <View style={styles.placeholder}>
-          <View style={styles.placeholderInset}>
-          <Catalogues store_id="" category=""  saved_screen="true" />
+            <View style={styles.placeholderInset}>
+              <Catalogues store_id="" category="" saved_screen="yes" setSaved={setSaved} saved={saved} setCatalogues={setCatalogues} catalogues={catalogues} loading={loading} />
+            </View>
           </View>
-        </View>
           <Text style={styles.sectionTitle}>Articles sauvegardés</Text>
           <View style={styles.placeholder}>
-          <View style={styles.placeholderInset}>
-          <ProductCard/>
+            <View style={styles.placeholderInset}>
+              <ProductCard />
+            </View>
           </View>
         </View>
-        </View>
 
-    
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -150,7 +219,7 @@ const styles = StyleSheet.create({
     borderColor: '#e5e7eb',
     borderStyle: 'dashed',
     padding: 6,
-    marginBottom:10,
+    marginBottom: 10,
     borderRadius: 9,
     flexGrow: 1,
     flexShrink: 1,

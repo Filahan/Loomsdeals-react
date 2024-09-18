@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Text, // Added for the empty message
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import { auth } from '../config/Firebase';
-import { useFocusEffect } from '@react-navigation/native';
 import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../api/catalogues';
 import colors from '../theme';
@@ -31,76 +31,26 @@ interface CataloguesListProps {
   category: string;
   store_id: string;
   saved_screen: string;
+  saved: string[];
+  setSaved: React.Dispatch<React.SetStateAction<string[]>>;
+  catalogues: Catalogue[];
+  setCatalogues: React.Dispatch<React.SetStateAction<Catalogue[]>>;
+  loading: boolean;
 }
 
-// Externalize the functions
-const fetchCataloguesData = async (userId, saved_screen, setSaved, setCatalogues, setLoading) => {
-  setLoading(true);
-  try {
-    const savedList = await getSavedCatalogueIds(userId);
-    setSaved(savedList);
-
-    let cataloguesData: Catalogue[] = [];
-
-    if (saved_screen) {
-      cataloguesData = await getCataloguesByIds(savedList.join(','));
-    } else {
-      cataloguesData = await getAllCatalogues();
-    }
-
-    setCatalogues(cataloguesData);
-  } catch (error) {
-    console.error('Error fetching catalogues data:', error);
-    setSaved([]);
-    setCatalogues([]); // Clear catalogues in case of error
-  } finally {
-    setLoading(false);
-  }
-};
-
-const getsavedlist = async (userId, setSaved) => {
-  try {
-    const savedList = await getSavedCatalogueIds(userId);
-    setSaved(savedList);
-  } catch (error) {
-    console.error('Error fetching saved catalogues data:', error);
-    setSaved([]);
-  }
-};
-
-// Handle useFocusEffect
-const handleFocusEffect = (fetchCataloguesData, getsavedlist, saved_screen) => {
-  useFocusEffect(
-    useCallback(() => {
-      if (saved_screen) {
-        fetchCataloguesData();
-      } else {
-        getsavedlist();
-      }
-    }, [fetchCataloguesData, getsavedlist, saved_screen])
-  );
-};
-
-// Handle useEffect
-const handleUseEffect = (fetchCataloguesData) => {
-  useEffect(() => {
-    fetchCataloguesData();
-  }, [fetchCataloguesData]);
-};
-
-const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, saved_screen }) => {
-  const [saved, setSaved] = useState<string[]>([]);
-  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [loading, setLoading] = useState(true);
+const CataloguesList: React.FC<CataloguesListProps> = ({
+  category,
+  store_id,
+  saved_screen,
+  setSaved,
+  saved,
+  setCatalogues,
+  catalogues,
+  loading
+}) => {
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
+
   const userId = auth.currentUser?.uid;
-
-  const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, saved_screen, setSaved, setCatalogues, setLoading), [userId, saved_screen]);
-  const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
-
-  // Use extracted hooks
-  handleFocusEffect(fetchCatalogues, fetchSaved, saved_screen);
-  handleUseEffect(fetchCatalogues);
 
   const handleSave = useCallback(
     async (id: string) => {
@@ -109,7 +59,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         if (isSaved) {
           await removeSavedCatalogueId(userId, id);
           if (saved_screen) {
-            setCatalogues(prevCatalogues => prevCatalogues.filter(catalogue => catalogue.id !== id));
+            setCatalogues(prevCatalogues => prevCatalogues.filter(({ id: catalogueId }) => catalogueId !== id));
           }
           setSaved(prevSaved => prevSaved.filter(val => val !== id));
         } else {
@@ -120,8 +70,16 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
         console.error('Error saving/removing catalogue:', error);
       }
     },
-    [saved, saved_screen, userId]
+    [saved, saved_screen, userId, setCatalogues, setSaved] // Add setCatalogues and setSaved as dependencies
   );
+
+  useEffect(() => {
+    if (!loading && catalogues.length === 0) {
+      setEmptyMessage('No catalogues available');
+    } else {
+      setEmptyMessage(null);
+    }
+  }, [loading, catalogues]);
 
   if (loading) {
     return (
@@ -150,12 +108,13 @@ const CataloguesList: React.FC<CataloguesListProps> = ({ category, store_id, sav
       >
         {emptyMessage ? (
           <View style={styles.emptyContainer}>
+            <Text style={styles.emptyMessage}>{emptyMessage}</Text>
           </View>
         ) : (
           catalogues.map((catalogue) => {
             if (!catalogue) return null;
             const { id, link, store, img, stores } = catalogue;
-            const isSaved = saved.includes(id.toString());
+            const isSaved = saved.includes(id);
             return (
               <TouchableOpacity
                 key={id}
@@ -248,7 +207,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   container: {
-    marginHorizontal:15,
+    marginHorizontal: 15,
     flex: 1,
     marginTop: 10,
   },
