@@ -7,14 +7,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../../theme';
 
-const renderTabBar = props => (
+const renderTabBar = (props) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: colors.primary }}
@@ -52,7 +51,7 @@ export default function SearchScreen() {
 
   // Filter catalogues based on input and selected category
   const filteredCatalogues = useMemo(() => {
-    return catalogues.filter(catalogue =>
+    return catalogues.filter((catalogue) =>
       catalogue.title.toLowerCase().includes(input.toLowerCase()) &&
       (selectedCatalogueCategory ? catalogue.category === selectedCatalogueCategory : true)
     );
@@ -60,7 +59,7 @@ export default function SearchScreen() {
 
   // Filter products based on input and selected category
   const filteredProduits = useMemo(() => {
-    return produits.filter(produit =>
+    return produits.filter((produit) =>
       produit.name.toLowerCase().includes(input.toLowerCase()) &&
       (selectedProductCategory ? produit.category === selectedProductCategory : true)
     );
@@ -73,7 +72,7 @@ export default function SearchScreen() {
         showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
         style={styles.filterContainer}
       >
-        {categoriesCatalogue.map(category => (
+        {categoriesCatalogue.map((category) => (
           <TouchableOpacity
             key={category}
             onPress={() => setSelectedCatalogueCategory(category)}
@@ -86,7 +85,6 @@ export default function SearchScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View></View>
       {filteredCatalogues.length ? (
         filteredCatalogues.map((catalogue, index) => (
           <View key={index} style={styles.cardWrapper}>
@@ -117,7 +115,7 @@ export default function SearchScreen() {
         showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
         style={styles.filterContainer}
       >
-        {categoriesProduct.map(category => (
+        {categoriesProduct.map((category) => (
           <TouchableOpacity
             key={category}
             onPress={() => setSelectedProductCategory(category)}
@@ -159,8 +157,7 @@ export default function SearchScreen() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff'}}>
-      
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <View style={styles.search}>
@@ -171,7 +168,7 @@ export default function SearchScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={val => setInput(val)}
+              onChangeText={(val) => setInput(val)}
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
               returnKeyType="done"
@@ -181,12 +178,18 @@ export default function SearchScreen() {
           </View>
         </View>
 
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          renderTabBar={renderTabBar}
-        />
+        {input === '' ? (
+          <Text style={styles.searchMessage}>Recherche</Text>
+        ) : (
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            renderTabBar={renderTabBar}
+          />
+        )}
+
+        
       </View>
     </SafeAreaView>
   );
@@ -195,7 +198,7 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    marginTop: 30
+    marginTop: 30,
   },
   searchWrapper: {
     paddingHorizontal: 16,
@@ -228,6 +231,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     fontSize: 15,
     color: '#9ca1ac',
+  },
+  searchMessage: {
+    textAlign: 'center',
+    paddingTop: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#616d79',
   },
   cardWrapper: {
     borderBottomWidth: 1,
@@ -272,6 +282,7 @@ const styles = StyleSheet.create({
     marginRight: 10, // Espacement entre les boutons
   },
   filterButtonActive: {
-    backgroundColor: '#ccc',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
 });
