@@ -15,6 +15,7 @@ import { auth } from '../config/Firebase';
 import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../api/catalogues';
 import colors from '../theme';
+const nocatalog = require('../asserts/nocatalog.jpg');
 
 interface Catalogue {
   id: string;
@@ -75,7 +76,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
 
   useEffect(() => {
     if (!loading && catalogues.length === 0) {
-      setEmptyMessage('No catalogues available');
+      setEmptyMessage('Pas de catalogues sauvegardés');
     } else {
       setEmptyMessage(null);
     }
@@ -108,7 +109,11 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
       >
         {emptyMessage ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyMessage}>{emptyMessage}</Text>
+            <Image
+              resizeMode="contain"
+              style={styles.nocatalog}
+              source={nocatalog}
+            />
           </View>
         ) : (
           catalogues.map((catalogue) => {
@@ -236,11 +241,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
   },
   emptyMessage: {
     fontSize: 16,
     color: '#888',
+  },
+  nocatalog: {
+    height: 50,
+    marginVertical:10
   },
 });
 

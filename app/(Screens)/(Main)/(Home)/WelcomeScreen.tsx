@@ -8,15 +8,18 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Settings
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from "../../../theme"
 import Hometab from "./tabs/Hometab"
 import Cataloguestab from "./tabs/Cataloguestab"
-const myImage = require('../../../asserts/shopslogos/logo.png');
+import { router } from 'expo-router';
+const logo = require('../../../asserts/shopslogos/logo.png');
 
 
 const FirstRoute = () => (
@@ -75,11 +78,13 @@ export default function TabViewExample() {
   return (
 
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.logoContainer}>
-        <Image source={myImage} resizeMode="contain" style={styles.logo} />
-      </View>
       <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={logo} resizeMode="contain" style={styles.logo} />
+        </View>
+
         <View style={styles.search}>
+
           <View style={styles.searchInput}>
             <View style={styles.inputWrapper}>
 
@@ -93,13 +98,25 @@ export default function TabViewExample() {
                 style={styles.input}
               />
               <View style={styles.inputIcon}>
-                <FeatherIcon
+                <FontAwesome5
                   color="#848484"
                   name="search"
                   size={16}
                 />
               </View>
             </View>
+          </View>
+          <View style={styles.settings}>
+            <TouchableOpacity
+              onPress={() => router.push({ pathname: '/SettingsScreen' })}
+            >
+              <FeatherIcon
+                color={colors.primary}
+                name="user"
+                size={23}
+
+              />
+            </TouchableOpacity >
           </View>
         </View>
         <View style={styles.tabContainer}>
@@ -120,13 +137,27 @@ export default function TabViewExample() {
 
 const styles = StyleSheet.create({
   logoContainer: {
-    justifyContent: 'center',
+    // alignItems: "flex-start",
+    marginHorizontal: 20,
+    marginVertical: 10,
+    flexDirection: 'row',
+    justifyContent: "center"
+
+  },
+  settings: {
+    backgroundColor: colors.secondary,
+    borderColor: "grey",
+    height: 45, // Smaller logo height
+    width: 45,
+    borderRadius: 7,
     alignItems: 'center',
-    marginVertical: 10
+    justifyContent: 'center',
+
+
   },
   logo: {
-    height: 27, // Smaller logo height
-    alignSelf: 'center', // Horizontally center the logo
+    height: 50, // Smaller logo height
+    width: 50
   },
   safeArea: {
     flex: 1,
@@ -135,34 +166,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
+
   },
   search: {
     marginHorizontal: 15,
-    position: 'relative',
-    backgroundColor: colors.secondary,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
     flexDirection: 'row',
   },
   searchInput: {
-
+    borderRadius: 7,
+    // flexDirection: 'row',
+    // alignItems: 'center',
     flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
+    marginRight: 6,
+    backgroundColor: "yellow"
+
   },
   input: {
+    backgroundColor: colors.secondary,
+    borderRadius: 7,
+    alignItems: 'center',
     paddingVertical: 10,
     paddingLeft: 34,
-    width: '100%',
+    height: 45,
     fontSize: 16,
     fontWeight: '500',
+
   },
   inputWrapper: {
-    position: 'relative',
-    width: '100%',
+    width: "100%"
   },
   inputIcon: {
+    // backgroundColor: colors.primary,
+
     position: 'absolute',
     top: 0,
     bottom: 0,
@@ -171,6 +206,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
+    // margin:10
   },
   tabContainer: {
     flex: 1,
@@ -181,7 +217,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
-    borderRadius: 6,
+    borderRadius: 7
   },
   tabText: {
     fontSize: 14,

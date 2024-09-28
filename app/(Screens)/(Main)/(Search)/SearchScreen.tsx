@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import colors from '../../../theme';
 
 type User = {
@@ -91,7 +92,7 @@ export default function Example() {
         <View style={styles.searchWrapper}>
           <View style={styles.search}>
             <View style={styles.searchIcon}>
-              <FeatherIcon
+              <FontAwesome5
                 color="#848484"
                 name="search"
                 size={17}

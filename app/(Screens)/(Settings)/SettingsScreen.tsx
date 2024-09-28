@@ -11,8 +11,8 @@ import {
   Image,
 } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { auth } from '../../../config/Firebase';
-import colors from '../../../theme';
+import { auth } from '../../config/Firebase';
+import colors from '../../theme';
 
 export default function SettingsScreen() {
   const [form, setForm] = useState({
@@ -27,11 +27,22 @@ export default function SettingsScreen() {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
 
 
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={[styles.section, { paddingTop: 40 }]}>
+        <View style={[styles.section, { paddingTop: 0 }]}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}>
+            <Text style={styles.return}>
+              <FeatherIcon
+                color="#000"
+                name="arrow-left"
+                size={24} />
+            </Text>
+          </TouchableOpacity>
           <Text style={styles.sectionTitle}>Account</Text>
 
           <View style={styles.sectionBody}>
@@ -84,7 +95,7 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             </View>
 
-            
+
 
             <View style={styles.rowWrapper}>
               <View style={styles.row}>
@@ -240,7 +251,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexGrow: 1,
     letterSpacing: 1.2,
-},
+  },
   /** Content */
   content: {
     paddingHorizontal: 16,
@@ -349,5 +360,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
     color: '#dc2626',
+  },
+  return: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.primary,
+    textAlign: 'left',
+    letterSpacing: 0.15,
   },
 });

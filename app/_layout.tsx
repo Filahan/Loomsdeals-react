@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { auth } from './config/Firebase';
 import Main from './(Screens)/(Main)/_layout';
-import Settings from './(Screens)/(Main)/(Settings)/SettingsScreen';
+import SettingsScreen from './(Screens)/(Settings)/SettingsScreen';
 import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
 import SigninScreen from './(Screens)/(Auth)/SigninScreen';
 import SignupScreen from './(Screens)/(Auth)/SignupScreen';
@@ -30,8 +30,10 @@ const Layout = () => {
     <Stack.Navigator>
       {isAuthenticated ? (
         <>
+
           <Stack.Screen name="(Screens)/(Main)" component={Main} options={{ headerShown: false }}/>
-          <Stack.Screen name="(Screens)/(Settings)/Settings" component={Settings} options={{ headerShown: false }}/>
+          <Stack.Screen name="(Screens)/(Settings)/SettingsScreen" component={SettingsScreen} options={{ headerShown: false }}/>
+
           <Stack.Screen name="(Screens)/(Catalogue)/CatalogueScreen" component={CatalogueScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="(Screens)/(Search)/SearchScreen" component={SearchScreen} options={{ headerShown: false }}/>
         </>

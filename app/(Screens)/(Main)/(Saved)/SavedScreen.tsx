@@ -86,7 +86,7 @@ export default function SavedScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Mes favoris</Text>
+        {/* <Text style={styles.title}>Mes favoris</Text> */}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>

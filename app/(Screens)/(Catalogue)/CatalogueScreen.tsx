@@ -6,10 +6,10 @@ import { router, useGlobalSearchParams } from 'expo-router';
 
 // Ajoute cette section pour la date d'expiration
 const ExpirationDate = ({ date }) => (
-  <View style={styles.expirationContainer}>
-    <FeatherIcon name="calendar" size={20} color="#002D62" />
-    <Text style={styles.expirationText}>Date d'expiration: {date}</Text>
-  </View>
+    <View style={styles.expirationContainer}>
+        <FeatherIcon name="calendar" size={20} color="#002D62" />
+        <Text style={styles.expirationText}>Date d'expiration: {date}</Text>
+    </View>
 );
 
 export default function CatalogueScreen() {
@@ -17,25 +17,25 @@ export default function CatalogueScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-            <TouchableOpacity style={styles.headerAction} onPress={() => router.back()}>
-                <FeatherIcon color="#000" name="arrow-left" size={24} />
-            </TouchableOpacity>
-            <Text numberOfLines={1} style={styles.headerTitle}>
-                Catalogue
-            </Text>
-            <TouchableOpacity style={styles.headerAction}>
-            </TouchableOpacity>
-        </View>
-        <View style={styles.content}>
-            {end_date && (
-                <View style={styles.section}>
-                    <ExpirationDate date={end_date} />
-                </View>
-            )}
-            <PDFViewer uri={link} />
-        </View>
-    </SafeAreaView>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.headerAction} onPress={() => router.back()}>
+                    <FeatherIcon color="#000" name="arrow-left" size={24} />
+                </TouchableOpacity>
+                <Text numberOfLines={1} style={styles.headerTitle}>
+                    Catalogue
+                </Text>
+                <TouchableOpacity style={styles.headerAction}>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.content}>
+                {end_date && (
+                    <View style={styles.section}>
+                        <ExpirationDate date={end_date} />
+                    </View>
+                )}
+                <PDFViewer uri={link} />
+            </View>
+        </SafeAreaView>
     );
 }
 
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         width: '100%',
         paddingHorizontal: 16,
-      },
+    },
     headerAction: {
         width: 40,
         height: 40,
@@ -95,22 +95,22 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#333',
     },
-     placeholder: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    height: 400,
-    marginTop: 24,
-    padding: 0,
-    backgroundColor: 'transparent',
-  },
-  placeholderInset: {
-    borderWidth: 4,
-    borderColor: '#e5e7eb',
-    borderStyle: 'dashed',
-    borderRadius: 9,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
+    placeholder: {
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        height: 400,
+        marginTop: 24,
+        padding: 0,
+        backgroundColor: 'transparent',
+    },
+    placeholderInset: {
+        borderWidth: 4,
+        borderColor: '#e5e7eb',
+        borderStyle: 'dashed',
+        borderRadius: 9,
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+    },
 });

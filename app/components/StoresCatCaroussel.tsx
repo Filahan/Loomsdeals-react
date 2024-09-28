@@ -3,6 +3,7 @@ import { View, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-nat
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../api/stores_categories';
+import colors from '../theme';
 
 interface ImageType {
   id: string;
@@ -74,7 +75,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     left:10
-
   },
   scrollContainer: {
     flexDirection: 'row',
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginRight: 10,
     marginTop: 20,
+
   },
   image: {
     width: 80,
@@ -90,6 +91,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     shadowRadius: 4,
     elevation: 4,
+    bottom: 3, // push it down
+
   },
   skeleton: {
     width: 80,

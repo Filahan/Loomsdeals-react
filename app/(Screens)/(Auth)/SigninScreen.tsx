@@ -34,9 +34,9 @@ export default function SignIn() {
         <KeyboardAwareScrollView>
           <View style={styles.header}>
             <Text style={styles.title}>
-              Se connecter à   
+              Se connecter à
               <View style={styles.appName}><Text style={styles.appNameText}>Loum</Text></View>
-              
+
             </Text>
           </View>
 
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
       },
     ],
     paddingHorizontal: 6,
-    },
+  },
   appNameText: {
     fontSize: 28,
     fontWeight: '700',
