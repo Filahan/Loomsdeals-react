@@ -129,12 +129,6 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 30,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    // color: '#333',
-    marginBottom: 10,
-  },
   catalogueCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -161,12 +155,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectiontitle: {
-    marginHorizontal: 15,
+    marginHorizontal: 3,
     fontWeight: '600',
     fontSize: 17,
     paddingBottom: 4,
     color: colors.primary,
-    flexGrow: 1,
     letterSpacing: 0.4,
   },
   itemCard: {

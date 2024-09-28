@@ -183,6 +183,7 @@ export default function SearchScreen() {
           renderScene={renderScene}
           onIndexChange={setIndex}
           renderTabBar={renderTabBar}
+          lazy
         />
 
 
@@ -278,7 +279,7 @@ const styles = StyleSheet.create({
     marginRight: 10, // Espacement entre les boutons
   },
   filterButtonActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
+    backgroundColor: "#DCDCDC",
+    borderColor: "#DCDCDC"
   },
 });
