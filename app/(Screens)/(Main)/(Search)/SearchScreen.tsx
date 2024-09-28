@@ -67,8 +67,8 @@ export default function SearchScreen() {
 
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
         style={styles.filterContainer}
       >
@@ -110,8 +110,8 @@ export default function SearchScreen() {
 
   const renderProduits = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView 
-        horizontal 
+      <ScrollView
+        horizontal
         showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
         style={styles.filterContainer}
       >
@@ -178,18 +178,14 @@ export default function SearchScreen() {
           </View>
         </View>
 
-        {input === '' ? (
-          <Text style={styles.searchMessage}>Recherche</Text>
-        ) : (
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            renderTabBar={renderTabBar}
-          />
-        )}
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          renderTabBar={renderTabBar}
+        />
 
-        
+
       </View>
     </SafeAreaView>
   );
