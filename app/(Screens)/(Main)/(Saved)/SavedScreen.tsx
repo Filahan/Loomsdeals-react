@@ -112,10 +112,12 @@ export default function SavedScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   content: {
     padding: 16,
+    paddingTop: 30
+
   },
   title: {
     fontSize: 20,

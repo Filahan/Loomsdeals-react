@@ -68,7 +68,11 @@ export default function SearchScreen() {
 
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <View style={styles.filterContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
+        style={styles.filterContainer}
+      >
         {categoriesCatalogue.map(category => (
           <TouchableOpacity
             key={category}
@@ -81,7 +85,8 @@ export default function SearchScreen() {
             <Text>{category}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
+      <View></View>
       {filteredCatalogues.length ? (
         filteredCatalogues.map((catalogue, index) => (
           <View key={index} style={styles.cardWrapper}>
@@ -107,7 +112,11 @@ export default function SearchScreen() {
 
   const renderProduits = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <View style={styles.filterContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
+        style={styles.filterContainer}
+      >
         {categoriesProduct.map(category => (
           <TouchableOpacity
             key={category}
@@ -120,7 +129,7 @@ export default function SearchScreen() {
             <Text>{category}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       {filteredProduits.length ? (
         filteredProduits.map((produit, index) => (
           <View key={index} style={styles.cardWrapper}>
@@ -150,7 +159,8 @@ export default function SearchScreen() {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff'}}>
+      
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <View style={styles.search}>
@@ -178,14 +188,14 @@ export default function SearchScreen() {
           renderTabBar={renderTabBar}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    marginTop: 14
+    marginTop: 30
   },
   searchWrapper: {
     paddingHorizontal: 16,
@@ -205,9 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchControl: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    paddingLeft: 34,
+    height: 45,
     width: '100%',
     fontSize: 16,
     fontWeight: '500',
@@ -254,7 +262,6 @@ const styles = StyleSheet.create({
   },
   filterContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     marginBottom: 10,
   },
   filterButton: {
@@ -262,6 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#d6d6d6',
+    marginRight: 10, // Espacement entre les boutons
   },
   filterButtonActive: {
     backgroundColor: '#ccc',

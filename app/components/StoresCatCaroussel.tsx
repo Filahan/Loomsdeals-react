@@ -3,7 +3,6 @@ import { View, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-nat
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../api/stores_categories';
-import colors from '../theme';
 
 interface ImageType {
   id: string;

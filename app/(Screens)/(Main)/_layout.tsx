@@ -35,7 +35,7 @@ const TabNavigator = () => {
         name="Search"
         options={{
           title: '',
-          headerShown: true,
+          headerShown: false,
           tabBarLabel: () => null,
           tabBarIcon: ({ focused }) => (
             <Ionicons
