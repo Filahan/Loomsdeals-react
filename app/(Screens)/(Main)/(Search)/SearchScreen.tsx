@@ -13,53 +13,75 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../../theme';
+
 const renderTabBar = props => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: colors.primary }} // Indicator color
-    style={{ backgroundColor: 'white' }} // Tab bar background color
-    activeColor="#000" // Active tab text color
-    inactiveColor="#888" // Inactive tab text color
+    indicatorStyle={{ backgroundColor: colors.primary }}
+    style={{ backgroundColor: 'white' }}
+    activeColor="#000"
+    inactiveColor="#888"
   />
 );
+
 const catalogues = [
-  { title: 'Catalogue Lidl', img: '', date: '10/2024' },
-  { title: 'Catalogue Aldi', img: '', date: '11/2024' },
+  { title: 'Catalogue Lidl', img: '', date: '10/2024', category: 'Supermarket' },
+  { title: 'Catalogue Aldi', img: '', date: '11/2024', category: 'Discount' },
   // Ajoute d'autres catalogues ici
 ];
 
 const produits = [
-  { name: 'Pomme', img: '', price: '2.99€' },
-  { name: 'Banane', img: '', price: '1.99€' },
+  { name: 'Pomme', img: '', price: '2.99€', category: 'Fruits' },
+  { name: 'Banane', img: '', price: '1.99€', category: 'Fruits' },
   // Ajoute d'autres produits ici
 ];
+
+const categoriesCatalogue = ['Supermarket', 'Discount', 'Electronics'];
+const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
 
 export default function SearchScreen() {
   const [input, setInput] = useState('');
   const [index, setIndex] = useState(0);
+  const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
+  const [selectedProductCategory, setSelectedProductCategory] = useState('');
 
-  // TabView configuration
   const [routes] = useState([
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
   ]);
 
-  // Filtrer les catalogues et produits
+  // Filter catalogues based on input and selected category
   const filteredCatalogues = useMemo(() => {
     return catalogues.filter(catalogue =>
-      catalogue.title.toLowerCase().includes(input.toLowerCase())
+      catalogue.title.toLowerCase().includes(input.toLowerCase()) &&
+      (selectedCatalogueCategory ? catalogue.category === selectedCatalogueCategory : true)
     );
-  }, [input]);
+  }, [input, selectedCatalogueCategory]);
 
+  // Filter products based on input and selected category
   const filteredProduits = useMemo(() => {
     return produits.filter(produit =>
-      produit.name.toLowerCase().includes(input.toLowerCase())
+      produit.name.toLowerCase().includes(input.toLowerCase()) &&
+      (selectedProductCategory ? produit.category === selectedProductCategory : true)
     );
-  }, [input]);
+  }, [input, selectedProductCategory]);
 
-  // Render pour les catalogues
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
+      <View style={styles.filterContainer}>
+        {categoriesCatalogue.map(category => (
+          <TouchableOpacity
+            key={category}
+            onPress={() => setSelectedCatalogueCategory(category)}
+            style={[
+              styles.filterButton,
+              selectedCatalogueCategory === category && styles.filterButtonActive
+            ]}
+          >
+            <Text>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       {filteredCatalogues.length ? (
         filteredCatalogues.map((catalogue, index) => (
           <View key={index} style={styles.cardWrapper}>
@@ -83,9 +105,22 @@ export default function SearchScreen() {
     </ScrollView>
   );
 
-  // Render pour les produits
   const renderProduits = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
+      <View style={styles.filterContainer}>
+        {categoriesProduct.map(category => (
+          <TouchableOpacity
+            key={category}
+            onPress={() => setSelectedProductCategory(category)}
+            style={[
+              styles.filterButton,
+              selectedProductCategory === category && styles.filterButtonActive
+            ]}
+          >
+            <Text>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       {filteredProduits.length ? (
         filteredProduits.map((produit, index) => (
           <View key={index} style={styles.cardWrapper}>
@@ -115,7 +150,7 @@ export default function SearchScreen() {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff'}}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <View style={styles.search}>
@@ -136,13 +171,12 @@ export default function SearchScreen() {
           </View>
         </View>
 
-        {/* TabView pour switcher entre Catalogues et Produits */}
         <TabView
-    navigationState={{ index, routes }}
-    renderScene={renderScene}
-    onIndexChange={setIndex}
-    renderTabBar={renderTabBar} // Use the custom TabBar
-  />
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          renderTabBar={renderTabBar}
+        />
       </View>
     </View>
   );
@@ -151,6 +185,7 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    marginTop: 14
   },
   searchWrapper: {
     paddingHorizontal: 16,
@@ -216,5 +251,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#616d79',
     marginTop: 3,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 10,
+  },
+  filterButton: {
+    padding: 8,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#d6d6d6',
+  },
+  filterButtonActive: {
+    backgroundColor: '#ccc',
   },
 });
