@@ -63,15 +63,14 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
-    height: 200,
+    padding: 10,
   },
   item: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
     overflow: 'hidden',
-    elevation: 5,
+    // elevation: 7,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
   },
   pagination: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 13,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

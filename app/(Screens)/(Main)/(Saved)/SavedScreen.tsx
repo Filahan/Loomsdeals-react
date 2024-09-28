@@ -89,13 +89,13 @@ export default function SavedScreen() {
         {/* <Text style={styles.title}>Mes favoris</Text> */}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Catalogues sauvegardés</Text>
+          <Text style={styles.sectiontitle}>Catalogues sauvegardés</Text>
           <View style={styles.placeholder}>
             <View style={styles.placeholderInset}>
               <Catalogues store_id="" category="" saved_screen="yes" setSaved={setSaved} saved={saved} setCatalogues={setCatalogues} catalogues={catalogues} loading={loading} />
             </View>
           </View>
-          <Text style={styles.sectionTitle}>Articles sauvegardés</Text>
+          <Text style={styles.sectiontitle}>Articles sauvegardés</Text>
           <View style={styles.placeholder}>
             <View style={styles.placeholderInset}>
               <ProductCard />
@@ -158,10 +158,14 @@ const styles = StyleSheet.create({
   catalogueDetails: {
     flex: 1,
   },
-  catalogueTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+  sectiontitle: {
+    marginHorizontal: 15,
+    fontWeight: '600',
+    fontSize: 17,
+    paddingBottom: 4,
+    color: colors.primary,
+    flexGrow: 1,
+    letterSpacing: 0.4,
   },
   itemCard: {
     flexDirection: 'row',

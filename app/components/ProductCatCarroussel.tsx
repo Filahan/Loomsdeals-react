@@ -100,18 +100,18 @@ const styles = StyleSheet.create({
 
   },
   skeleton: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     marginRight: 10,
     marginTop: 20,
     backgroundColor: '#E0E0E0',
-    borderRadius: 12,
+    borderRadius: 1000,
   },
   divider: {
     width: '100%',
     height: 0,
     backgroundColor: '#CCCCCC',
-    marginBottom: 10,
+    // marginBottom: 10,
     marginTop: 10,
   },
 });

@@ -85,12 +85,13 @@ const styles = StyleSheet.create({
 
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 85,
+    height: 85,
     resizeMode: 'cover',
-    borderRadius: 12,
+    borderRadius: 100,
     shadowRadius: 4,
     elevation: 4,
+    // borderWidth:1,
     bottom: 3, // push it down
 
   },
