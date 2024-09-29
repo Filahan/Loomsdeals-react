@@ -52,25 +52,11 @@ export default function SearchScreen() {
 
   const textInputRef = useRef<TextInput>(null);
 
-  // Focus the input when the screen is mounted
   useEffect(() => {
     if (textInputRef.current) {
       textInputRef.current.focus();
     }
   }, []);
-  const filteredCatalogues = useMemo(() => {
-    return catalogues.filter((catalogue) =>
-      catalogue.title.toLowerCase().includes(input.toLowerCase()) &&
-      (selectedCatalogueCategory ? catalogue.category === selectedCatalogueCategory : true)
-    );
-  }, [input, selectedCatalogueCategory]);
-
-  const filteredProduits = useMemo(() => {
-    return produits.filter((produit) =>
-      produit.name.toLowerCase().includes(input.toLowerCase()) &&
-      (selectedProductCategory ? produit.category === selectedProductCategory : true)
-    );
-  }, [input, selectedProductCategory]);
 
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
@@ -96,8 +82,8 @@ export default function SearchScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {filteredCatalogues.length ? (
-        filteredCatalogues.map((catalogue, index) => (
+      {catalogues.length ? (
+        catalogues.map((catalogue, index) => (
           <View key={index} style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => { /* Action on click */ }}>
               <View style={styles.card}>
@@ -143,8 +129,8 @@ export default function SearchScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {filteredProduits.length ? (
-        filteredProduits.map((produit, index) => (
+      {produits.length ? (
+        produits.map((produit, index) => (
           <View key={index} style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => { /* Action on click */ }}>
               <View style={styles.card}>
