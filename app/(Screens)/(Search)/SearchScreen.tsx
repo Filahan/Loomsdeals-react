@@ -5,6 +5,8 @@ import {
   View,
   ScrollView,
   Text,
+  Image,
+
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -17,8 +19,7 @@ import { getStoresCategories } from '../../api/stores_categories';
 
 // Define catalogues and products
 const catalogues = [
-  { title: 'Catalogue Lidl', date: '10/2024', category: 'Supermarket' },
-  { title: 'Catalogue Aldi', date: '11/2024', category: 'Discount' },
+  { title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf" },
 ];
 
 const produits = [
@@ -60,7 +61,7 @@ export default function SearchScreen() {
     id: number;  // or string, depending on your data
     name: string;
   }
-    useEffect(() => {
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response: Category[] = await getStoresCategories();
@@ -93,12 +94,20 @@ export default function SearchScreen() {
           <View key={index} style={styles.cardWrapper}>
             <TouchableOpacity onPress={() => { /* Action on click */ }}>
               <View style={styles.card}>
-                <View style={styles.cardImg}>
-                  <Text>{catalogue.title[0]}</Text>
+
+                <View style={styles.catImg}>
+
+                  <Image
+                    resizeMode="contain"
+                    source={{ uri: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png" }}
+                    style={{ height: "100%" }}
+                  />
+
+                  {/* <Text>{catalogue.img}</Text> */}
                 </View>
                 <View style={styles.cardBody}>
                   <Text style={styles.cardTitle}>{catalogue.title}</Text>
-                  <Text style={styles.cardPhone}>{catalogue.date}</Text>
+                  <Text style={styles.cardPhone}>{catalogue.start_date} - {catalogue.end_date}</Text>
                 </View>
                 <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
               </View>
@@ -252,13 +261,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  catImg: {
+    height: 150,
+    width: 100,
+    borderRadius: 7,
+    backgroundColor: '#9ca3af',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+  },
   cardBody: {
     marginLeft: 12,
     marginRight: 'auto',
+    flex: 1,  // Allow the cardBody to take available space
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: '500',
+    flexShrink: 1, // Allows text to shrink
+    flexWrap: 'wrap', // Allows text to wrap
   },
   cardPhone: {
     fontSize: 14,
