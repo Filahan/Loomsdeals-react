@@ -213,6 +213,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderRadius: 7,
     flexDirection: 'row',
+    // borderWidth: 2,
+
     alignItems: 'center',
   },
   searchIcon: {
@@ -221,8 +223,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchControl: {
-    height: 45,
-    width: '100%',
+    height: 40,
+    width: '90%',
     fontSize: 16,
     fontWeight: '500',
   },
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   filterButtonActive: {
-    backgroundColor: "#DCDCDC",
-    borderColor: "#DCDCDC"
+    backgroundColor: "#FFE5B4",
+    borderColor: "#FFE5B4"
   },
 });

@@ -6,11 +6,13 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Image
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router } from 'expo-router';
 import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
+const logo = require('../../asserts/shopslogos/logo.png');
 
 import colors from "../../theme"
 export default function SignIn() {
@@ -29,15 +31,11 @@ export default function SignIn() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor:"#fff"}}>
       <View style={styles.container}>
         <KeyboardAwareScrollView>
           <View style={styles.header}>
-            <Text style={styles.title}>
-              Se connecter à
-              <View style={styles.appName}><Text style={styles.appNameText}>Loum</Text></View>
-
-            </Text>
+            <Image source={logo} resizeMode="contain"  style={styles.logo}/>
           </View>
 
           <View style={styles.form}>
@@ -100,17 +98,15 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 24,
+    paddingVertical: 50,
     paddingHorizontal: 0,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
   },
-  title: {
-    fontSize: 31,
-    fontWeight: '700',
-    color: '#1D2A32',
-    marginBottom: 6,
+  logo: {
+    height: 80, // Smaller logo height
+    // width: 50
   },
   header: {
     alignItems: 'center',
@@ -129,13 +125,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   formLink: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: colors.primary,
     textAlign: 'center',
   },
   formFooter: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#222',
     textAlign: 'center',
@@ -145,52 +141,36 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
   },
   inputControl: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F1F0',
     paddingHorizontal: 16,
-    borderRadius: 9,
+    borderRadius: 6,
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
-    borderWidth: 0.5,
-    borderColor: colors.primary,
     borderStyle: 'solid',
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9,
+    borderRadius: 6,
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 15,
     lineHeight: 26,
     fontWeight: '600',
     color: '#fff',
-  },
-  appName: {
-    backgroundColor: colors.secondary,
-    transform: [
-      {
-        rotate: '-7deg',
-      },
-    ],
-    paddingHorizontal: 6,
-  },
-  appNameText: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: colors.primary,
   },
 });
 

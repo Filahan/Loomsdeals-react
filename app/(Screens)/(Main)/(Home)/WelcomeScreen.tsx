@@ -111,7 +111,7 @@ export default function TabViewExample() {
               onPress={() => router.push({ pathname: '/SettingsScreen' })}
             >
               <FeatherIcon
-                color={colors.primary}
+                color={"white"}
                 name="user"
                 size={23}
 
@@ -137,16 +137,17 @@ export default function TabViewExample() {
 
 const styles = StyleSheet.create({
   logoContainer: {
-    // alignItems: "flex-start",
+    alignItems: "flex-start",
     marginHorizontal: 20,
     marginVertical: 10,
     flexDirection: 'row',
-    justifyContent: "center"
+    // justifyContent: "center"
 
   },
   settings: {
-    backgroundColor: colors.secondary,
-    borderColor: "grey",
+    borderWidth: 2,
+    backgroundColor: "black",
+    color:"white",
     height: 45, // Smaller logo height
     width: 45,
     borderRadius: 7,
@@ -174,29 +175,28 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     borderRadius: 7,
-    // flexDirection: 'row',
-    // alignItems: 'center',
+    borderWidth: 2,
+    height: 45,
     flexGrow: 1,
     marginRight: 6,
-    backgroundColor: "yellow"
 
   },
   input: {
-    backgroundColor: colors.secondary,
+    // backgroundColor: colors.secondary,
     borderRadius: 7,
     alignItems: 'center',
     paddingVertical: 10,
     paddingLeft: 34,
-    height: 45,
+    height: "100%",
     fontSize: 16,
     fontWeight: '500',
 
   },
   inputWrapper: {
+
     width: "100%"
   },
   inputIcon: {
-    // backgroundColor: colors.primary,
 
     position: 'absolute',
     top: 0,

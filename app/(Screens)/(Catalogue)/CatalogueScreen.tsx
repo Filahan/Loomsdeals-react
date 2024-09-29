@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity } from 'react-na
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import PDFViewer from '../../components/PDFViewer'; // Assure-toi que le chemin est correct
 import { router, useGlobalSearchParams } from 'expo-router';
+import colors from '../../theme';
 
 // Ajoute cette section pour la date d'expiration
 const ExpirationDate = ({ date }) => (
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     expirationContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: colors.secondary,
         padding: 10,
         borderRadius: 5,
         marginVertical: 10,
