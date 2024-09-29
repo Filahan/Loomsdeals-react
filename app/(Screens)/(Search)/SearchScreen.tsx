@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -13,6 +13,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../theme';
 import { router } from 'expo-router';
+import { getStoresCategories } from '../../api/stores_categories';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -36,7 +37,6 @@ const produits = [
   // Add more products here
 ];
 
-const categoriesCatalogue = ['Supermarket', 'Discount', 'Electronics'];
 const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
 
 export default function SearchScreen() {
@@ -45,10 +45,10 @@ export default function SearchScreen() {
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [selectedProductCategory, setSelectedProductCategory] = useState('');
 
-  const [routes] = useState([
+  const routes = [
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
-  ]);
+  ];
 
   const textInputRef = useRef<TextInput>(null);
 
@@ -58,6 +58,25 @@ export default function SearchScreen() {
     }
   }, []);
 
+  interface Category {
+    id: number;  // or string, depending on your data
+    name: string;
+  }
+  
+  const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response: Category[] = await getStoresCategories();
+        setCategoriesCatalogue(response);
+      } catch (error) {
+        console.error('Error fetching categories: ', error);
+      }
+    };
+  
+    fetchCategories();
+  }, []);
+  
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
       <ScrollView
@@ -67,18 +86,18 @@ export default function SearchScreen() {
       >
         {categoriesCatalogue.map((category) => (
           <TouchableOpacity
-            key={category}
+            key={category.id} // Use category.id as the key
             onPress={() =>
-              setSelectedCatalogueCategory(prev =>
-                prev === category ? '' : category
+              setSelectedCatalogueCategory((prev) =>
+                prev === category.name ? '' : category.name
               )
             }
             style={[
               styles.filterButton,
-              selectedCatalogueCategory === category && styles.filterButtonActive
+              selectedCatalogueCategory === category.name && styles.filterButtonActive,
             ]}
           >
-            <Text>{category}</Text>
+            <Text>{category.name}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -114,15 +133,15 @@ export default function SearchScreen() {
       >
         {categoriesProduct.map((category) => (
           <TouchableOpacity
-            key={category}
+            key={category} // Use category name as the key
             onPress={() =>
-              setSelectedProductCategory(prev =>
+              setSelectedProductCategory((prev) =>
                 prev === category ? '' : category
               )
             }
             style={[
               styles.filterButton,
-              selectedProductCategory === category && styles.filterButtonActive
+              selectedProductCategory === category && styles.filterButtonActive,
             ]}
           >
             <Text>{category}</Text>
@@ -160,7 +179,6 @@ export default function SearchScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
-
         <View style={styles.searchWrapper}>
           <TouchableOpacity
             onPress={() => {
@@ -204,7 +222,6 @@ export default function SearchScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -220,7 +237,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 2,
     marginTop: 15,
-
     alignItems: 'center',
   },
   searchIcon: {
@@ -242,13 +258,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     fontSize: 15,
     color: '#9ca1ac',
-  },
-  searchMessage: {
-    textAlign: 'center',
-    paddingTop: 16,
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#616d79',
   },
   cardWrapper: {
     borderBottomWidth: 1,
@@ -273,30 +282,28 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#000',
+    fontWeight: '500',
   },
   cardPhone: {
-    fontSize: 15,
-    color: '#616d79',
-    marginTop: 3,
+    fontSize: 14,
+    color: '#6b7280',
   },
   filterContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    paddingVertical: 10,
   },
   filterButton: {
-    padding: 8,
-    borderRadius: 100,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: '#d6d6d6',
-    marginRight: 10,
+    borderColor: colors.primary,
+    borderRadius: 20,
+    marginRight: 8,
   },
   filterButtonActive: {
     backgroundColor: "#FFE5B4",
-    borderColor: "#FFE5B4"
-  },
+    borderColor: "#FFE5B4"  },
   return: {
-
+    fontSize: 16,
+    color: '#000',
   },
 });
