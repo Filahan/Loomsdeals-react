@@ -15,6 +15,20 @@ import colors from '../../theme';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
 
+// Define catalogues and products
+const catalogues = [
+  { title: 'Catalogue Lidl', date: '10/2024', category: 'Supermarket' },
+  { title: 'Catalogue Aldi', date: '11/2024', category: 'Discount' },
+];
+
+const produits = [
+  { name: 'Pomme', price: '2.99€', category: 'Fruits' },
+  { name: 'Banane', price: '1.99€', category: 'Fruits' },
+];
+
+// Define categories
+const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
+
 const renderTabBar = (props) => (
   <TabBar
     {...props}
@@ -25,46 +39,28 @@ const renderTabBar = (props) => (
   />
 );
 
-const catalogues = [
-  { title: 'Catalogue Lidl', img: '', date: '10/2024', category: 'Supermarket' },
-  { title: 'Catalogue Aldi', img: '', date: '11/2024', category: 'Discount' },
-  // Add more catalogues here
-];
-
-const produits = [
-  { name: 'Pomme', img: '', price: '2.99€', category: 'Fruits' },
-  { name: 'Banane', img: '', price: '1.99€', category: 'Fruits' },
-  // Add more products here
-];
-
-const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
-
 export default function SearchScreen() {
   const [input, setInput] = useState('');
   const [index, setIndex] = useState(0);
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [selectedProductCategory, setSelectedProductCategory] = useState('');
+  const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
 
+  const textInputRef = useRef<TextInput>(null);
   const routes = [
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
   ];
 
-  const textInputRef = useRef<TextInput>(null);
-
   useEffect(() => {
-    if (textInputRef.current) {
-      textInputRef.current.focus();
-    }
+    textInputRef.current?.focus();
   }, []);
 
   interface Category {
     id: number;  // or string, depending on your data
     name: string;
   }
-  
-  const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
-  useEffect(() => {
+    useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response: Category[] = await getStoresCategories();
@@ -73,25 +69,16 @@ export default function SearchScreen() {
         console.error('Error fetching categories: ', error);
       }
     };
-  
     fetchCategories();
   }, []);
-  
+
   const renderCatalogues = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
         {categoriesCatalogue.map((category) => (
           <TouchableOpacity
-            key={category.id} // Use category.id as the key
-            onPress={() =>
-              setSelectedCatalogueCategory((prev) =>
-                prev === category.name ? '' : category.name
-              )
-            }
+            key={category.id}
+            onPress={() => setSelectedCatalogueCategory((prev) => (prev === category.name ? '' : category.name))}
             style={[
               styles.filterButton,
               selectedCatalogueCategory === category.name && styles.filterButtonActive,
@@ -126,19 +113,11 @@ export default function SearchScreen() {
 
   const renderProduits = () => (
     <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-      >
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
         {categoriesProduct.map((category) => (
           <TouchableOpacity
-            key={category} // Use category name as the key
-            onPress={() =>
-              setSelectedProductCategory((prev) =>
-                prev === category ? '' : category
-              )
-            }
+            key={category}
+            onPress={() => setSelectedProductCategory((prev) => (prev === category ? '' : category))}
             style={[
               styles.filterButton,
               selectedProductCategory === category && styles.filterButtonActive,
@@ -177,18 +156,12 @@ export default function SearchScreen() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
-          <TouchableOpacity
-            onPress={() => {
-              router.back();
-            }}>
+          <TouchableOpacity onPress={() => router.back()}>
             <Text style={styles.return}>
-              <FeatherIcon
-                color="#000"
-                name="arrow-left"
-                size={24} />
+              <FeatherIcon color="#000" name="arrow-left" size={24} />
             </Text>
           </TouchableOpacity>
           <View style={styles.search}>
@@ -196,11 +169,11 @@ export default function SearchScreen() {
               <FontAwesome5 color="#848484" name="search" size={17} />
             </View>
             <TextInput
-              ref={textInputRef}  // Attach the ref to the TextInput
+              ref={textInputRef}
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={(val) => setInput(val)}
+              onChangeText={setInput}
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
               returnKeyType="done"
@@ -209,7 +182,6 @@ export default function SearchScreen() {
             />
           </View>
         </View>
-
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
@@ -223,6 +195,10 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flexGrow: 1,
   },
@@ -301,7 +277,8 @@ const styles = StyleSheet.create({
   },
   filterButtonActive: {
     backgroundColor: "#FFE5B4",
-    borderColor: "#FFE5B4"  },
+    borderColor: "#FFE5B4",
+  },
   return: {
     fontSize: 16,
     color: '#000',
