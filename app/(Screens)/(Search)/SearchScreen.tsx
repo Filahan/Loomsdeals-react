@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -50,7 +50,14 @@ export default function SearchScreen() {
     { key: 'produits', title: 'Produits' },
   ]);
 
-  // Filter catalogues based on input and selected category
+  const textInputRef = useRef<TextInput>(null);
+
+  // Focus the input when the screen is mounted
+  useEffect(() => {
+    if (textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  }, []);
   const filteredCatalogues = useMemo(() => {
     return catalogues.filter((catalogue) =>
       catalogue.title.toLowerCase().includes(input.toLowerCase()) &&
@@ -58,7 +65,6 @@ export default function SearchScreen() {
     );
   }, [input, selectedCatalogueCategory]);
 
-  // Filter products based on input and selected category
   const filteredProduits = useMemo(() => {
     return produits.filter((produit) =>
       produit.name.toLowerCase().includes(input.toLowerCase()) &&
@@ -186,6 +192,7 @@ export default function SearchScreen() {
               <FontAwesome5 color="#848484" name="search" size={17} />
             </View>
             <TextInput
+              ref={textInputRef}  // Attach the ref to the TextInput
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -210,6 +217,7 @@ export default function SearchScreen() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
