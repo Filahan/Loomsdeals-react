@@ -26,13 +26,13 @@ const renderTabBar = (props) => (
 const catalogues = [
   { title: 'Catalogue Lidl', img: '', date: '10/2024', category: 'Supermarket' },
   { title: 'Catalogue Aldi', img: '', date: '11/2024', category: 'Discount' },
-  // Ajoute d'autres catalogues ici
+  // Add more catalogues here
 ];
 
 const produits = [
   { name: 'Pomme', img: '', price: '2.99€', category: 'Fruits' },
   { name: 'Banane', img: '', price: '1.99€', category: 'Fruits' },
-  // Ajoute d'autres produits ici
+  // Add more products here
 ];
 
 const categoriesCatalogue = ['Supermarket', 'Discount', 'Electronics'];
@@ -69,13 +69,17 @@ export default function SearchScreen() {
     <ScrollView contentContainerStyle={styles.searchContent}>
       <ScrollView
         horizontal
-        showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
+        showsHorizontalScrollIndicator={false}
         style={styles.filterContainer}
       >
         {categoriesCatalogue.map((category) => (
           <TouchableOpacity
             key={category}
-            onPress={() => setSelectedCatalogueCategory(category)}
+            onPress={() => 
+              setSelectedCatalogueCategory(prev => 
+                prev === category ? '' : category
+              )
+            }
             style={[
               styles.filterButton,
               selectedCatalogueCategory === category && styles.filterButtonActive
@@ -88,7 +92,7 @@ export default function SearchScreen() {
       {filteredCatalogues.length ? (
         filteredCatalogues.map((catalogue, index) => (
           <View key={index} style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => { /* Action au clic */ }}>
+            <TouchableOpacity onPress={() => { /* Action on click */ }}>
               <View style={styles.card}>
                 <View style={styles.cardImg}>
                   <Text>{catalogue.title[0]}</Text>
@@ -112,13 +116,17 @@ export default function SearchScreen() {
     <ScrollView contentContainerStyle={styles.searchContent}>
       <ScrollView
         horizontal
-        showsHorizontalScrollIndicator={false} // Masque la barre de défilement horizontale
+        showsHorizontalScrollIndicator={false}
         style={styles.filterContainer}
       >
         {categoriesProduct.map((category) => (
           <TouchableOpacity
             key={category}
-            onPress={() => setSelectedProductCategory(category)}
+            onPress={() => 
+              setSelectedProductCategory(prev => 
+                prev === category ? '' : category
+              )
+            }
             style={[
               styles.filterButton,
               selectedProductCategory === category && styles.filterButtonActive
@@ -131,7 +139,7 @@ export default function SearchScreen() {
       {filteredProduits.length ? (
         filteredProduits.map((produit, index) => (
           <View key={index} style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => { /* Action au clic */ }}>
+            <TouchableOpacity onPress={() => { /* Action on click */ }}>
               <View style={styles.card}>
                 <View style={styles.cardImg}>
                   <Text>{produit.name[0]}</Text>
@@ -185,8 +193,6 @@ export default function SearchScreen() {
           renderTabBar={renderTabBar}
           lazy
         />
-
-
       </View>
     </SafeAreaView>
   );
@@ -276,7 +282,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#d6d6d6',
-    marginRight: 10, // Espacement entre les boutons
+    marginRight: 10,
   },
   filterButtonActive: {
     backgroundColor: "#DCDCDC",
