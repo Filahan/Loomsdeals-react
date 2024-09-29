@@ -9,7 +9,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Settings
+  TouchableWithoutFeedback
 } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -21,6 +21,7 @@ import Cataloguestab from "./tabs/Cataloguestab"
 import { router } from 'expo-router';
 const logo = require('../../../asserts/shopslogos/logo.png');
 
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const FirstRoute = () => (
   <Hometab />
@@ -74,21 +75,32 @@ export default function TabViewExample() {
     { key: 'second', title: 'Catalogues ' },
   ]);
 
+  const navigation:any  = useNavigation(); // Get the navigation object
 
   return (
 
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
+
         <View style={styles.logoContainer}>
           <Image source={logo} resizeMode="contain" style={styles.logo} />
         </View>
 
         <View style={styles.search}>
+          <TouchableWithoutFeedback 
+              onPress={() => router.push({ pathname: '/SearchScreen' })}
+              >
+              {/* <TouchableWithoutFeedback 
+              onPress={() => router.push({ pathname: '/search' })}
+              > */}
 
-          <View style={styles.searchInput}>
-            <View style={styles.inputWrapper}>
+            <View style={styles.searchInput}>
+              <View style={styles.inputWrapper}>
+                <Text style={styles.input}>Rechercher...</Text>
 
-              <TextInput
+                {/* <Text style={styles.input}>Rechercher...</Text>  */}
+
+                {/* <TextInput
                 autoCapitalize="none"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
@@ -96,16 +108,19 @@ export default function TabViewExample() {
                 placeholderTextColor="#848484"
                 returnKeyType="done"
                 style={styles.input}
-              />
-              <View style={styles.inputIcon}>
-                <FontAwesome5
-                  color="#848484"
-                  name="search"
-                  size={16}
-                />
+              /> */}
+                <View style={styles.inputIcon}>
+                  <FontAwesome5
+                    color="#848484"
+                    name="search"
+                    size={16}
+                  />
+                </View>
               </View>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
+
+
           <View style={styles.settings}>
             <TouchableOpacity
               onPress={() => router.push({ pathname: '/SettingsScreen' })}
@@ -119,6 +134,7 @@ export default function TabViewExample() {
             </TouchableOpacity >
           </View>
         </View>
+
         <View style={styles.tabContainer}>
           <TabView
             navigationState={{ index, routes }}
@@ -147,7 +163,7 @@ const styles = StyleSheet.create({
   settings: {
     borderWidth: 2,
     backgroundColor: "black",
-    color:"white",
+    color: "white",
     height: 45, // Smaller logo height
     width: 45,
     borderRadius: 7,
@@ -190,6 +206,7 @@ const styles = StyleSheet.create({
     height: "100%",
     fontSize: 16,
     fontWeight: '500',
+    color: "#848484"
 
   },
   inputWrapper: {

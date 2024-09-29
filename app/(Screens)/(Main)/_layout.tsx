@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from "./(Home)/WelcomeScreen";
 import SavedScreen from "./(Saved)/SavedScreen";
 import SettingScreen from "../(Settings)/SettingsScreen";
-import SearchScreen from "./(Search)/SearchScreen"; // Import the search screen component
+import SearchScreen from "../(Search)/SearchScreen"; // Import the search screen component
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -31,7 +31,7 @@ const TabNavigator = () => {
         }}
         component={WelcomeScreen}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Search"
         options={{
           title: '',
@@ -46,7 +46,7 @@ const TabNavigator = () => {
           ),
         }}
         component={SearchScreen} // Add the search screen component
-      />
+      /> */}
       <Tab.Screen
         name="Saved"
         options={{

@@ -11,7 +11,8 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import colors from '../../../theme';
+import colors from '../../theme';
+import { router } from 'expo-router';
 
 const renderTabBar = (props) => (
   <TabBar
@@ -75,8 +76,8 @@ export default function SearchScreen() {
         {categoriesCatalogue.map((category) => (
           <TouchableOpacity
             key={category}
-            onPress={() => 
-              setSelectedCatalogueCategory(prev => 
+            onPress={() =>
+              setSelectedCatalogueCategory(prev =>
                 prev === category ? '' : category
               )
             }
@@ -122,8 +123,8 @@ export default function SearchScreen() {
         {categoriesProduct.map((category) => (
           <TouchableOpacity
             key={category}
-            onPress={() => 
-              setSelectedProductCategory(prev => 
+            onPress={() =>
+              setSelectedProductCategory(prev =>
                 prev === category ? '' : category
               )
             }
@@ -167,7 +168,19 @@ export default function SearchScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
+
         <View style={styles.searchWrapper}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}>
+            <Text style={styles.return}>
+              <FeatherIcon
+                color="#000"
+                name="arrow-left"
+                size={24} />
+            </Text>
+          </TouchableOpacity>
           <View style={styles.search}>
             <View style={styles.searchIcon}>
               <FontAwesome5 color="#848484" name="search" size={17} />
@@ -201,19 +214,18 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    marginTop: 30,
   },
   searchWrapper: {
     paddingHorizontal: 16,
-    paddingBottom: 12,
+    paddingBottom: 5,
     borderBottomWidth: 1,
-    borderColor: '#efefef',
+    borderColor: colors.secondary,
   },
   search: {
-    backgroundColor: colors.secondary,
     borderRadius: 7,
     flexDirection: 'row',
-    // borderWidth: 2,
+    borderWidth: 2,
+    marginTop: 15,
 
     alignItems: 'center',
   },
@@ -289,5 +301,8 @@ const styles = StyleSheet.create({
   filterButtonActive: {
     backgroundColor: "#FFE5B4",
     borderColor: "#FFE5B4"
+  },
+  return: {
+
   },
 });

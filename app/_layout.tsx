@@ -7,7 +7,7 @@ import CatalogueScreen from './(Screens)/(Catalogue)/CatalogueScreen';
 import SigninScreen from './(Screens)/(Auth)/SigninScreen';
 import SignupScreen from './(Screens)/(Auth)/SignupScreen';
 import ForgotPasswordScreen from './(Screens)/(Auth)/ForgotPasswordScreen';
-import SearchScreen from './(Screens)/(Main)/(Search)/SearchScreen';
+import SearchScreen from './(Screens)/(Search)/SearchScreen';
 
 const Stack = createStackNavigator();
 

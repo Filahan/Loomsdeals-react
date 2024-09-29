@@ -73,7 +73,8 @@ const StoresCatCaroussel = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    left:10
+    left: 10,
+    // backgroundColor:'red'
   },
   scrollContainer: {
     flexDirection: 'row',
@@ -84,19 +85,19 @@ const styles = StyleSheet.create({
 
   },
   image: {
-    width: 85,
-    height: 85,
+    width: 70,
+    height: 70,
     resizeMode: 'cover',
-    borderRadius: 100,
+    borderRadius: 12,
     shadowRadius: 4,
     elevation: 4,
-    // borderWidth:1,
+    borderWidth: 1,
     bottom: 3, // push it down
 
   },
   skeleton: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     marginRight: 10,
     marginTop: 20,
     backgroundColor: '#E0E0E0',
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 0,
     backgroundColor: '#CCCCCC',
-    marginBottom: 10,
     marginTop: 10,
   },
 });
