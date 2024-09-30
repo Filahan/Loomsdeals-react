@@ -22,6 +22,30 @@ async function getAllCatalogues() {
     }
 }
 
+async function getAllCatalogueslike(cond) {
+    try {
+        const { data, error } = await supabase
+            .from('catalogues')
+            .select(`
+            *,
+            stores (
+                url,
+                stores_categories (name)
+            )
+        `)
+            .or(`title.ilike.%${cond}%, store.ilike.%${cond}%`);  // Search in both title and store columns
+
+        if (error) {
+            throw new Error(`Error fetching catalogues: ${error.message}`);
+        }
+        return data;
+    } catch (err) {
+        console.error(err.message);
+        throw new Error(`Error fetching catalogues: ${err.message}`);
+    }
+}
+
+
 // Function to get catalogues by IDs
 async function getCataloguesByIds(cataloguesIds) {
     if (!cataloguesIds) {
@@ -50,4 +74,4 @@ async function getCataloguesByIds(cataloguesIds) {
 }
 
 
-export { getAllCatalogues, getCataloguesByIds };
+export { getAllCatalogues, getCataloguesByIds, getAllCatalogueslike };

@@ -15,6 +15,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../theme';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
+import { getAllCatalogueslike } from '../../api/catalogues';
 
 
 interface Catalogue {
@@ -23,25 +24,30 @@ interface Catalogue {
   title: string;
   start_date: string;
   end_date: string;
-  stores: { url: string; category: { name: string } };
+  stores: { url: string; stores_categories: { name: string } };
   store: string;
   img: string;
 }
 
 // Define catalogues and products
-const catalogues: Catalogue[] = [
-  {
-    title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf",
-    id: '',
-    stores: {
-      url: 'https://www.1min30.com/wp-content/uploads/2018/02/Symbole-Lidl.jpg',
-      category: {
-        name: 'Marché'
-      }
-    },
-    store: ''
-  },
-];
+
+
+// const catalogues: Catalogue[] = [
+//   {
+//     title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf",
+//     id: '',
+//     stores: {
+//       url: 'https://www.1min30.com/wp-content/uploads/2018/02/Symbole-Lidl.jpg',
+//       category: {
+//         name: 'Marché'
+//       }
+//     },
+//     store: ''
+//   },
+// ];
+
+
+
 
 const produits = [
   { name: 'Pomme', price: '2.99€', category: 'Fruits' },
@@ -62,6 +68,7 @@ const renderTabBar = (props) => (
 );
 
 export default function SearchScreen() {
+
   const [input, setInput] = useState('');
   const [index, setIndex] = useState(0);
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
@@ -73,6 +80,19 @@ export default function SearchScreen() {
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
   ];
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+
+  useEffect(() => {
+    const fetchCatalogues = async () => {
+      try {
+        const response: Catalogue[] = await getAllCatalogueslike(""); // Fetch catalogues based on input
+        setCatalogues(response);
+      } catch (error) {
+        console.error('Error fetching catalogues: ', error);
+      }
+    };
+    fetchCatalogues();
+  }, []);
 
   useEffect(() => {
     textInputRef.current?.focus();
@@ -97,7 +117,7 @@ export default function SearchScreen() {
   const renderCatalogues = () => {
     const filteredCatalogues = catalogues.filter((catalogue) => {
       if (!selectedCatalogueCategory) return true; // Show all if no category is selected
-      return catalogue.stores.category.name === selectedCatalogueCategory
+      return catalogue.stores.stores_categories.name === selectedCatalogueCategory
 
     });
 
@@ -120,20 +140,21 @@ export default function SearchScreen() {
         {filteredCatalogues.length ? (
           filteredCatalogues.map((catalogue, index) => (
             <View key={index} style={styles.cardWrapper}>
-              <TouchableOpacity onPress={() => { /* Action on click */ }}>
+              <TouchableOpacity
+                onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link: catalogue.link, end_date: catalogue.end_date } })}
+              >
                 <View style={styles.card}>
                   <View style={styles.catImg}>
                     <Image
                       resizeMode="contain"
                       source={{ uri: catalogue.img }}
-                      style={{ height: "100%", backgroundColor:"grey", borderRadius:5 }}
+                      style={{ height: "100%", backgroundColor: "grey", borderRadius: 5 }}
                     />
                   </View>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardTitle}>{catalogue.title}</Text>
                     <Text style={styles.carddate}>{catalogue.start_date} - {catalogue.end_date}</Text>
                     <Image resizeMode="cover" source={{ uri: catalogue.stores.url }} style={styles.storelogo}></Image>
-                    {/* <Text style={styles.card}>{catalogue.start_date} - {catalogue.end_date}</Text> */}
                   </View>
                   <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
                 </View>
@@ -172,7 +193,7 @@ export default function SearchScreen() {
         {filteredProduits.length ? (
           filteredProduits.map((produit, index) => (
             <View key={index} style={styles.cardWrapper}>
-              <TouchableOpacity onPress={() => { /* Action on click */ }}>
+              <TouchableOpacity>
                 <View style={styles.card}>
                   <View style={styles.cardImg}>
                     <Text>{produit.name[0]}</Text>
@@ -197,8 +218,13 @@ export default function SearchScreen() {
     catalogues: renderCatalogues,
     produits: renderProduits,
   });
-  const handleInputSubmit = () => {
-    console.log(input); // Print the input to the console on submit
+  const handleInputSubmit = async () => {
+    try {
+      const response: Catalogue[] = await getAllCatalogueslike(input); // Fetch catalogues based on input
+      setCatalogues(response);
+    } catch (error) {
+      console.error('Error fetching catalogues: ', error);
+    }
   };
   const handleInputChange = (text: string) => {
     setInput(text);
@@ -222,7 +248,6 @@ export default function SearchScreen() {
               autoCorrect={false}
               clearButtonMode="while-editing"
               onChangeText={handleInputChange} // Call the function here
-
               onSubmitEditing={handleInputSubmit} // Call the function on submit
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
@@ -283,7 +308,7 @@ const styles = StyleSheet.create({
   storelogo: {
     height: 30,
     width: 30,
-    borderRadius:100
+    borderRadius: 100
 
   },
   searchEmpty: {
@@ -332,7 +357,7 @@ const styles = StyleSheet.create({
   carddate: {
     fontSize: 12,
     color: '#9ca3af',
-    paddingBottom:2
+    paddingBottom: 2
   },
   filterContainer: {
     flexDirection: 'row',
