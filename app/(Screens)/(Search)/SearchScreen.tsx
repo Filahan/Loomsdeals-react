@@ -6,7 +6,6 @@ import {
   ScrollView,
   Text,
   Image,
-
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -73,91 +72,102 @@ export default function SearchScreen() {
     fetchCategories();
   }, []);
 
-  const renderCatalogues = () => (
-    <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-        {categoriesCatalogue.map((category) => (
-          <TouchableOpacity
-            key={category.id}
-            onPress={() => setSelectedCatalogueCategory((prev) => (prev === category.name ? '' : category.name))}
-            style={[
-              styles.filterButton,
-              selectedCatalogueCategory === category.name && styles.filterButtonActive,
-            ]}
-          >
-            <Text>{category.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      {catalogues.length ? (
-        catalogues.map((catalogue, index) => (
-          <View key={index} style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => { /* Action on click */ }}>
-              <View style={styles.card}>
+  const renderCatalogues = () => {
+    const filteredCatalogues = catalogues.filter((catalogue) => {
+      if (!selectedCatalogueCategory) return true; // Show all if no category is selected
+      // Add your filtering logic here based on catalogue's category if available
+      return true; // Modify according to your data structure
+    });
 
-                <View style={styles.catImg}>
-
-                  <Image
-                    resizeMode="contain"
-                    source={{ uri: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png" }}
-                    style={{ height: "100%" }}
-                  />
-
-                  {/* <Text>{catalogue.img}</Text> */}
-                </View>
-                <View style={styles.cardBody}>
-                  <Text style={styles.cardTitle}>{catalogue.title}</Text>
-                  <Text style={styles.cardPhone}>{catalogue.start_date} - {catalogue.end_date}</Text>
-                </View>
-                <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-              </View>
+    return (
+      <ScrollView contentContainerStyle={styles.searchContent}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+          {categoriesCatalogue.map((category) => (
+            <TouchableOpacity
+              key={category.id}
+              onPress={() => setSelectedCatalogueCategory((prev) => (prev === category.name ? '' : category.name))}
+              style={[
+                styles.filterButton,
+                selectedCatalogueCategory === category.name && styles.filterButtonActive,
+              ]}
+            >
+              <Text>{category.name}</Text>
             </TouchableOpacity>
-          </View>
-        ))
-      ) : (
-        <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
-      )}
-    </ScrollView>
-  );
-
-  const renderProduits = () => (
-    <ScrollView contentContainerStyle={styles.searchContent}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-        {categoriesProduct.map((category) => (
-          <TouchableOpacity
-            key={category}
-            onPress={() => setSelectedProductCategory((prev) => (prev === category ? '' : category))}
-            style={[
-              styles.filterButton,
-              selectedProductCategory === category && styles.filterButtonActive,
-            ]}
-          >
-            <Text>{category}</Text>
-          </TouchableOpacity>
-        ))}
+          ))}
+        </ScrollView>
+        {filteredCatalogues.length ? (
+          filteredCatalogues.map((catalogue, index) => (
+            <View key={index} style={styles.cardWrapper}>
+              <TouchableOpacity onPress={() => { /* Action on click */ }}>
+                <View style={styles.card}>
+                  <View style={styles.catImg}>
+                    <Image
+                      resizeMode="contain"
+                      source={{ uri: catalogue.img }}
+                      style={{ height: "100%" }}
+                    />
+                  </View>
+                  <View style={styles.cardBody}>
+                    <Text style={styles.cardTitle}>{catalogue.title}</Text>
+                    <Text style={styles.cardPhone}>{catalogue.start_date} - {catalogue.end_date}</Text>
+                  </View>
+                  <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
+        )}
       </ScrollView>
-      {produits.length ? (
-        produits.map((produit, index) => (
-          <View key={index} style={styles.cardWrapper}>
-            <TouchableOpacity onPress={() => { /* Action on click */ }}>
-              <View style={styles.card}>
-                <View style={styles.cardImg}>
-                  <Text>{produit.name[0]}</Text>
-                </View>
-                <View style={styles.cardBody}>
-                  <Text style={styles.cardTitle}>{produit.name}</Text>
-                  <Text style={styles.cardPhone}>{produit.price}</Text>
-                </View>
-                <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-              </View>
+    );
+  };
+
+  const renderProduits = () => {
+    const filteredProduits = produits.filter((produit) => {
+      if (!selectedProductCategory) return true; // Show all if no category is selected
+      return produit.category === selectedProductCategory;
+    });
+
+    return (
+      <ScrollView contentContainerStyle={styles.searchContent}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+          {categoriesProduct.map((category) => (
+            <TouchableOpacity
+              key={category}
+              onPress={() => setSelectedProductCategory((prev) => (prev === category ? '' : category))}
+              style={[
+                styles.filterButton,
+                selectedProductCategory === category && styles.filterButtonActive,
+              ]}
+            >
+              <Text>{category}</Text>
             </TouchableOpacity>
-          </View>
-        ))
-      ) : (
-        <Text style={styles.searchEmpty}>Aucun produit trouvé</Text>
-      )}
-    </ScrollView>
-  );
+          ))}
+        </ScrollView>
+        {filteredProduits.length ? (
+          filteredProduits.map((produit, index) => (
+            <View key={index} style={styles.cardWrapper}>
+              <TouchableOpacity onPress={() => { /* Action on click */ }}>
+                <View style={styles.card}>
+                  <View style={styles.cardImg}>
+                    <Text>{produit.name[0]}</Text>
+                  </View>
+                  <View style={styles.cardBody}>
+                    <Text style={styles.cardTitle}>{produit.name}</Text>
+                    <Text style={styles.cardPhone}>{produit.price}</Text>
+                  </View>
+                  <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.searchEmpty}>Aucun produit trouvé</Text>
+        )}
+      </ScrollView>
+    );
+  };
 
   const renderScene = SceneMap({
     catalogues: renderCatalogues,
@@ -169,7 +179,7 @@ export default function SearchScreen() {
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.return}>
+            <Text>
               <FeatherIcon color="#000" name="arrow-left" size={24} />
             </Text>
           </TouchableOpacity>
@@ -245,13 +255,11 @@ const styles = StyleSheet.create({
     color: '#9ca1ac',
   },
   cardWrapper: {
-    borderBottomWidth: 1,
-    borderColor: '#d6d6d6',
-  },
-  card: {
-    paddingVertical: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
+    borderWidth: 0.5,
+    borderRadius: 10,
+    marginBottom: 16,
+    backgroundColor: 'white',
+    elevation: 2,
   },
   cardImg: {
     width: 42,
@@ -261,37 +269,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  catImg: {
-    height: 150,
-    width: 100,
-    borderRadius: 7,
-    backgroundColor: '#9ca3af',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+  card: {
+    flexDirection: 'row',
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   cardBody: {
-    marginLeft: 12,
-    marginRight: 'auto',
-    flex: 1,  // Allow the cardBody to take available space
+    flex: 1,
+    marginLeft: 10,
   },
+
   cardTitle: {
     fontSize: 16,
-    fontWeight: '500',
-    flexShrink: 1, // Allows text to shrink
-    flexWrap: 'wrap', // Allows text to wrap
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   cardPhone: {
-    fontSize: 14,
-    color: '#6b7280',
+    fontSize: 12,
+    color: '#9ca3af',
   },
   filterContainer: {
-    paddingVertical: 10,
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   filterButton: {
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: colors.primary,
+    borderColor: "grey",
     borderRadius: 20,
     marginRight: 8,
   },
@@ -302,5 +308,9 @@ const styles = StyleSheet.create({
   return: {
     fontSize: 16,
     color: '#000',
+  },
+  catImg: {
+    height: 80,
+    width: 60,
   },
 });
