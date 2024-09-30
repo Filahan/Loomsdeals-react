@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     color: "white",
     height: 45, // Smaller logo height
     width: 45,
-    borderRadius: 7,
+    borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
 
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   searchInput: {
-    borderRadius: 7,
+    borderRadius: 20,
     borderWidth: 2,
     height: 45,
     flexGrow: 1,

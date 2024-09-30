@@ -12,13 +12,11 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../theme';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
 import { getCataloguesLike } from '../../api/catalogues';
-
 
 interface Catalogue {
   id: string;
@@ -31,6 +29,10 @@ interface Catalogue {
   img: string;
 }
 
+interface Category {
+  id: number;  // or string, depending on your data
+  name: string;
+}
 
 const produits = [
   { name: 'Pomme', price: '2.99€', category: 'Fruits' },
@@ -49,33 +51,28 @@ const renderTabBar = (props) => (
   />
 );
 
-export default function SearchScreen() {
 
+export default function SearchScreen() {
   const [input, setInput] = useState('');
   const [index, setIndex] = useState(0);
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [selectedProductCategory, setSelectedProductCategory] = useState('');
   const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
-
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [totalCount, setTotalCount] = useState<number | null>(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 2; // Number of items per page
   const textInputRef = useRef<TextInput>(null);
+  
   const routes = [
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
   ];
-  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [totalCount, setTotalCount] = useState<number | null>(0); // State for total count of catalogues
-  const [currentPage, setCurrentPage] = useState(1); // State for current page
-  const pageSize = 3; // Number of items per page
-
 
   useEffect(() => {
     textInputRef.current?.focus();
   }, []);
 
-  interface Category {
-    id: number;  // or string, depending on your data
-    name: string;
-  }
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -88,9 +85,35 @@ export default function SearchScreen() {
     fetchCategories();
   }, []);
 
+  const handleInputChange = (text: string) => {
+    setInput(text);
+  };
+
+  const handleInputSubmit = async () => {
+    setCurrentPage(1);
+    try {
+      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
+      setCatalogues(data);
+      setTotalCount(count);
+    } catch (error) {
+      console.error('Error fetching catalogues: ', error);
+    }
+  };
+
+  const handleLoadMore = async () => {
+    setCurrentPage(prev => prev + 1);
+    try {
+      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
+      setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
+      setTotalCount(count);
+    } catch (error) {
+      console.error('Error fetching catalogues: ', error);
+    }
+  };
+
   const renderCatalogues = () => {
     const filteredCatalogues = catalogues.filter((catalogue) => {
-      if (!selectedCatalogueCategory) return true; // Show all if no category is selected
+      if (!selectedCatalogueCategory) return true;
       return catalogue.stores.stores_categories.name === selectedCatalogueCategory;
     });
 
@@ -138,30 +161,18 @@ export default function SearchScreen() {
           <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
         )}
 
-        {(totalCount ?? 0) > currentPage * pageSize && ( // Check if there are more pages
+        {(totalCount ?? 0) > currentPage * pageSize && (
           <TouchableOpacity style={styles.paginationButton} onPress={handleLoadMore}>
-            {/* <FeatherIcon color="#9ca3af" name="loader" size={25} /> */}
-            <AntDesign color="#9ca3af" name="pluscircleo" size={25} />
-
+            <AntDesign name="plussquare" size={25} />
           </TouchableOpacity>
         )}
       </ScrollView>
     );
   };
-  const handleLoadMore = async () => {
-    setCurrentPage(prev => prev + 1);
-    try {
-      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
-      setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
 
-      setTotalCount(count);
-    } catch (error) {
-      console.error('Error fetching catalogues: ', error);
-    }
-  };
   const renderProduits = () => {
     const filteredProduits = produits.filter((produit) => {
-      if (!selectedProductCategory) return true; // Show all if no category is selected
+      if (!selectedProductCategory) return true;
       return produit.category === selectedProductCategory;
     });
 
@@ -209,19 +220,7 @@ export default function SearchScreen() {
     catalogues: renderCatalogues,
     produits: renderProduits,
   });
-  let handleInputSubmit = async () => {
-    setCurrentPage(1);
-    try {
-      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
-      setCatalogues(data);
-      setTotalCount(count);
-    } catch (error) {
-      console.error('Error fetching catalogues: ', error);
-    }
-  };
-  const handleInputChange = (text: string) => {
-    setInput(text);
-  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -240,8 +239,8 @@ export default function SearchScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={handleInputChange} // Call the function here
-              onSubmitEditing={handleInputSubmit} // Call the function on submit
+              onChangeText={handleInputChange}
+              onSubmitEditing={handleInputSubmit}
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
               returnKeyType="done"
@@ -261,7 +260,6 @@ export default function SearchScreen() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
     borderColor: colors.secondary,
   },
   search: {
-    borderRadius: 7,
+    borderRadius: 20,
     flexDirection: 'row',
     backgroundColor: colors.secondary,
     marginTop: 15,
@@ -289,7 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchControl: {
-    height: 40,
+    height: 45,
     width: '90%',
     fontSize: 16,
     fontWeight: '500',
@@ -321,8 +319,6 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 12,
     backgroundColor: '#9ca3af',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   card: {
     flexDirection: 'row',
@@ -368,7 +364,6 @@ const styles = StyleSheet.create({
     borderColor: "#FFE5B4",
   },
   return: {
-    // fontSize: 13,
     color: '#000',
   },
   catImg: {
@@ -377,11 +372,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   paginationButton: {
-    // padding: 10,
-    // backgroundColor: colors.primary,
-    // borderRadius: 5,
     alignItems: 'center',
-    // marginTop: 10,
   },
   paginationText: {
     color: '#fff',
