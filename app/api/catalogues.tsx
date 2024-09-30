@@ -4,45 +4,46 @@ import { createClient } from '@supabase/supabase-js';
 // Create Supabase client
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function getAllCatalogues() {
+async function getAllCatalogues(page = 1, pageSize = 10) {
     try {
-        const { data, error } = await supabase
+        const { data, error, count } = await supabase
             .from('catalogues')
             .select(`
                 *,
                 stores (url)
-            `);
+            `, { count: 'exact' }) // Get the total count of items
+            .range((page - 1) * pageSize, page * pageSize - 1); // Set the range for pagination
+
         if (error) {
             throw new Error(`Error fetching catalogues: ${error.message}`);
         }
-        return data;
+
+        return { data, count }; // Return both data and total count
     } catch (err) {
         console.error(err.message);
         throw new Error(`Error fetching catalogues: ${err.message}`);
     }
 }
 
-async function getAllCatalogueslike(cond) {
-    try {
-        const { data, error } = await supabase
-            .from('catalogues')
-            .select(`
+async function getCataloguesLike(cond, page = 1, pageSize = 10) {
+    const { data, error, count } = await supabase
+        .from('catalogues')
+        .select(`
             *,
             stores (
                 url,
                 stores_categories (name)
             )
-        `)
-            .or(`title.ilike.%${cond}%, store.ilike.%${cond}%`);  // Search in both title and store columns
+        `, { count: 'exact' }) 
+        .or(`title.ilike.%${cond}%, store.ilike.%${cond}%`) // Search in both title and store columns
+        .range((page - 1) * pageSize, page * pageSize - 1); // Set the range for pagination
 
-        if (error) {
-            throw new Error(`Error fetching catalogues: ${error.message}`);
-        }
-        return data;
-    } catch (err) {
-        console.error(err.message);
-        throw new Error(`Error fetching catalogues: ${err.message}`);
+    if (error) {
+        console.error(`Error fetching catalogues: ${error.message}`);
+        throw new Error(error.message);
     }
+
+    return { data, count };
 }
 
 
@@ -73,5 +74,4 @@ async function getCataloguesByIds(cataloguesIds) {
     }
 }
 
-
-export { getAllCatalogues, getCataloguesByIds, getAllCatalogueslike };
+export { getAllCatalogues, getCataloguesByIds, getCataloguesLike };

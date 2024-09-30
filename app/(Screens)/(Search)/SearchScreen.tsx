@@ -15,7 +15,7 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../theme';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
-import { getAllCatalogueslike } from '../../api/catalogues';
+import { getCataloguesLike } from '../../api/catalogues';
 
 
 interface Catalogue {
@@ -85,8 +85,8 @@ export default function SearchScreen() {
   useEffect(() => {
     const fetchCatalogues = async () => {
       try {
-        const response: Catalogue[] = await getAllCatalogueslike(""); // Fetch catalogues based on input
-        setCatalogues(response);
+        const { data, count } = await getCataloguesLike(""); // Fetch catalogues based on input
+        setCatalogues(data);
       } catch (error) {
         console.error('Error fetching catalogues: ', error);
       }
@@ -220,8 +220,8 @@ export default function SearchScreen() {
   });
   const handleInputSubmit = async () => {
     try {
-      const response: Catalogue[] = await getAllCatalogueslike(input); // Fetch catalogues based on input
-      setCatalogues(response);
+      const { data, count } = await getCataloguesLike(input); // Fetch catalogues based on input
+      setCatalogues(data);
     } catch (error) {
       console.error('Error fetching catalogues: ', error);
     }

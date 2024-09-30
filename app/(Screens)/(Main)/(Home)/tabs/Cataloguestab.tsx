@@ -33,9 +33,7 @@ const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) 
     const savedList = await getSavedCatalogueIds(userId);
     setSaved(savedList);
 
-    let cataloguesData: Catalogue[] = [];
-
-      cataloguesData = await getAllCatalogues();
+    const { data: cataloguesData, count } = await getAllCatalogues();
 
     setCatalogues(cataloguesData);
   } catch (error) {
