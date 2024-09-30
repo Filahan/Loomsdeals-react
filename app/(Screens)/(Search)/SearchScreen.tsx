@@ -34,7 +34,7 @@ const catalogues: Catalogue[] = [
     title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf",
     id: '',
     stores: {
-      url: '',
+      url: 'https://www.1min30.com/wp-content/uploads/2018/02/Symbole-Lidl.jpg',
       category: {
         name: 'Marché'
       }
@@ -126,12 +126,13 @@ export default function SearchScreen() {
                     <Image
                       resizeMode="contain"
                       source={{ uri: catalogue.img }}
-                      style={{ height: "100%" }}
+                      style={{ height: "100%", backgroundColor:"grey", borderRadius:5 }}
                     />
                   </View>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardTitle}>{catalogue.title}</Text>
                     <Text style={styles.carddate}>{catalogue.start_date} - {catalogue.end_date}</Text>
+                    <Image resizeMode="cover" source={{ uri: catalogue.stores.url }} style={styles.storelogo}></Image>
                     {/* <Text style={styles.card}>{catalogue.start_date} - {catalogue.end_date}</Text> */}
                   </View>
                   <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
@@ -148,7 +149,6 @@ export default function SearchScreen() {
 
   const renderProduits = () => {
     const filteredProduits = produits.filter((produit) => {
-      console.log(filteredProduits)
       if (!selectedProductCategory) return true; // Show all if no category is selected
       return produit.category === selectedProductCategory;
     });
@@ -197,12 +197,9 @@ export default function SearchScreen() {
     catalogues: renderCatalogues,
     produits: renderProduits,
   });
-  // Function to handle input submission (on Enter)
   const handleInputSubmit = () => {
     console.log(input); // Print the input to the console on submit
   };
-
-  // Function to handle input change
   const handleInputChange = (text: string) => {
     setInput(text);
   };
@@ -283,6 +280,12 @@ const styles = StyleSheet.create({
   searchContent: {
     padding: 16,
   },
+  storelogo: {
+    height: 30,
+    width: 30,
+    borderRadius:100
+
+  },
   searchEmpty: {
     textAlign: 'center',
     paddingTop: 16,
@@ -301,8 +304,8 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 12,
     backgroundColor: '#9ca3af',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   card: {
     flexDirection: 'row',
@@ -312,6 +315,7 @@ const styles = StyleSheet.create({
   },
   cardBody: {
     flex: 1,
+    height: "100%",
     marginLeft: 10,
   },
 
@@ -328,6 +332,7 @@ const styles = StyleSheet.create({
   carddate: {
     fontSize: 12,
     color: '#9ca3af',
+    paddingBottom:2
   },
   filterContainer: {
     flexDirection: 'row',
