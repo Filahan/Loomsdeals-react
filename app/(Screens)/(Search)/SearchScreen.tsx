@@ -131,7 +131,8 @@ export default function SearchScreen() {
                   </View>
                   <View style={styles.cardBody}>
                     <Text style={styles.cardTitle}>{catalogue.title}</Text>
-                    <Text style={styles.cardPhone}>{catalogue.start_date} - {catalogue.end_date}</Text>
+                    <Text style={styles.carddate}>{catalogue.start_date} - {catalogue.end_date}</Text>
+                    {/* <Text style={styles.card}>{catalogue.start_date} - {catalogue.end_date}</Text> */}
                   </View>
                   <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
                 </View>
@@ -315,11 +316,16 @@ const styles = StyleSheet.create({
   },
 
   cardTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
   },
   cardPhone: {
+    fontSize: 12,
+    color: '#9ca3af',
+  },
+
+  carddate: {
     fontSize: 12,
     color: '#9ca3af',
   },
@@ -340,11 +346,12 @@ const styles = StyleSheet.create({
     borderColor: "#FFE5B4",
   },
   return: {
-    fontSize: 16,
+    // fontSize: 13,
     color: '#000',
   },
   catImg: {
-    height: 80,
-    width: 60,
+    height: 100,
+    width: 70,
+    borderRadius: 12,
   },
 });
