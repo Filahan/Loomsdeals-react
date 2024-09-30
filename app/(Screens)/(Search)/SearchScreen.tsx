@@ -16,9 +16,31 @@ import colors from '../../theme';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
 
+
+interface Catalogue {
+  id: string;
+  link: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  stores: { url: string; category: { name: string } };
+  store: string;
+  img: string;
+}
+
 // Define catalogues and products
-const catalogues = [
-  { title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf" },
+const catalogues: Catalogue[] = [
+  {
+    title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf",
+    id: '',
+    stores: {
+      url: '',
+      category: {
+        name: 'Marché'
+      }
+    },
+    store: ''
+  },
 ];
 
 const produits = [
@@ -75,8 +97,8 @@ export default function SearchScreen() {
   const renderCatalogues = () => {
     const filteredCatalogues = catalogues.filter((catalogue) => {
       if (!selectedCatalogueCategory) return true; // Show all if no category is selected
-      // Add your filtering logic here based on catalogue's category if available
-      return true; // Modify according to your data structure
+      return catalogue.stores.category.name === selectedCatalogueCategory
+
     });
 
     return (
@@ -125,6 +147,7 @@ export default function SearchScreen() {
 
   const renderProduits = () => {
     const filteredProduits = produits.filter((produit) => {
+      console.log(filteredProduits)
       if (!selectedProductCategory) return true; // Show all if no category is selected
       return produit.category === selectedProductCategory;
     });
@@ -230,7 +253,8 @@ const styles = StyleSheet.create({
   search: {
     borderRadius: 7,
     flexDirection: 'row',
-    borderWidth: 2,
+    // borderWidth: 2,
+    backgroundColor: colors.secondary,
     marginTop: 15,
     alignItems: 'center',
   },
