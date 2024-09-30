@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import colors from '../../theme';
 import { router } from 'expo-router';
@@ -29,32 +31,12 @@ interface Catalogue {
   img: string;
 }
 
-// Define catalogues and products
-
-
-// const catalogues: Catalogue[] = [
-//   {
-//     title: 'Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01', start_date: '30/09', end_date: '31/09', img: 'https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/image/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.png', link: "https://storage.googleapis.com/promappio.appspot.com/catalogues/lidl/pdf/Du-30-09-au-03-10-Les-bonnes-affaires-de-la-semaine-01.pdf",
-//     id: '',
-//     stores: {
-//       url: 'https://www.1min30.com/wp-content/uploads/2018/02/Symbole-Lidl.jpg',
-//       category: {
-//         name: 'Marché'
-//       }
-//     },
-//     store: ''
-//   },
-// ];
-
-
-
 
 const produits = [
   { name: 'Pomme', price: '2.99€', category: 'Fruits' },
   { name: 'Banane', price: '1.99€', category: 'Fruits' },
 ];
 
-// Define categories
 const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
 
 const renderTabBar = (props) => (
@@ -81,18 +63,10 @@ export default function SearchScreen() {
     { key: 'produits', title: 'Produits' },
   ];
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [totalCount, setTotalCount] = useState<number | null>(0); // State for total count of catalogues
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const pageSize = 3; // Number of items per page
 
-  useEffect(() => {
-    const fetchCatalogues = async () => {
-      try {
-        const { data, count } = await getCataloguesLike(""); // Fetch catalogues based on input
-        setCatalogues(data);
-      } catch (error) {
-        console.error('Error fetching catalogues: ', error);
-      }
-    };
-    fetchCatalogues();
-  }, []);
 
   useEffect(() => {
     textInputRef.current?.focus();
@@ -117,8 +91,7 @@ export default function SearchScreen() {
   const renderCatalogues = () => {
     const filteredCatalogues = catalogues.filter((catalogue) => {
       if (!selectedCatalogueCategory) return true; // Show all if no category is selected
-      return catalogue.stores.stores_categories.name === selectedCatalogueCategory
-
+      return catalogue.stores.stores_categories.name === selectedCatalogueCategory;
     });
 
     return (
@@ -164,10 +137,28 @@ export default function SearchScreen() {
         ) : (
           <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
         )}
+
+        {(totalCount ?? 0) > currentPage * pageSize && ( // Check if there are more pages
+          <TouchableOpacity style={styles.paginationButton} onPress={handleLoadMore}>
+            {/* <FeatherIcon color="#9ca3af" name="loader" size={25} /> */}
+            <AntDesign color="#9ca3af" name="pluscircleo" size={25} />
+
+          </TouchableOpacity>
+        )}
       </ScrollView>
     );
   };
+  const handleLoadMore = async () => {
+    setCurrentPage(prev => prev + 1);
+    try {
+      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
+      setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
 
+      setTotalCount(count);
+    } catch (error) {
+      console.error('Error fetching catalogues: ', error);
+    }
+  };
   const renderProduits = () => {
     const filteredProduits = produits.filter((produit) => {
       if (!selectedProductCategory) return true; // Show all if no category is selected
@@ -218,10 +209,12 @@ export default function SearchScreen() {
     catalogues: renderCatalogues,
     produits: renderProduits,
   });
-  const handleInputSubmit = async () => {
+  let handleInputSubmit = async () => {
+    setCurrentPage(1);
     try {
-      const { data, count } = await getCataloguesLike(input); // Fetch catalogues based on input
+      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
       setCatalogues(data);
+      setTotalCount(count);
     } catch (error) {
       console.error('Error fetching catalogues: ', error);
     }
@@ -286,7 +279,6 @@ const styles = StyleSheet.create({
   search: {
     borderRadius: 7,
     flexDirection: 'row',
-    // borderWidth: 2,
     backgroundColor: colors.secondary,
     marginTop: 15,
     alignItems: 'center',
@@ -383,5 +375,16 @@ const styles = StyleSheet.create({
     height: 100,
     width: 70,
     borderRadius: 12,
+  },
+  paginationButton: {
+    // padding: 10,
+    // backgroundColor: colors.primary,
+    // borderRadius: 5,
+    alignItems: 'center',
+    // marginTop: 10,
+  },
+  paginationText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
