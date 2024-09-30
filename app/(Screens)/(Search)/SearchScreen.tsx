@@ -196,7 +196,15 @@ export default function SearchScreen() {
     catalogues: renderCatalogues,
     produits: renderProduits,
   });
+  // Function to handle input submission (on Enter)
+  const handleInputSubmit = () => {
+    console.log(input); // Print the input to the console on submit
+  };
 
+  // Function to handle input change
+  const handleInputChange = (text: string) => {
+    setInput(text);
+  };
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -215,7 +223,9 @@ export default function SearchScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={setInput}
+              onChangeText={handleInputChange} // Call the function here
+
+              onSubmitEditing={handleInputSubmit} // Call the function on submit
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
               returnKeyType="done"
