@@ -34,29 +34,9 @@ interface Category {
   name: string;
 }
 
-const produits = [
-  { name: 'Pomme', price: '2.99€', category: 'Fruits' },
-  { name: 'Banane', price: '1.99€', category: 'Fruits' },
-];
-
-const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
-
-const renderTabBar = (props) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: colors.primary}}
-    style={{ backgroundColor: 'white'}}
-    activeColor="#000"
-    inactiveColor="#888"
-  />
-);
-
-
 export default function SearchScreen() {
-  const [input, setInput] = useState('');
-  const [index, setIndex] = useState(0);
+  const [input, setInput] = useState('jjb');
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
-  const [selectedProductCategory, setSelectedProductCategory] = useState('');
   const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(0);
@@ -103,14 +83,37 @@ export default function SearchScreen() {
   };
 
 
-  const renderCatalogues = () => {
-    const filteredCatalogues = catalogues.filter((catalogue) => {
-      if (!selectedCatalogueCategory) return true;
-      return catalogue.stores.stores_categories.name === selectedCatalogueCategory;
-    });
-
-    return (
-      <ScrollView contentContainerStyle={styles.searchContent}>
+  const filteredCatalogues = catalogues.filter((catalogue) => {
+    if (!selectedCatalogueCategory) return true;
+    return catalogue.stores.stores_categories.name === selectedCatalogueCategory;
+  });
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.searchWrapper}>
+          <TouchableOpacity onPress={() => router.back()}>
+              <FeatherIcon color="#000" name="arrow-left" size={24} />
+          </TouchableOpacity>
+          <View style={styles.search}>
+            <View style={styles.searchIcon}>
+              <FontAwesome5 color="#848484" name="search" size={17} />
+            </View>
+            <TextInput
+              ref={textInputRef}
+              autoCapitalize="none"
+              autoCorrect={false}
+              clearButtonMode="while-editing"
+              onSubmitEditing={() => handleCatalogues(false)}
+              placeholder="Rechercher..."
+              placeholderTextColor="#848484"
+              returnKeyType="done"
+              style={styles.searchControl}
+              value={input}
+              onChangeText={setInput} // Update state on text change
+            />
+          </View>
+        </View>
+        <ScrollView contentContainerStyle={styles.searchContent}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
           {categoriesCatalogue.map((category) => (
             <TouchableOpacity
@@ -155,100 +158,12 @@ export default function SearchScreen() {
           <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
         )}
 
-        {(totalCount ?? 0) > currentPage * pageSize && (
+        {(totalCount ?? 0) > currentPage * pageSize &&  filteredCatalogues.length > 0 && (
           <TouchableOpacity style={styles.paginationButton} onPress={() => handleCatalogues(true)}>
             <AntDesign name="plussquare" size={25} />
           </TouchableOpacity>
         )}
       </ScrollView>
-    );
-  };
-
-  const renderProduits = () => {
-    const filteredProduits = produits.filter((produit) => {
-      if (!selectedProductCategory) return true;
-      return produit.category === selectedProductCategory;
-    });
-
-    return (
-      <ScrollView contentContainerStyle={styles.searchContent}
-      >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-          {categoriesProduct.map((category) => (
-            <TouchableOpacity
-              key={category}
-              onPress={() => setSelectedProductCategory((prev) => (prev === category ? '' : category))}
-              style={[
-                styles.filterButton,
-                selectedProductCategory === category && styles.filterButtonActive,
-              ]}
-            >
-              <Text>{category}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        {filteredProduits.length ? (
-          filteredProduits.map((produit, index) => (
-            <View key={index} style={styles.cardWrapper}>
-              <TouchableOpacity>
-                <View style={styles.card}>
-                  <View style={styles.cardImg}>
-                    <Text>{produit.name[0]}</Text>
-                  </View>
-                  <View style={styles.cardBody}>
-                    <Text style={styles.cardTitle}>{produit.name}</Text>
-                    <Text style={styles.cardPhone}>{produit.price}</Text>
-                  </View>
-                  <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.searchEmpty}>Aucun produit trouvé</Text>
-        )}
-      </ScrollView>
-    );
-  };
-
-  const renderScene = SceneMap({
-    catalogues: renderCatalogues,
-    produits: renderProduits,
-  });
-
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <View style={styles.searchWrapper}>
-          <TouchableOpacity onPress={() => router.back()}>
-              <FeatherIcon color="#000" name="arrow-left" size={24} />
-          </TouchableOpacity>
-          <View style={styles.search}>
-            <View style={styles.searchIcon}>
-              <FontAwesome5 color="#848484" name="search" size={17} />
-            </View>
-            <TextInput
-              ref={textInputRef}
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onSubmitEditing={() => handleCatalogues(false)}
-              placeholder="Rechercher..."
-              placeholderTextColor="#848484"
-              returnKeyType="done"
-              style={styles.searchControl}
-              value={input}
-            />
-          </View>
-        </View>
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          renderTabBar={renderTabBar}
-          style={{flex:1}}
-          lazy
-        />
       </View>
     </SafeAreaView>
   );
@@ -265,17 +180,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#ffffff',
   },
   search: {
     flex: 1,
+    marginLeft:10,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e0e0e0',
     borderRadius: 8,
     paddingHorizontal: 8,
-    backgroundColor: '#fff',
   },
   searchIcon: {
     marginRight: 8,
@@ -287,7 +201,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   searchContent: {
-    padding: 16,
+    paddingHorizontal:16,
+    paddingBottom:100,
   },
   storelogo: {
     height: 30,
@@ -309,12 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 2,
   },
-  cardImg: {
-    width: 42,
-    height: 42,
-    borderRadius: 8,
-    backgroundColor: '#9ca3af',
-  },
+
   card: {
     flexDirection: 'row',
     padding: 10,
@@ -332,10 +242,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
-  },
-  cardPhone: {
-    fontSize: 12,
-    color: '#9ca3af',
   },
 
   carddate: {
@@ -359,9 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFE5B4",
     borderColor: "#FFE5B4",
   },
-  return: {
-    color: '#000',
-  },
+
   catImg: {
     height: 100,
     width: 70,
@@ -369,9 +273,5 @@ const styles = StyleSheet.create({
   },
   paginationButton: {
     alignItems: 'center',
-  },
-  paginationText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
+  }
 });
