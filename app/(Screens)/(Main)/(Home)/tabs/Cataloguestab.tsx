@@ -38,21 +38,23 @@ export default function Cataloguestab() {
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [totalCount, setTotalCount] = useState<number | null>(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const userId = auth.currentUser?.uid;
-  const pageSize = 3;
+  const pageSize = 5;
 
-  const fetchCataloguesData = async (page: number, isloadmore) => {
+  const fetchCataloguesData = async (page: number, newpage) => {
     try {
       const savedList = await getSavedCatalogueIds(userId);
       setSaved(savedList);
       const { data: cataloguesData, count } = await getAllCatalogues(page, pageSize);
+      if (page == 1 && catalogues.length > 0) {
+        return;
+      }
       setCatalogues((prev) => [...prev, ...cataloguesData]);
       setTotalCount(count);
+
     } catch (error) {
       console.error('Error fetching catalogues:', error);
       setSaved([]);
@@ -84,7 +86,7 @@ export default function Cataloguestab() {
       }
     };
     fetchCategories();
-    fetchCataloguesData(currentPage, false);
+    fetchCataloguesData(currentPage, true);
   }, [currentPage]);
 
   useFocusEffect(handleFocusEffect);
@@ -95,9 +97,6 @@ export default function Cataloguestab() {
 
   const filteredCatalogues = catalogues.filter(catalogue =>
     !selectedCatalogueCategory || catalogue.stores.stores_categories.name === selectedCatalogueCategory
-  );
-  catalogues.filter(catalogue =>
-    console.log(catalogue.stores)
   );
   return (
     <ScrollView
@@ -114,6 +113,7 @@ export default function Cataloguestab() {
           >
             <Text>{category.name}</Text>
           </TouchableOpacity>
+
         ))}
       </ScrollView>
       <Text numberOfLines={1} style={styles.CataloguesTitle}>
@@ -129,7 +129,7 @@ export default function Cataloguestab() {
         catalogues={filteredCatalogues}
         loading={false}
       />
-      {(totalCount ?? 0) > currentPage * pageSize && filteredCatalogues.length> 0 && (
+      {(totalCount ?? 0) > currentPage * pageSize && filteredCatalogues.length > 0 && (
         <TouchableOpacity style={styles.paginationButton} onPress={loadMoreCatalogues}>
           <AntDesign name="plussquare" size={25} />
         </TouchableOpacity>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.secondary,
-    left:10,
+    left: 10,
     borderRadius: 8,
     marginRight: 8,
   },

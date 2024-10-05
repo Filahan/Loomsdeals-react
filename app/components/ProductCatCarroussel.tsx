@@ -78,7 +78,6 @@ const ProductCatCarroussel = () => {
 
 const styles = StyleSheet.create({
   container: {
-    left: 15,
     flex: 1,
   },
   scrollContainer: {

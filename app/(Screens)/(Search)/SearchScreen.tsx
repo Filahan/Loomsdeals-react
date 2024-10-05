@@ -49,6 +49,9 @@ export default function SearchScreen() {
   useEffect(() => {
     textInputRef.current?.focus();
 
+    if (currentPage == 1 && catalogues.length > 0) {
+      return;
+    }
     const fetchCategories = async () => {
       try {
         const response: Category[] = await getStoresCategories();
@@ -58,11 +61,13 @@ export default function SearchScreen() {
       }
     };
     fetchCategories();
+    handleCatalogues(false);
   }, []);
 
   const handleCatalogues = async (isLoadMore: boolean) => {
     const newPage = isLoadMore ? currentPage + 1 : 1;
     setCurrentPage(newPage);
+
 
     try {
       const { data, count } = await getCataloguesLike(input, newPage, pageSize);

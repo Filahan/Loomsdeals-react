@@ -32,7 +32,9 @@ export default function Hometab() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <ProductCatCarroussel />
+      <View style={{ left: 15 }}>
+        <ProductCatCarroussel />
+      </View>
       <Slider />
       <View style={styles.headerContainer}>
 
