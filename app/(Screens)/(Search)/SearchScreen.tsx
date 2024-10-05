@@ -61,19 +61,18 @@ export default function SearchScreen() {
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 2; // Number of items per page
+  const pageSize = 3; // Number of items per page
   const textInputRef = useRef<TextInput>(null);
-  
+
   const routes = [
     { key: 'catalogues', title: 'Catalogues' },
     { key: 'produits', title: 'Produits' },
   ];
 
-  useEffect(() => {
-    textInputRef.current?.focus();
-  }, []);
 
   useEffect(() => {
+    textInputRef.current?.focus();
+
     const fetchCategories = async () => {
       try {
         const response: Category[] = await getStoresCategories();
@@ -85,31 +84,25 @@ export default function SearchScreen() {
     fetchCategories();
   }, []);
 
-  const handleInputChange = (text: string) => {
-    setInput(text);
-  };
+  const handleCatalogues = async (isLoadMore) => {
+    const newPage = isLoadMore ? currentPage + 1 : 1;
+    setCurrentPage(newPage);
 
-  const handleInputSubmit = async () => {
-    setCurrentPage(1);
     try {
-      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
-      setCatalogues(data);
+      const { data, count } = await getCataloguesLike(input, newPage, pageSize);
+
+      if (isLoadMore) {
+        setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
+      } else {
+        setCatalogues(data);
+      }
+
       setTotalCount(count);
     } catch (error) {
       console.error('Error fetching catalogues: ', error);
     }
   };
 
-  const handleLoadMore = async () => {
-    setCurrentPage(prev => prev + 1);
-    try {
-      const { data, count } = await getCataloguesLike(input, currentPage, pageSize);
-      setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
-      setTotalCount(count);
-    } catch (error) {
-      console.error('Error fetching catalogues: ', error);
-    }
-  };
 
   const renderCatalogues = () => {
     const filteredCatalogues = catalogues.filter((catalogue) => {
@@ -133,6 +126,7 @@ export default function SearchScreen() {
             </TouchableOpacity>
           ))}
         </ScrollView>
+
         {filteredCatalogues.length ? (
           filteredCatalogues.map((catalogue, index) => (
             <View key={index} style={styles.cardWrapper}>
@@ -162,7 +156,7 @@ export default function SearchScreen() {
         )}
 
         {(totalCount ?? 0) > currentPage * pageSize && (
-          <TouchableOpacity style={styles.paginationButton} onPress={handleLoadMore}>
+          <TouchableOpacity style={styles.paginationButton} onPress={() => handleCatalogues(true)}>
             <AntDesign name="plussquare" size={25} />
           </TouchableOpacity>
         )}
@@ -177,7 +171,8 @@ export default function SearchScreen() {
     });
 
     return (
-      <ScrollView contentContainerStyle={styles.searchContent}>
+      <ScrollView contentContainerStyle={styles.searchContent}
+      >
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
           {categoriesProduct.map((category) => (
             <TouchableOpacity
@@ -239,8 +234,7 @@ export default function SearchScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
-              onChangeText={handleInputChange}
-              onSubmitEditing={handleInputSubmit}
+              onSubmitEditing={() => handleCatalogues(false)}
               placeholder="Rechercher..."
               placeholderTextColor="#848484"
               returnKeyType="done"
