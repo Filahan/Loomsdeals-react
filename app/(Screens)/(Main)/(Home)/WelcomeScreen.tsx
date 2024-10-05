@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   searchInput: {
-    borderRadius: 20,
+    borderRadius: 8,
     borderWidth: 2,
     height: 45,
     flexGrow: 1,

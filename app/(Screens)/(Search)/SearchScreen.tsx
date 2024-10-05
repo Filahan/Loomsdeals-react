@@ -44,8 +44,8 @@ const categoriesProduct = ['Fruits', 'Vegetables', 'Drinks'];
 const renderTabBar = (props) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: colors.primary }}
-    style={{ backgroundColor: 'white' }}
+    indicatorStyle={{ backgroundColor: colors.primary}}
+    style={{ backgroundColor: 'white'}}
     activeColor="#000"
     inactiveColor="#888"
   />
@@ -87,7 +87,6 @@ export default function SearchScreen() {
   const handleCatalogues = async (isLoadMore) => {
     const newPage = isLoadMore ? currentPage + 1 : 1;
     setCurrentPage(newPage);
-
     try {
       const { data, count } = await getCataloguesLike(input, newPage, pageSize);
 
@@ -127,7 +126,8 @@ export default function SearchScreen() {
           ))}
         </ScrollView>
 
-        {filteredCatalogues.length ? (
+        {
+        filteredCatalogues.length ? (
           filteredCatalogues.map((catalogue, index) => (
             <View key={index} style={styles.cardWrapper}>
               <TouchableOpacity
@@ -221,9 +221,7 @@ export default function SearchScreen() {
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Text>
               <FeatherIcon color="#000" name="arrow-left" size={24} />
-            </Text>
           </TouchableOpacity>
           <View style={styles.search}>
             <View style={styles.searchIcon}>
@@ -248,6 +246,7 @@ export default function SearchScreen() {
           renderScene={renderScene}
           onIndexChange={setIndex}
           renderTabBar={renderTabBar}
+          style={{flex:1}}
           lazy
         />
       </View>
@@ -263,22 +262,23 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   searchWrapper: {
-    paddingHorizontal: 16,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderColor: colors.secondary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#ffffff',
   },
   search: {
-    borderRadius: 20,
+    flex: 1,
     flexDirection: 'row',
-    backgroundColor: colors.secondary,
-    marginTop: 15,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    backgroundColor: '#fff',
   },
   searchIcon: {
-    width: 34,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginRight: 8,
   },
   searchControl: {
     height: 45,
@@ -302,8 +302,9 @@ const styles = StyleSheet.create({
     color: '#9ca1ac',
   },
   cardWrapper: {
+    borderColor: '#e0e0e0',
     borderWidth: 0.5,
-    borderRadius: 10,
+    borderRadius: 8,
     marginBottom: 16,
     backgroundColor: 'white',
     elevation: 2,
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
   cardImg: {
     width: 42,
     height: 42,
-    borderRadius: 12,
+    borderRadius: 8,
     backgroundColor: '#9ca3af',
   },
   card: {
@@ -319,6 +320,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
+
   },
   cardBody: {
     flex: 1,
@@ -349,8 +351,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: "grey",
-    borderRadius: 20,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
     marginRight: 8,
   },
   filterButtonActive: {
@@ -363,7 +365,7 @@ const styles = StyleSheet.create({
   catImg: {
     height: 100,
     width: 70,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   paginationButton: {
     alignItems: 'center',
