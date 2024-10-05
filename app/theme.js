@@ -2,7 +2,7 @@
 
 const colors = {
   primary: 'black',
-  secondary: '#f9f9f9',
+  secondary: '#e0e0e0',
   third: '#FFE5B4',
   background: "#fff", // Example background color (light gray)
 };

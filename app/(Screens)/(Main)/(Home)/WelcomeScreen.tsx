@@ -90,25 +90,10 @@ export default function TabViewExample() {
           <TouchableWithoutFeedback
             onPress={() => router.push({ pathname: '/SearchScreen' })}
           >
-            {/* <TouchableWithoutFeedback 
-              onPress={() => router.push({ pathname: '/search' })}
-              > */}
 
             <View style={styles.searchInput}>
               <View style={styles.inputWrapper}>
                 <Text style={styles.input}>Rechercher...</Text>
-
-                {/* <Text style={styles.input}>Rechercher...</Text>  */}
-
-                {/* <TextInput
-                autoCapitalize="none"
-                autoCorrect={false}
-                clearButtonMode="while-editing"
-                placeholder="Rechercher..."
-                placeholderTextColor="#848484"
-                returnKeyType="done"
-                style={styles.input}
-              /> */}
                 <View style={styles.inputIcon}>
                   <FontAwesome5
                     color="#848484"
@@ -216,7 +201,6 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   inputIcon: {
-
     position: 'absolute',
     top: 0,
     bottom: 0,

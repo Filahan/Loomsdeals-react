@@ -10,8 +10,10 @@ async function getAllCatalogues(page = 1, pageSize = 10) {
             .from('catalogues')
             .select(`
                 *,
-                stores (url)
-            `, { count: 'exact' }) // Get the total count of items
+            stores (
+                url,
+                stores_categories (name)
+            )            `, { count: 'exact' }) // Get the total count of items
             .range((page - 1) * pageSize, page * pageSize - 1); // Set the range for pagination
 
         if (error) {
@@ -34,7 +36,7 @@ async function getCataloguesLike(cond, page = 1, pageSize = 10) {
                 url,
                 stores_categories (name)
             )
-        `, { count: 'exact' }) 
+        `, { count: 'exact' })
         .or(`title.ilike.%${cond}%, store.ilike.%${cond}%`) // Search in both title and store columns
         .range((page - 1) * pageSize, page * pageSize - 1); // Set the range for pagination
 

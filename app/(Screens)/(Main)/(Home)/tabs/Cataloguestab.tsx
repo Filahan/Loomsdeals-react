@@ -6,14 +6,15 @@ import {
   ScrollView,
   RefreshControl,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import Catalogues from '../../../../components/CataloguesList';
 import colors from '../../../../theme';
 import { useFocusEffect } from 'expo-router';
 import { getSavedCatalogueIds } from '../../../../api/saved';
-import { getAllCatalogues, getCataloguesByIds } from '../../../../api/catalogues';
+import { getAllCatalogues } from '../../../../api/catalogues';
 import { auth } from '../../../../config/Firebase';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { getStoresCategories } from '../../../../api/stores_categories';
 
 interface Catalogue {
@@ -22,7 +23,7 @@ interface Catalogue {
   title: string;
   start_date: string;
   end_date: string;
-  stores: { url: string; };
+  stores: { url: string; stores_categories: { name: string } };
   store: string;
   img: string;
 }
@@ -31,65 +32,49 @@ interface Category {
   id: number;  // or string, depending on your data
   name: string;
 }
-// Externalize the functions
-const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) => {
-  setLoading(true);
-  try {
-    const savedList = await getSavedCatalogueIds(userId);
-    setSaved(savedList);
-
-    const { data: cataloguesData, count } = await getAllCatalogues();
-
-    setCatalogues(cataloguesData);
-  } catch (error) {
-    console.error('Error fetching catalogues data:', error);
-    setSaved([]);
-    setCatalogues([]); // Clear catalogues in case of error
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-const getsavedlist = async (userId, setSaved) => {
-  try {
-    const savedList = await getSavedCatalogueIds(userId);
-    setSaved(savedList);
-  } catch (error) {
-    console.error('Error fetching saved catalogues data:', error);
-    setSaved([]);
-  }
-};
-
-
-
-
-const handleFocusEffect = (fetchCataloguesData, getsavedlist) => {
-  useFocusEffect(
-    useCallback(() => {
-      getsavedlist();
-    }, [fetchCataloguesData, getsavedlist])
-  );
-};
-
-const handleUseEffect = (fetchCataloguesData) => {
-  useEffect(() => {
-    fetchCataloguesData();
-  }, [fetchCataloguesData]);
-};
-
 
 export default function Cataloguestab() {
   const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
-
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
-
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [loading, setLoading] = useState(true);
-  const userId = auth.currentUser?.uid;
-  useEffect(() => {
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [totalCount, setTotalCount] = useState<number | null>(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const userId = auth.currentUser?.uid;
+  const pageSize = 3;
+
+  const fetchCataloguesData = async (page: number, isloadmore) => {
+    try {
+      const savedList = await getSavedCatalogueIds(userId);
+      setSaved(savedList);
+      const { data: cataloguesData, count } = await getAllCatalogues(page, pageSize);
+      setCatalogues((prev) => [...prev, ...cataloguesData]);
+      setTotalCount(count);
+    } catch (error) {
+      console.error('Error fetching catalogues:', error);
+      setSaved([]);
+      setCatalogues([]);
+    }
+  };
+
+  const handleFocusEffect = useCallback(() => {
+    const fetchSaved = async () => {
+      try {
+        const savedList = await getSavedCatalogueIds(userId);
+        setSaved(savedList);
+      } catch (error) {
+        console.error('Error fetching saved catalogues:', error);
+        setSaved([]);
+      }
+    };
+
+    fetchSaved();
+  }, [userId]);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response: Category[] = await getStoresCategories();
@@ -99,31 +84,23 @@ export default function Cataloguestab() {
       }
     };
     fetchCategories();
-  }, []);
-  const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, setSaved, setCatalogues, setLoading), [userId, ""]);
-  const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
+    fetchCataloguesData(currentPage, false);
+  }, [currentPage]);
 
-  handleFocusEffect(fetchCatalogues, fetchSaved);
-  handleUseEffect(fetchCatalogues);
+  useFocusEffect(handleFocusEffect);
 
+  const loadMoreCatalogues = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
 
-  const [refreshing, setRefreshing] = React.useState(false);
-  const [key, setKey] = useState(0);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setKey(prevKey => prevKey + 1); // Update key to force re-render
-      setRefreshing(false);
-    }, 1500);
-  }, []);
-
+  const filteredCatalogues = catalogues.filter(catalogue =>
+    !selectedCatalogueCategory || catalogue.stores.stores_categories.name === selectedCatalogueCategory
+  );
+  catalogues.filter(catalogue =>
+    console.log(catalogue.stores)
+  );
   return (
     <ScrollView
-      key={key}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
         {categoriesCatalogue.map((category) => (
@@ -139,19 +116,29 @@ export default function Cataloguestab() {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      {/* <StoresCatCaroussel /> */}
       <Text numberOfLines={1} style={styles.CataloguesTitle}>
         Les catalogues
       </Text>
-      <View></View>
-      <Catalogues store_id="" category="" saved_screen='' setSaved={setSaved} saved={saved} setCatalogues={setCatalogues} catalogues={catalogues} loading={loading} />
+      <Catalogues
+        store_id=""
+        category=""
+        saved_screen=""
+        setSaved={setSaved}
+        saved={saved}
+        setCatalogues={setCatalogues}
+        catalogues={filteredCatalogues}
+        loading={false}
+      />
+      {(totalCount ?? 0) > currentPage * pageSize && filteredCatalogues.length> 0 && (
+        <TouchableOpacity style={styles.paginationButton} onPress={loadMoreCatalogues}>
+          <AntDesign name="plussquare" size={25} />
+        </TouchableOpacity>
+      )}
     </ScrollView>
   );
 }
 
-
 const styles = StyleSheet.create({
-
   CataloguesTitle: {
     marginHorizontal: 15,
     fontSize: 17,
@@ -168,12 +155,17 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
+    left:10,
     borderRadius: 8,
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: "#FFE5B4",
-    borderColor: "#FFE5B4",
+    backgroundColor: '#FFE5B4',
+    borderColor: '#FFE5B4',
+  },
+  paginationButton: {
+    alignItems: 'center',
+    padding: 10,
   },
 });

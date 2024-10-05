@@ -23,7 +23,7 @@ interface Catalogue {
   title: string;
   start_date: string;
   end_date: string;
-  stores: { url: string; };
+  stores: { url: string; stores_categories: { name: string } };
   store: string;
   img: string;
 }
@@ -107,15 +107,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {emptyMessage ? (
-          <View style={styles.emptyContainer}>
-            <Image
-              resizeMode="contain"
-              style={styles.nocatalog}
-              source={nocatalog}
-            />
-          </View>
-        ) : (
+        {
           catalogues.map((catalogue) => {
             if (!catalogue) return null;
             const { id, link, store, img, stores } = catalogue;
@@ -158,7 +150,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
               </TouchableOpacity>
             );
           })
-        )}
+        }
       </ScrollView>
     </SafeAreaView>
   );
@@ -166,15 +158,10 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    position: 'relative',
+    // position: 'relative',
     borderRadius: 8,
-    backgroundColor: '#fff',
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
     marginBottom: 16,
-    shadowColor: 'rgba(0, 0, 0, 0.5)',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
     elevation: 2,
     borderWidth: 1,
   },

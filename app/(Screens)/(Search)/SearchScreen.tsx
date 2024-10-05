@@ -35,9 +35,9 @@ interface Category {
   name: string;
 }
 
-const pageSize = 3; // Number of items per page
 
 export default function SearchScreen() {
+  const pageSize = 3; // Number of items per page
   const [input, setInput] = useState('');
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
@@ -114,7 +114,7 @@ export default function SearchScreen() {
               style={pickerSelectStyles}
             />
           </View>
-          {filteredCatalogues.length ? (
+          {
             filteredCatalogues.map((catalogue, index) => (
               <View key={index} style={styles.cardWrapper}>
                 <TouchableOpacity
@@ -136,12 +136,7 @@ export default function SearchScreen() {
                 </TouchableOpacity>
               </View>
             ))
-          ) : (
-            <View style={styles.emptyContainer}>
-              <Image resizeMode="contain" source={searchlogo} style={styles.emptyIcon} />
-            </View>
-
-          )}
+          }
           {(totalCount ?? 0) > currentPage * pageSize && filteredCatalogues.length > 0 && (
             <TouchableOpacity style={styles.paginationButton} onPress={() => handleCatalogues(true)}>
               <AntDesign name="plussquare" size={25} />

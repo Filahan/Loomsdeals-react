@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginHorizontal:15,
+    marginHorizontal: 15,
     padding: 6
   },
   card: {
