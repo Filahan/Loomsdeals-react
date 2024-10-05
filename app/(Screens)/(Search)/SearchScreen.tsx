@@ -12,11 +12,12 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import colors from '../../theme';
+import RNPickerSelect from 'react-native-picker-select';
 import { router } from 'expo-router';
 import { getStoresCategories } from '../../api/stores_categories';
 import { getCataloguesLike } from '../../api/catalogues';
+import colors from '../../theme';
+const searchlogo = require('../../asserts/search.png');
 
 interface Catalogue {
   id: string;
@@ -34,21 +35,16 @@ interface Category {
   name: string;
 }
 
+const pageSize = 3; // Number of items per page
+
 export default function SearchScreen() {
-  const [input, setInput] = useState('jjb');
+  const [input, setInput] = useState('');
   const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
   const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 3; // Number of items per page
   const textInputRef = useRef<TextInput>(null);
-
-  const routes = [
-    { key: 'catalogues', title: 'Catalogues' },
-    { key: 'produits', title: 'Produits' },
-  ];
-
 
   useEffect(() => {
     textInputRef.current?.focus();
@@ -64,40 +60,32 @@ export default function SearchScreen() {
     fetchCategories();
   }, []);
 
-  const handleCatalogues = async (isLoadMore) => {
+  const handleCatalogues = async (isLoadMore: boolean) => {
     const newPage = isLoadMore ? currentPage + 1 : 1;
     setCurrentPage(newPage);
+
     try {
       const { data, count } = await getCataloguesLike(input, newPage, pageSize);
-
-      if (isLoadMore) {
-        setCatalogues(prevCatalogues => [...prevCatalogues, ...data]);
-      } else {
-        setCatalogues(data);
-      }
-
+      setCatalogues(isLoadMore ? [...catalogues, ...data] : data);
       setTotalCount(count);
     } catch (error) {
       console.error('Error fetching catalogues: ', error);
     }
   };
 
+  const filteredCatalogues = catalogues.filter(catalogue =>
+    !selectedCatalogueCategory || catalogue.stores.stores_categories.name === selectedCatalogueCategory
+  );
 
-  const filteredCatalogues = catalogues.filter((catalogue) => {
-    if (!selectedCatalogueCategory) return true;
-    return catalogue.stores.stores_categories.name === selectedCatalogueCategory;
-  });
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.searchWrapper}>
           <TouchableOpacity onPress={() => router.back()}>
-              <FeatherIcon color="#000" name="arrow-left" size={24} />
+            <FeatherIcon color="#000" name="arrow-left" size={24} />
           </TouchableOpacity>
           <View style={styles.search}>
-            <View style={styles.searchIcon}>
-              <FontAwesome5 color="#848484" name="search" size={17} />
-            </View>
+            <FontAwesome5 color="#848484" name="search" size={17} style={styles.searchIcon} />
             <TextInput
               ref={textInputRef}
               autoCapitalize="none"
@@ -109,65 +97,62 @@ export default function SearchScreen() {
               returnKeyType="done"
               style={styles.searchControl}
               value={input}
-              onChangeText={setInput} // Update state on text change
+              onChangeText={setInput}
             />
           </View>
         </View>
         <ScrollView contentContainerStyle={styles.searchContent}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-          {categoriesCatalogue.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              onPress={() => setSelectedCatalogueCategory((prev) => (prev === category.name ? '' : category.name))}
-              style={[
-                styles.filterButton,
-                selectedCatalogueCategory === category.name && styles.filterButtonActive,
-              ]}
-            >
-              <Text>{category.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {
-        filteredCatalogues.length ? (
-          filteredCatalogues.map((catalogue, index) => (
-            <View key={index} style={styles.cardWrapper}>
-              <TouchableOpacity
-                onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link: catalogue.link, end_date: catalogue.end_date } })}
-              >
-                <View style={styles.card}>
-                  <View style={styles.catImg}>
+          <View style={styles.pickerContainer}>
+            <RNPickerSelect
+              onValueChange={setSelectedCatalogueCategory}
+              items={categoriesCatalogue.map(category => ({
+                label: category.name,
+                value: category.name,
+              }))}
+              placeholder={{ label: 'Catalogues', value: null }}
+              value={selectedCatalogueCategory}
+              style={pickerSelectStyles}
+            />
+          </View>
+          {filteredCatalogues.length ? (
+            filteredCatalogues.map((catalogue, index) => (
+              <View key={index} style={styles.cardWrapper}>
+                <TouchableOpacity
+                  onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link: catalogue.link, end_date: catalogue.end_date } })}
+                >
+                  <View style={styles.card}>
                     <Image
                       resizeMode="contain"
                       source={{ uri: catalogue.img }}
-                      style={{ height: "100%", backgroundColor: "grey", borderRadius: 5 }}
+                      style={styles.catImg}
                     />
+                    <View style={styles.cardBody}>
+                      <Text style={styles.cardTitle}>{catalogue.title}</Text>
+                      <Text style={styles.cardDate}>{catalogue.start_date} - {catalogue.end_date}</Text>
+                      <Image resizeMode="cover" source={{ uri: catalogue.stores.url }} style={styles.storeLogo} />
+                    </View>
+                    <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
                   </View>
-                  <View style={styles.cardBody}>
-                    <Text style={styles.cardTitle}>{catalogue.title}</Text>
-                    <Text style={styles.carddate}>{catalogue.start_date} - {catalogue.end_date}</Text>
-                    <Image resizeMode="cover" source={{ uri: catalogue.stores.url }} style={styles.storelogo}></Image>
-                  </View>
-                  <FeatherIcon color="#9ca3af" name="chevron-right" size={22} />
-                </View>
-              </TouchableOpacity>
+                </TouchableOpacity>
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Image resizeMode="contain" source={searchlogo} style={styles.emptyIcon} />
             </View>
-          ))
-        ) : (
-          <Text style={styles.searchEmpty}>Aucun catalogue trouvé</Text>
-        )}
 
-        {(totalCount ?? 0) > currentPage * pageSize &&  filteredCatalogues.length > 0 && (
-          <TouchableOpacity style={styles.paginationButton} onPress={() => handleCatalogues(true)}>
-            <AntDesign name="plussquare" size={25} />
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+          )}
+          {(totalCount ?? 0) > currentPage * pageSize && filteredCatalogues.length > 0 && (
+            <TouchableOpacity style={styles.paginationButton} onPress={() => handleCatalogues(true)}>
+              <AntDesign name="plussquare" size={25} />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -183,7 +168,7 @@ const styles = StyleSheet.create({
   },
   search: {
     flex: 1,
-    marginLeft:10,
+    marginLeft: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
@@ -201,20 +186,28 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   searchContent: {
-    paddingHorizontal:16,
-    paddingBottom:100,
+    paddingHorizontal: 16,
+    paddingBottom: 100,
   },
-  storelogo: {
+  storeLogo: {
     height: 30,
     width: 30,
-    borderRadius: 100
-
+    borderRadius: 100,
   },
-  searchEmpty: {
-    textAlign: 'center',
-    paddingTop: 16,
-    fontSize: 15,
-    color: '#9ca1ac',
+  pickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  emptyIcon: {
+    width: 90,
+    height: 90,
   },
   cardWrapper: {
     borderColor: '#e0e0e0',
@@ -224,48 +217,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     elevation: 2,
   },
-
   card: {
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
-
   },
   cardBody: {
     flex: 1,
     height: "100%",
     marginLeft: 10,
   },
-
   cardTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 5,
   },
-
-  carddate: {
+  cardDate: {
     fontSize: 12,
     color: '#9ca3af',
-    paddingBottom: 2
+    paddingBottom: 2,
   },
-  filterContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
-  },
-  filterButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    marginRight: 8,
-  },
-  filterButtonActive: {
-    backgroundColor: "#FFE5B4",
-    borderColor: "#FFE5B4",
-  },
-
   catImg: {
     height: 100,
     width: 70,
@@ -273,5 +245,28 @@ const styles = StyleSheet.create({
   },
   paginationButton: {
     alignItems: 'center',
-  }
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    height: 40,
+    borderColor: '#e0e0e0',
+    borderRadius: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    flex: 1,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    height: 40,
+    borderColor: '#e0e0e0',
+    borderRadius: 4,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    flex: 1,
+  },
 });

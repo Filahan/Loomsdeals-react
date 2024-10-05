@@ -5,15 +5,16 @@ import {
   Text,
   ScrollView,
   RefreshControl,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
-import StoresCatCaroussel from '../../../../components/StoresCatCaroussel'; // Ensure path is correct
 import Catalogues from '../../../../components/CataloguesList';
 import colors from '../../../../theme';
 import { useFocusEffect } from 'expo-router';
 import { getSavedCatalogueIds } from '../../../../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../../../../api/catalogues';
 import { auth } from '../../../../config/Firebase';
+import { getStoresCategories } from '../../../../api/stores_categories';
 
 interface Catalogue {
   id: string;
@@ -26,6 +27,10 @@ interface Catalogue {
   img: string;
 }
 
+interface Category {
+  id: number;  // or string, depending on your data
+  name: string;
+}
 // Externalize the functions
 const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) => {
   setLoading(true);
@@ -45,6 +50,7 @@ const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) 
   }
 };
 
+
 const getsavedlist = async (userId, setSaved) => {
   try {
     const savedList = await getSavedCatalogueIds(userId);
@@ -54,6 +60,9 @@ const getsavedlist = async (userId, setSaved) => {
     setSaved([]);
   }
 };
+
+
+
 
 const handleFocusEffect = (fetchCataloguesData, getsavedlist) => {
   useFocusEffect(
@@ -71,11 +80,26 @@ const handleUseEffect = (fetchCataloguesData) => {
 
 
 export default function Cataloguestab() {
+  const [categoriesCatalogue, setCategoriesCatalogue] = useState<Category[]>([]);
+
+  const [selectedCatalogueCategory, setSelectedCatalogueCategory] = useState('');
+
   const [saved, setSaved] = useState<string[]>([]);
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
   const [loading, setLoading] = useState(true);
   const userId = auth.currentUser?.uid;
+  useEffect(() => {
 
+    const fetchCategories = async () => {
+      try {
+        const response: Category[] = await getStoresCategories();
+        setCategoriesCatalogue(response);
+      } catch (error) {
+        console.error('Error fetching categories: ', error);
+      }
+    };
+    fetchCategories();
+  }, []);
   const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, setSaved, setCatalogues, setLoading), [userId, ""]);
   const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
 
@@ -101,7 +125,21 @@ export default function Cataloguestab() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <StoresCatCaroussel />
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+        {categoriesCatalogue.map((category) => (
+          <TouchableOpacity
+            key={category.id}
+            onPress={() => setSelectedCatalogueCategory((prev) => (prev === category.name ? '' : category.name))}
+            style={[
+              styles.filterButton,
+              selectedCatalogueCategory === category.name && styles.filterButtonActive,
+            ]}
+          >
+            <Text>{category.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      {/* <StoresCatCaroussel /> */}
       <Text numberOfLines={1} style={styles.CataloguesTitle}>
         Les catalogues
       </Text>
@@ -121,5 +159,21 @@ const styles = StyleSheet.create({
     color: colors.primary,
     flexGrow: 1,
     letterSpacing: 0.4,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  filterButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  filterButtonActive: {
+    backgroundColor: "#FFE5B4",
+    borderColor: "#FFE5B4",
   },
 });

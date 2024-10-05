@@ -75,7 +75,7 @@ export default function TabViewExample() {
     { key: 'second', title: 'Catalogues ' },
   ]);
 
-  const navigation:any  = useNavigation(); // Get the navigation object
+  const navigation: any = useNavigation(); // Get the navigation object
 
   return (
 
@@ -87,10 +87,10 @@ export default function TabViewExample() {
         </View>
 
         <View style={styles.search}>
-          <TouchableWithoutFeedback 
-              onPress={() => router.push({ pathname: '/SearchScreen' })}
-              >
-              {/* <TouchableWithoutFeedback 
+          <TouchableWithoutFeedback
+            onPress={() => router.push({ pathname: '/SearchScreen' })}
+          >
+            {/* <TouchableWithoutFeedback 
               onPress={() => router.push({ pathname: '/search' })}
               > */}
 
@@ -191,7 +191,9 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     borderRadius: 8,
-    borderWidth: 2,
+    borderColor: '#e0e0e0',
+
+    borderWidth: 1,
     height: 45,
     flexGrow: 1,
     marginRight: 6,
