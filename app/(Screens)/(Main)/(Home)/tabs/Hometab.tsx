@@ -9,7 +9,7 @@ import {
 import Slider from '../../../../components/Slider';
 import colors from '../../../../theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import ProductCard from '../../../../components/ProductCard';
+import ProductCard from '../../../../components/ProductsList';
 import ProductCatCarroussel from '../../../../components/ProductCatCarroussel';
 
 export default function Hometab() {

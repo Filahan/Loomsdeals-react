@@ -10,7 +10,7 @@ import {
 import colors from '../../../theme';
 import Catalogues from '../../../components/CataloguesList';
 
-import ProductCard from '../../../components/ProductCard';
+import ProductCard from '../../../components/ProductsList';
 import { getSavedCatalogueIds } from '../../../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../../../api/catalogues';
 import { auth } from '../../../config/Firebase';

@@ -22,6 +22,12 @@ const products = [
     price: '59.99',
     image: 'https://via.placeholder.com/300',
   },
+  {
+    id: '4',
+    title: 'Product 4',
+    price: '59.99',
+    image: 'https://via.placeholder.com/300',
+  },
 ];
 
 const ProductCard = ({ product }) => {
@@ -60,16 +66,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 8,
-    borderRadius: 12,
+    borderRadius: 8,
     marginBottom: 16,
     borderWidth:1,
     borderColor:colors.secondary,
     elevation: 2,
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+    width: 90,
+    height: 90,
+    borderRadius: 4,
     marginRight: 12,
   },
   cardContent: {
