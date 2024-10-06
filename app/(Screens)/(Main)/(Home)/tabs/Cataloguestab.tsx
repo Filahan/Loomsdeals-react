@@ -8,7 +8,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
-import Catalogues from '../../../../components/CataloguesList';
+import Catalogues from '../../../../components/List/CataloguesList';
 import colors from '../../../../theme';
 import { useFocusEffect } from 'expo-router';
 import { getSavedCatalogueIds } from '../../../../api/saved';
@@ -116,9 +116,6 @@ export default function Cataloguestab() {
 
         ))}
       </ScrollView>
-      {/* <Text numberOfLines={1} style={styles.CataloguesTitle}>
-        Les catalogues
-      </Text> */}
       <Catalogues
         store_id=""
         category=""

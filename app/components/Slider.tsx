@@ -69,14 +69,13 @@ const styles = StyleSheet.create({
   item: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
+    borderRadius: 10,
     overflow: 'hidden',
-    // elevation: 7,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    marginHorizontal: 20, // Space between items
+    marginHorizontal: 12, // Space between items
   },
   image: {
     width: '100%',
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
   },
   pagination: {
     position: 'absolute',
-    bottom: 13,
+    bottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

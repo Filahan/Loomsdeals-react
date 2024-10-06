@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, View, Image, StyleSheet } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import colors from '../theme';
+import colors from '../../theme';
 
 const products = [
   {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginHorizontal: 15,
+    marginHorizontal: 5,
     padding: 6
   },
   card: {

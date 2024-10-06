@@ -8,12 +8,13 @@ import {
   Text,
 } from 'react-native';
 import colors from '../../../theme';
-import Catalogues from '../../../components/CataloguesList';
+import Catalogues from '../../../components/List/CataloguesList';
 
-import ProductCard from '../../../components/ProductsList';
+import ProductCard from '../../../components/List/ProductsList';
 import { getSavedCatalogueIds } from '../../../api/saved';
 import { getAllCatalogues, getCataloguesByIds } from '../../../api/catalogues';
 import { auth } from '../../../config/Firebase';
+
 
 interface Catalogue {
   id: string;
@@ -21,10 +22,11 @@ interface Catalogue {
   title: string;
   start_date: string;
   end_date: string;
-  stores: { url: string; };
+  stores: { url: string; stores_categories: { name: string } };
   store: string;
   img: string;
 }
+
 
 // Externalize the functions
 const fetchCataloguesData = async (userId, setSaved, setCatalogues, setLoading) => {
@@ -115,8 +117,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   content: {
-    padding: 16,
-    paddingTop: 30
+    padding: 10,
+    paddingTop: 20
 
   },
   title: {
@@ -128,31 +130,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 30,
-  },
-  catalogueCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  catalogueImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  catalogueDetails: {
-    flex: 1,
+
   },
   sectiontitle: {
     marginHorizontal: 3,
@@ -161,67 +139,18 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     color: colors.primary,
     letterSpacing: 0.4,
-  },
-  itemCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  itemDetails: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-  },
-  itemPrice: {
-    fontSize: 14,
-    color: '#888',
-  },
-  iconButton: {
-    padding: 8,
-    borderRadius: 999,
-    backgroundColor: '#f0f0f0',
-  },
-  emptyMessage: {
-    fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
-    marginTop: 50,
+
   },
   placeholder: {
-    flexGrow: 1,
-    flexShrink: 1,
     flexBasis: 0,
     backgroundColor: 'transparent',
+
   },
   placeholderInset: {
     borderWidth: 2,
-    borderColor: '#e5e7eb',
+    borderColor: colors.secondary,
     borderStyle: 'dashed',
-    padding: 6,
     marginBottom: 10,
     borderRadius: 9,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
 });

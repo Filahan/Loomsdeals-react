@@ -9,7 +9,7 @@ import {
 import Slider from '../../../../components/Slider';
 import colors from '../../../../theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import ProductCard from '../../../../components/ProductsList';
+import ProductCard from '../../../../components/List/ProductsList';
 import ProductCatCarroussel from '../../../../components/ProductCatCarroussel';
 
 export default function Hometab() {
@@ -32,9 +32,7 @@ export default function Hometab() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      <View style={{ left: 15 }}>
-        {/* <ProductCatCarroussel /> */}
-      </View>
+      {/* <ProductCatCarroussel /> */}
       <Slider />
       <View style={styles.headerContainer}>
 
@@ -63,7 +61,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginHorizontal: 15,
-
     marginRight: 3, // Space between icon and text
   },
   DealsTitle: {

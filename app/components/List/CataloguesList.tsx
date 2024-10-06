@@ -11,11 +11,9 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MotiView } from 'moti';
 import { router } from 'expo-router';
-import { auth } from '../config/Firebase';
-import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../api/saved';
-import { getAllCatalogues, getCataloguesByIds } from '../api/catalogues';
-import colors from '../theme';
-const nocatalog = require('../asserts/nocatalog.jpg');
+import { auth } from '../../config/Firebase';
+import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../../api/saved';
+import colors from '../../theme';
 
 interface Catalogue {
   id: string;
@@ -199,7 +197,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   container: {
-    marginHorizontal: 15,
+    marginHorizontal: 10,
     flex: 1,
     marginTop: 10,
   },
