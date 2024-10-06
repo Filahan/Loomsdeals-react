@@ -278,19 +278,13 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
     elevation: 2,
   },
   /** Profile */
   profile: {
     padding: 12,
-    backgroundColor: colors.secondary,
+    borderColor: colors.secondary,
+    borderWidth: 0.5,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
@@ -318,6 +312,7 @@ const styles = StyleSheet.create({
   },
   /** Row */
   row: {
+
     height: 44,
     width: '100%',
     flexDirection: 'row',
@@ -326,10 +321,10 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   rowWrapper: {
+    borderColor: colors.secondary,
+    borderWidth: 1,
     paddingLeft: 16,
-    backgroundColor: colors.secondary,
     borderTopWidth: 1,
-    borderColor: '#f0f0f0',
   },
   rowFirst: {
     borderTopLeftRadius: 12,

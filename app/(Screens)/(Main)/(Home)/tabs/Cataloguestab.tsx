@@ -116,9 +116,9 @@ export default function Cataloguestab() {
 
         ))}
       </ScrollView>
-      <Text numberOfLines={1} style={styles.CataloguesTitle}>
+      {/* <Text numberOfLines={1} style={styles.CataloguesTitle}>
         Les catalogues
-      </Text>
+      </Text> */}
       <Catalogues
         store_id=""
         category=""

@@ -33,7 +33,7 @@ export default function Hometab() {
       }
     >
       <View style={{ left: 15 }}>
-        <ProductCatCarroussel />
+        {/* <ProductCatCarroussel /> */}
       </View>
       <Slider />
       <View style={styles.headerContainer}>
