@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { MotiView } from 'moti';
+import colors from '../theme';
 
 const { width } = Dimensions.get('window');
 
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor:"#FFE5B4",
+    backgroundColor: colors.third,
     padding: 10,
   },
   item: {

@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   Text,
   ScrollView,
-  RefreshControl,
-  View,
   TouchableOpacity,
 } from 'react-native';
 import Catalogues from '../../../../components/List/CataloguesList';
@@ -111,7 +108,7 @@ export default function Cataloguestab() {
               selectedCatalogueCategory === category.name && styles.filterButtonActive,
             ]}
           >
-            <Text>{category.name}</Text>
+            <Text style={selectedCatalogueCategory === category.name && styles.activeButtonText} >{category.name}</Text>
           </TouchableOpacity>
 
         ))}
@@ -153,16 +150,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: colors.secondary,
+    backgroundColor: colors.secondary,
     left: 10,
     borderRadius: 8,
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#FFE5B4',
-    borderColor: '#FFE5B4',
+    backgroundColor:  colors.primary,
+    borderWidth: 0,
   },
   paginationButton: {
     alignItems: 'center',
     padding: 10,
   },
+  activeButtonText: {
+    color:"white"
+    },
 });

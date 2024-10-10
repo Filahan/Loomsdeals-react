@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     height: 90,
   },
   cardWrapper: {
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
     borderWidth: 0.5,
     borderRadius: 8,
     marginBottom: 16,
@@ -252,7 +252,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
     height: 40,
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
     borderRadius: 4,
     paddingVertical: 12,
     paddingHorizontal: 10,
@@ -262,7 +262,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     fontSize: 16,
     height: 40,
-    borderColor: '#e0e0e0',
+    borderColor: colors.secondary,
     borderRadius: 4,
     paddingVertical: 12,
     paddingHorizontal: 10,

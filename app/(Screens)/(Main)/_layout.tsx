@@ -31,22 +31,6 @@ const TabNavigator = () => {
         }}
         component={WelcomeScreen}
       />
-      {/* <Tab.Screen
-        name="Search"
-        options={{
-          title: '',
-          headerShown: false,
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              color={focused ? colors : "grey"}
-              name="search"
-              size={27}
-            />
-          ),
-        }}
-        component={SearchScreen} // Add the search screen component
-      /> */}
       <Tab.Screen
         name="Saved"
         options={{
@@ -63,23 +47,6 @@ const TabNavigator = () => {
         }}
         component={SavedScreen}
       />
-      {/* <Tab.Screen
-        name="Settings"
-        options={{
-          title: '',
-          headerShown: false,
-          tabBarLabel: () => null,
-          tabBarIcon: ({ focused }) => (           
-            <FeatherIcon
-              color={focused ? "#002D62" : "grey"}
-              marginTop={6}
-              name="user"
-              size={27}
-            />
-          ),
-        }}
-        component={SettingScreen}
-      /> */}
     </Tab.Navigator>
   );
 };
