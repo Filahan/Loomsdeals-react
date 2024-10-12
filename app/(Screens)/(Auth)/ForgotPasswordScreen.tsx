@@ -81,7 +81,7 @@ export default function ForgotPasswordScreen() {
             Vous avez déjà un compte ?{' '}
             <Text
               style={styles.linkText}
-              onPress={() => router.push('/login')}>
+              onPress={() => router.push('/SigninScreen')}>
               Se connecter
             </Text>
           </Text>

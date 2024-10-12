@@ -23,8 +23,8 @@ export default function SignIn() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to the home page or another protected route
-      router.push('/home'); // assuming '/home' is the route for the home page
+      // router.push('/WelcomeScreen');
+      router.back()
     } catch (err) {
       setError("Login ou mot de passe invalide");
     }

@@ -2,12 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from "./(Home)/WelcomeScreen";
 import SavedScreen from "./(Saved)/SavedScreen";
-import SettingScreen from "../(Settings)/SettingsScreen";
-import SearchScreen from "../(Search)/SearchScreen"; // Import the search screen component
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Icon for search tab
 
 import colors from "../../theme";
 const Tab = createBottomTabNavigator();

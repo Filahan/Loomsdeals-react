@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -13,19 +13,32 @@ import {
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { auth } from '../../config/Firebase';
 import colors from '../../theme';
-
+import { User } from 'firebase/auth';
+import NotSignedIn from '../(Auth)/NotSignedIn';
 export default function SettingsScreen() {
   const [form, setForm] = useState({
     emailNotifications: true,
     pushNotifications: false,
   });
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await auth.signOut();
+      router.push('/WelcomeScreen');
     } catch (err) {
       console.error(err.message);
     }
   };
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
 
@@ -43,187 +56,194 @@ export default function SettingsScreen() {
                 size={24} />
             </Text>
           </TouchableOpacity>
-          <Text style={styles.sectionTitle}>Account</Text>
 
-          <View style={styles.sectionBody}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-              style={styles.profile}>
-              <Image
-                alt=""
-                source={{
-                  uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
+        </View>
+        {user ? (<View>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Account</Text>
+
+            <View style={styles.sectionBody}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
                 }}
-                style={styles.profileAvatar} />
+                style={styles.profile}>
+                <Image
+                  alt=""
+                  source={{
+                    uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80',
+                  }}
+                  style={styles.profileAvatar} />
 
-              <View style={styles.profileBody}>
-                <Text style={styles.profileName}>John Doe</Text>
+                <View style={styles.profileBody}>
+                  <Text style={styles.profileName}>John Doe</Text>
 
-                <Text style={styles.profileHandle}>john@example.com</Text>
+                  <Text style={styles.profileHandle}>john@example.com</Text>
+                </View>
+
+                <FeatherIcon
+                  color="#bcbcbc"
+                  name="chevron-right"
+                  size={22} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.section}>
+
+            <Text style={styles.sectionTitle}>Préferences</Text>
+
+            <View style={styles.sectionBody}>
+              <View style={[styles.rowWrapper, styles.rowFirst]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                  style={styles.row}>
+                  <Text style={styles.rowLabel}>Langue</Text>
+
+                  <View style={styles.rowSpacer} />
+
+                  <Text style={styles.rowValue}>Francais</Text>
+
+                  <FeatherIcon
+                    color="#bcbcbc"
+                    name="chevron-right"
+                    size={19} />
+                </TouchableOpacity>
               </View>
 
-              <FeatherIcon
-                color="#bcbcbc"
-                name="chevron-right"
-                size={22} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Préferences</Text>
-
-          <View style={styles.sectionBody}>
-            <View style={[styles.rowWrapper, styles.rowFirst]}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Langue</Text>
-
-                <View style={styles.rowSpacer} />
-
-                <Text style={styles.rowValue}>Francais</Text>
-
-                <FeatherIcon
-                  color="#bcbcbc"
-                  name="chevron-right"
-                  size={19} />
-              </TouchableOpacity>
-            </View>
 
 
+              <View style={styles.rowWrapper}>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Email Notifications</Text>
 
-            <View style={styles.rowWrapper}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Email Notifications</Text>
+                  <View style={styles.rowSpacer} />
 
-                <View style={styles.rowSpacer} />
-
-                <Switch
-                  onValueChange={emailNotifications =>
-                    setForm({ ...form, emailNotifications })
-                  }
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.emailNotifications} />
+                  <Switch
+                    onValueChange={emailNotifications =>
+                      setForm({ ...form, emailNotifications })
+                    }
+                    style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
+                    value={form.emailNotifications} />
+                </View>
               </View>
-            </View>
 
-            <View style={[styles.rowWrapper, styles.rowLast]}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Push Notifications</Text>
+              <View style={[styles.rowWrapper, styles.rowLast]}>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Push Notifications</Text>
 
-                <View style={styles.rowSpacer} />
+                  <View style={styles.rowSpacer} />
 
-                <Switch
-                  onValueChange={pushNotifications =>
-                    setForm({ ...form, pushNotifications })
-                  }
-                  style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
-                  value={form.pushNotifications} />
+                  <Switch
+                    onValueChange={pushNotifications =>
+                      setForm({ ...form, pushNotifications })
+                    }
+                    style={{ transform: [{ scaleX: 0.95 }, { scaleY: 0.95 }] }}
+                    value={form.pushNotifications} />
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Resources</Text>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Resources</Text>
 
-          <View style={styles.sectionBody}>
-            <View style={[styles.rowWrapper, styles.rowFirst]}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Contact Us</Text>
+            <View style={styles.sectionBody}>
+              <View style={[styles.rowWrapper, styles.rowFirst]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                  style={styles.row}>
+                  <Text style={styles.rowLabel}>Contact Us</Text>
 
-                <View style={styles.rowSpacer} />
+                  <View style={styles.rowSpacer} />
 
-                <FeatherIcon
-                  color="#bcbcbc"
-                  name="chevron-right"
-                  size={19} />
-              </TouchableOpacity>
-            </View>
+                  <FeatherIcon
+                    color="#bcbcbc"
+                    name="chevron-right"
+                    size={19} />
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Report Bug</Text>
+              <View style={styles.rowWrapper}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                  style={styles.row}>
+                  <Text style={styles.rowLabel}>Report Bug</Text>
 
-                <View style={styles.rowSpacer} />
+                  <View style={styles.rowSpacer} />
 
-                <FeatherIcon
-                  color="#bcbcbc"
-                  name="chevron-right"
-                  size={19} />
-              </TouchableOpacity>
-            </View>
+                  <FeatherIcon
+                    color="#bcbcbc"
+                    name="chevron-right"
+                    size={19} />
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.rowWrapper}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Rate in App Store</Text>
+              <View style={styles.rowWrapper}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                  style={styles.row}>
+                  <Text style={styles.rowLabel}>Rate in App Store</Text>
 
-                <View style={styles.rowSpacer} />
+                  <View style={styles.rowSpacer} />
 
-                <FeatherIcon
-                  color="#bcbcbc"
-                  name="chevron-right"
-                  size={19} />
-              </TouchableOpacity>
-            </View>
+                  <FeatherIcon
+                    color="#bcbcbc"
+                    name="chevron-right"
+                    size={19} />
+                </TouchableOpacity>
+              </View>
 
-            <View style={[styles.rowWrapper, styles.rowLast]}>
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                style={styles.row}>
-                <Text style={styles.rowLabel}>Terms and Privacy</Text>
+              <View style={[styles.rowWrapper, styles.rowLast]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // handle onPress
+                  }}
+                  style={styles.row}>
+                  <Text style={styles.rowLabel}>Terms and Privacy</Text>
 
-                <View style={styles.rowSpacer} />
+                  <View style={styles.rowSpacer} />
 
-                <FeatherIcon
-                  color="#bcbcbc"
-                  name="chevron-right"
-                  size={19} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <View style={styles.sectionBody}>
-            <View
-              style={[
-                styles.rowWrapper,
-                styles.rowFirst,
-                styles.rowLast,
-                { alignItems: 'center' },
-              ]}>
-              <TouchableOpacity
-                onPress={handleLogout}
-                style={styles.row}>
-                <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
-                  Log out
-                </Text>
-              </TouchableOpacity>
+                  <FeatherIcon
+                    color="#bcbcbc"
+                    name="chevron-right"
+                    size={19} />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
 
-        <Text style={styles.contentFooter}>1.0.0</Text>
+          <View style={styles.section}>
+            <View style={styles.sectionBody}>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.rowFirst,
+                  styles.rowLast,
+                  { alignItems: 'center' },
+                ]}>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  style={styles.row}>
+                  <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
+                    Log out
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.contentFooter}>1.0.0</Text>
+        </View>) : (<NotSignedIn />)
+        }
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -255,6 +275,7 @@ const styles = StyleSheet.create({
   /** Content */
   content: {
     paddingHorizontal: 16,
+    paddingVertical: 16,
   },
   contentFooter: {
     marginTop: 24,
@@ -265,7 +286,7 @@ const styles = StyleSheet.create({
   },
   /** Section */
   section: {
-    paddingVertical: 12,
+    paddingVertical: 5,
   },
   sectionTitle: {
     margin: 8,
@@ -362,5 +383,5 @@ const styles = StyleSheet.create({
     color: colors.primary,
     textAlign: 'left',
     letterSpacing: 0.15,
-  },
+  }
 });
