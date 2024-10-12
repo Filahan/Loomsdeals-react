@@ -14,6 +14,7 @@ import { router } from 'expo-router';
 import { auth } from '../../config/Firebase';
 import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../../api/saved';
 import colors from '../../theme';
+import { Alert } from 'react-native'; // Assurez-vous d'importer Alert ou une autre bibliothèque de modale
 
 interface Catalogue {
   id: string;
@@ -54,6 +55,29 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
   const handleSave = useCallback(
     async (id: string) => {
       try {
+        // Vérifiez si userId est null
+        if (!userId) {
+          // Affichez une modale ou une alerte
+          Alert.alert(
+            'Avertissement',
+            'Vous devez être connecté pour sauvegarder un catalogue.',
+            [
+              {
+                text: 'Annuler',
+                style: 'cancel',
+              },
+              {
+                text: 'Se connecter',
+                onPress: () => router.push("/SigninScreen"), // Remplacez 'Login' par le nom de votre écran de connexion
+              }, {
+                text: "S'inscrire",
+                onPress: () => router.push("/SignupScreen"), // Remplacez 'Login' par le nom de votre écran de connexion
+              },
+            ]
+          );
+          return; // Arrêtez l'exécution de la fonction si userId est null
+        }
+
         const isSaved = saved.includes(id);
         if (isSaved) {
           await removeSavedCatalogueId(userId, id);
@@ -69,7 +93,7 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
         console.error('Error saving/removing catalogue:', error);
       }
     },
-    [saved, saved_screen, userId, setCatalogues, setSaved] // Add setCatalogues and setSaved as dependencies
+    [saved, saved_screen, userId, setCatalogues, setSaved] // Ajoutez setCatalogues et setSaved comme dépendances
   );
 
   useEffect(() => {
@@ -233,7 +257,7 @@ const styles = StyleSheet.create({
   },
   nocatalog: {
     height: 50,
-    marginVertical:10
+    marginVertical: 10
   },
 });
 
