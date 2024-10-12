@@ -13,7 +13,8 @@ import { router } from 'expo-router';
 import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
 const logo = require('../../asserts/shopslogos/logo.png');
 
-import colors from "../../theme"
+import colors from "../../theme";
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,16 +26,16 @@ export default function SignIn() {
       // Redirect to the home page or another protected route
       router.push('/home'); // assuming '/home' is the route for the home page
     } catch (err) {
-      setError(err.message);
+      setError("Login ou mot de passe invalide");
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor:"#fff"}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
         <KeyboardAwareScrollView>
           <View style={styles.header}>
-            <Image source={logo} resizeMode="contain"  style={styles.logo}/>
+            <Image source={logo} resizeMode="contain" style={styles.logo} />
           </View>
 
           <View style={styles.form}>
@@ -66,11 +67,13 @@ export default function SignIn() {
                 style={styles.inputControl}
                 secureTextEntry={true}
                 value={password} />
+              
+              {/* Error Message */}
+              {error && <Text style={styles.errorMessage}>{error}</Text>}
             </View>
 
             <View style={styles.formAction}>
-              <TouchableOpacity
-                onPress={handleLogin}>
+              <TouchableOpacity onPress={handleLogin}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Se connecter</Text>
                 </View>
@@ -104,7 +107,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 80, // Smaller logo height
-    // width: 50
   },
   header: {
     alignItems: 'center',
@@ -154,6 +156,11 @@ const styles = StyleSheet.create({
     color: '#222',
     borderStyle: 'solid',
   },
+  errorMessage: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 4,
+  },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -171,5 +178,3 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
-
-
