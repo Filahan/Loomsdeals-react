@@ -12,30 +12,36 @@ import colors from '../../theme';
 
 export default function NotSignedIn() {
   return (
-
-    <View style={styles.content}>
-      <Text style={styles.message}>Veuillez vous connecter pour accéder aux paramètres.</Text>
-      <TouchableOpacity style={styles.buttonContainer} onPress={() => router.push('/SigninScreen')}>
-        <View style={styles.btn}>
-          <Text style={styles.btnText}>Se connecter</Text>
-        </View>
-      </TouchableOpacity>
+    <View style={{ alignItems: 'center', marginTop: 20 }} >
+      <View style={styles.content}>
+        <Text style={styles.message}>Veuillez vous connecter pour accéder aux paramètres.</Text>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => router.push('/SigninScreen')}>
+          <View style={styles.btn}>
+            <Text style={styles.btnText}>Se connecter</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   content: {
-    backgroundColor: colors.secondary,
-    padding: 15,
-    margin: 20,
+    backgroundColor: "#EDF67D",
+    height: 180,
+    bottom: 5,
+    padding: 10,
+    // margin: 20,
     borderRadius: 10,
-    paddingVertical: 30,
-    justifyContent: 'center', // Center vertically
-    alignItems: 'center', // Center content horizontally
+    // paddingVertical: 30,
+    justifyContent: 'center', // Centre verticalement
+    alignItems: 'center'
+
   },
+
   message: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
     marginBottom: 20,
     color: '#4A4A4A',
@@ -51,7 +57,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     alignItems: 'center',
-    width: '60%',
+    width: '80%',
   },
   btnText: {
     color: '#fff',

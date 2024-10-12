@@ -32,7 +32,7 @@ export default function SettingsScreen() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      router.push('/WelcomeScreen');
+      // router.push('/WelcomeScreen');
     } catch (err) {
       console.error(err.message);
     }
@@ -93,28 +93,10 @@ export default function SettingsScreen() {
             <Text style={styles.sectionTitle}>Préferences</Text>
 
             <View style={styles.sectionBody}>
+
+
+
               <View style={[styles.rowWrapper, styles.rowFirst]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}>
-                  <Text style={styles.rowLabel}>Langue</Text>
-
-                  <View style={styles.rowSpacer} />
-
-                  <Text style={styles.rowValue}>Francais</Text>
-
-                  <FeatherIcon
-                    color="#bcbcbc"
-                    name="chevron-right"
-                    size={19} />
-                </TouchableOpacity>
-              </View>
-
-
-
-              <View style={styles.rowWrapper}>
                 <View style={styles.row}>
                   <Text style={styles.rowLabel}>Email Notifications</Text>
 
@@ -146,6 +128,30 @@ export default function SettingsScreen() {
             </View>
           </View>
 
+
+
+          <View style={styles.section}>
+            <View style={styles.sectionBody}>
+              <View
+                style={[
+                  styles.rowWrapper,
+                  styles.rowFirst,
+                  styles.rowLast,
+                  { alignItems: 'center' },
+                ]}>
+                <TouchableOpacity
+                  onPress={handleLogout}
+                  style={styles.row}>
+                  <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
+                    Log out
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+        </View>) : (<NotSignedIn />)
+        }
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Resources</Text>
 
@@ -219,30 +225,7 @@ export default function SettingsScreen() {
               </View>
             </View>
           </View>
-
-          <View style={styles.section}>
-            <View style={styles.sectionBody}>
-              <View
-                style={[
-                  styles.rowWrapper,
-                  styles.rowFirst,
-                  styles.rowLast,
-                  { alignItems: 'center' },
-                ]}>
-                <TouchableOpacity
-                  onPress={handleLogout}
-                  style={styles.row}>
-                  <Text style={[styles.rowLabel, styles.rowLabelLogout]}>
-                    Log out
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
           <Text style={styles.contentFooter}>1.0.0</Text>
-        </View>) : (<NotSignedIn />)
-        }
 
       </ScrollView>
     </SafeAreaView>
