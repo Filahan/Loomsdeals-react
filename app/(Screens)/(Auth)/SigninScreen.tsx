@@ -9,7 +9,6 @@ import {
   Image
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import { router } from 'expo-router';
 import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
 const logo = require('../../asserts/shopslogos/logo.png');
@@ -84,8 +83,7 @@ export default function SignIn() {
           </View>
         </KeyboardAwareScrollView>
 
-        <TouchableOpacity
-          style={{ marginTop: 'auto' }}>
+        <TouchableOpacity>
           <Text style={styles.formFooter}>
             Vous n'avez pas de compte ?{' '}
             <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/SignupScreen')}>S'inscrire</Text>

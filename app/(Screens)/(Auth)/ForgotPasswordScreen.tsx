@@ -1,4 +1,3 @@
-// ForgotPassword.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -10,9 +9,10 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { auth } from '../../config/Firebase'; // Assurez-vous que l'exportation est correcte dans Firebase.js
+import { auth } from '../../config/Firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { router } from 'expo-router';
+import colors from "../../theme"; // Ensure you have colors defined
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -31,24 +31,19 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
             router.back();
           }}>
           <Text style={styles.return}>
-            <FeatherIcon
-              color="#000"
-              name="arrow-left"
-              size={24} />
+            <FeatherIcon color="#000" name="arrow-left" size={24} />
           </Text>
         </TouchableOpacity>
         <KeyboardAwareScrollView>
           <View style={styles.header}>
-            <Text style={styles.title}>
-              Réinitialiser le mot de passe
-            </Text>
+            <Text style={styles.title}>Réinitialiser le mot de passe</Text>
           </View>
 
           <View style={styles.form}>
@@ -69,8 +64,7 @@ export default function ForgotPasswordScreen() {
             </View>
 
             <View style={styles.formAction}>
-              <TouchableOpacity
-                onPress={handlePasswordReset}>
+              <TouchableOpacity onPress={handlePasswordReset}>
                 <View style={styles.btn}>
                   <Text style={styles.btnText}>Envoyer l'e-mail</Text>
                 </View>
@@ -82,11 +76,14 @@ export default function ForgotPasswordScreen() {
           </View>
         </KeyboardAwareScrollView>
 
-        <TouchableOpacity
-          style={{ marginTop: 'auto' }}>
+        <TouchableOpacity style={styles.footer}>
           <Text style={styles.formFooter}>
             Vous avez déjà un compte ?{' '}
-            <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/login')}>Se connecter</Text>
+            <Text
+              style={styles.linkText}
+              onPress={() => router.push('/login')}>
+              Se connecter
+            </Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -95,17 +92,21 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
   container: {
-    paddingVertical: 24,
+    paddingVertical: 50,
     paddingHorizontal: 0,
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
   },
   title: {
-    fontSize: 31,
+    fontSize: 25,
     fontWeight: '700',
-    color: '#1D2A32',
+    color: colors.primary, // Change to your primary color
     marginBottom: 6,
   },
   header: {
@@ -143,36 +144,35 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
   },
   inputControl: {
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F1F0', // Match the input background color from SignIn
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 6,
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
-    borderColor: '#ffff',
+    borderColor: '#fff', // Set border color
     borderStyle: 'solid',
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 6,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderWidth: 1,
-    backgroundColor: '#002D62',
-    borderColor: '#002D62',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 15,
     lineHeight: 26,
     fontWeight: '600',
     color: '#fff',
@@ -186,5 +186,11 @@ const styles = StyleSheet.create({
     color: 'green',
     textAlign: 'center',
     marginTop: 10,
+  },
+  footer: {
+    marginTop: 'auto',
+  },
+  linkText: {
+    textDecorationLine: 'underline',
   },
 });

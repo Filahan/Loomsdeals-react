@@ -1,4 +1,3 @@
-// SignUp.js
 import React, { useState } from 'react';
 import {
   StyleSheet,
@@ -7,11 +6,15 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Image
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { auth, createUserWithEmailAndPassword } from '../../config/Firebase';
 import { router } from 'expo-router';
+import colors from "../../theme"; // Assuming you have a theme file similar to SignIn
+
+const logo = require('../../asserts/shopslogos/logo.png'); // Optional logo import
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -27,15 +30,14 @@ export default function SignUp() {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      // Optionally, redirect the user to the login page or home page
-      router.push('/login'); // assuming '/login' is the route for the login page
+      router.push('/login'); // Assuming '/login' is the route for the login page
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
@@ -50,9 +52,7 @@ export default function SignUp() {
         </TouchableOpacity>
         <KeyboardAwareScrollView>
           <View style={styles.header}>
-            <Text style={styles.title}>
-              S'inscrire à <Text style={{ color: '#002D62' }}>Loom</Text>
-            </Text>
+            <Image source={logo} resizeMode="contain" style={styles.logo} />
           </View>
 
           <View style={styles.form}>
@@ -113,7 +113,13 @@ export default function SignUp() {
           </View>
         </KeyboardAwareScrollView>
 
-        
+        <TouchableOpacity
+          style={{ marginTop: 30}}>
+          <Text style={styles.formFooter}>
+            Vous avez déjà un compte ?{' '}
+            <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/SigninScreen')}>Se connecter</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -121,17 +127,9 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 24,
-    paddingHorizontal: 0,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
   },
-  title: {
-    fontSize: 31,
-    fontWeight: '700',
-    color: '#1D2A32',
-    marginBottom: 6,
+  logo: {
+    height: 80, // Match logo height to SignIn
   },
   header: {
     alignItems: 'center',
@@ -139,7 +137,6 @@ const styles = StyleSheet.create({
     marginVertical: 36,
   },
   form: {
-    marginBottom: 24,
     paddingHorizontal: 24,
     flexGrow: 1,
     flexShrink: 1,
@@ -149,14 +146,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 16,
   },
-  formFooter: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#222',
-    textAlign: 'center',
-    letterSpacing: 0.15,
-  },
   return: {
+
     fontSize: 15,
     fontWeight: '600',
     color: '#222',
@@ -168,36 +159,34 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
   },
   inputControl: {
+
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F1F0',
     paddingHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: 6,
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
-    borderWidth: 1,
-    borderColor: '#ffff',
     borderStyle: 'solid',
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 6,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderWidth: 1,
-    backgroundColor: '#002D62',
-    borderColor: '#002D62',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: 15,
     lineHeight: 26,
     fontWeight: '600',
     color: '#fff',
@@ -206,5 +195,12 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginTop: 10,
-  }
+  },
+  formFooter: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'center',
+    letterSpacing: 0.15,
+  },
 });
