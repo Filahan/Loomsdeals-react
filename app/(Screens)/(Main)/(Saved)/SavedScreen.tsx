@@ -6,6 +6,8 @@ import {
   ScrollView,
   View,
   Text,
+  Image
+
 } from 'react-native';
 import colors from '../../../theme';
 import Catalogues from '../../../components/List/CataloguesList';
@@ -13,6 +15,8 @@ import ProductCard from '../../../components/List/ProductsList';
 import { getSavedCatalogueIds } from '../../../api/saved';
 import { getCataloguesByIds } from '../../../api/catalogues';
 import { auth } from '../../../config/Firebase';
+import NotSignedIn from '../../(Auth)/NotSignedIn';
+const saveicon = require('../../../asserts/saveicon.png'); // Optional logo import
 
 interface Catalogue {
   id: string;
@@ -72,12 +76,6 @@ export default function SavedScreen() {
   const [loading, setLoading] = useState(true);
   const userId = auth.currentUser?.uid;
 
-  // // Redirect to login if user is not authenticated
-  // useEffect(() => {
-  //   if (!userId) {
-  //     router.push('/SigninScreen'); // Adjust the path as necessary for your project
-  //   }
-  // }, [userId]);
 
   const fetchCatalogues = useCallback(() => fetchCataloguesData(userId, setSaved, setCatalogues, setLoading), [userId]);
   const fetchSaved = useCallback(() => getsavedlist(userId, setSaved), [userId]);
@@ -114,7 +112,13 @@ export default function SavedScreen() {
               </View>
             </>
           ) : (
-            <Text>Pas connecté</Text>
+            <View style={{alignItems:"center"}}>
+              <View>
+              <Image source={saveicon} resizeMode="contain" style={styles.saveicon} /> 
+              </View>
+            <NotSignedIn message={"Veuillez vous connecter pour accéder à votre espace."}/>
+            </View>
+            
           )}
         </View>
       </ScrollView>
@@ -123,6 +127,9 @@ export default function SavedScreen() {
 }
 
 const styles = StyleSheet.create({
+  saveicon: {
+    height: 150,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff'

@@ -32,7 +32,6 @@ export default function SettingsScreen() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      // router.push('/WelcomeScreen');
     } catch (err) {
       console.error(err.message);
     }
@@ -150,82 +149,83 @@ export default function SettingsScreen() {
             </View>
           </View>
 
-        </View>) : (<NotSignedIn />)
+        </View>) : ( <NotSignedIn message="Veuillez vous connecter pour accéder à votre espace." />
+)
         }
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Resources</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Resources</Text>
 
-            <View style={styles.sectionBody}>
-              <View style={[styles.rowWrapper, styles.rowFirst]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}>
-                  <Text style={styles.rowLabel}>Contact Us</Text>
+          <View style={styles.sectionBody}>
+            <View style={[styles.rowWrapper, styles.rowFirst]}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}>
+                <Text style={styles.rowLabel}>Contact Us</Text>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <FeatherIcon
-                    color="#bcbcbc"
-                    name="chevron-right"
-                    size={19} />
-                </TouchableOpacity>
-              </View>
+                <FeatherIcon
+                  color="#bcbcbc"
+                  name="chevron-right"
+                  size={19} />
+              </TouchableOpacity>
+            </View>
 
-              <View style={styles.rowWrapper}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}>
-                  <Text style={styles.rowLabel}>Report Bug</Text>
+            <View style={styles.rowWrapper}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}>
+                <Text style={styles.rowLabel}>Report Bug</Text>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <FeatherIcon
-                    color="#bcbcbc"
-                    name="chevron-right"
-                    size={19} />
-                </TouchableOpacity>
-              </View>
+                <FeatherIcon
+                  color="#bcbcbc"
+                  name="chevron-right"
+                  size={19} />
+              </TouchableOpacity>
+            </View>
 
-              <View style={styles.rowWrapper}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}>
-                  <Text style={styles.rowLabel}>Rate in App Store</Text>
+            <View style={styles.rowWrapper}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}>
+                <Text style={styles.rowLabel}>Rate in App Store</Text>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <FeatherIcon
-                    color="#bcbcbc"
-                    name="chevron-right"
-                    size={19} />
-                </TouchableOpacity>
-              </View>
+                <FeatherIcon
+                  color="#bcbcbc"
+                  name="chevron-right"
+                  size={19} />
+              </TouchableOpacity>
+            </View>
 
-              <View style={[styles.rowWrapper, styles.rowLast]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                  style={styles.row}>
-                  <Text style={styles.rowLabel}>Terms and Privacy</Text>
+            <View style={[styles.rowWrapper, styles.rowLast]}>
+              <TouchableOpacity
+                onPress={() => {
+                  // handle onPress
+                }}
+                style={styles.row}>
+                <Text style={styles.rowLabel}>Terms and Privacy</Text>
 
-                  <View style={styles.rowSpacer} />
+                <View style={styles.rowSpacer} />
 
-                  <FeatherIcon
-                    color="#bcbcbc"
-                    name="chevron-right"
-                    size={19} />
-                </TouchableOpacity>
-              </View>
+                <FeatherIcon
+                  color="#bcbcbc"
+                  name="chevron-right"
+                  size={19} />
+              </TouchableOpacity>
             </View>
           </View>
-          <Text style={styles.contentFooter}>1.0.0</Text>
+        </View>
+        <Text style={styles.contentFooter}>1.0.0</Text>
 
       </ScrollView>
     </SafeAreaView>

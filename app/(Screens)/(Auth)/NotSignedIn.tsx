@@ -7,18 +7,25 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import colors from '../../theme';
 
-export default function NotSignedIn() {
+export default function NotSignedIn({ message }) {
   return (
     <View style={{ alignItems: 'center', marginTop: 20 }} >
       <View style={styles.content}>
-        <Text style={styles.message}>Veuillez vous connecter pour accéder aux paramètres.</Text>
+        <Text style={styles.message}>{message}</Text>
         <TouchableOpacity style={styles.buttonContainer} onPress={() => router.push('/SigninScreen')}>
           <View style={styles.btn}>
             <Text style={styles.btnText}>Se connecter</Text>
           </View>
+          
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginTop: 30}}>
+          <Text style={styles.formFooter}>
+            Vous avez déjà un compte ?{' '}
+            <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/SigninScreen')}>Se connecter</Text>
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -28,13 +35,10 @@ export default function NotSignedIn() {
 const styles = StyleSheet.create({
 
   content: {
+    width:"95%",
     backgroundColor: "#EDF67D",
-    height: 180,
-    bottom: 5,
-    padding: 10,
-    // margin: 20,
+    padding: 20,
     borderRadius: 10,
-    // paddingVertical: 30,
     justifyContent: 'center', // Centre verticalement
     alignItems: 'center'
 
@@ -44,7 +48,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 20,
-    color: '#4A4A4A',
     textAlign: 'center', // Center text
   },
   buttonContainer: {
@@ -64,5 +67,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center', // Center button text
+  },
+  formFooter: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'center',
+    letterSpacing: 0.15,
   },
 });
