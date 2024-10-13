@@ -149,7 +149,7 @@ export default function SettingsScreen() {
             </View>
           </View>
 
-        </View>) : ( <NotSignedIn message="Veuillez vous connecter pour accéder à votre espace." />
+        </View>) : ( <NotSignedIn message="Connectez vous pour accéder à votre espace." />
 )
         }
         <View style={styles.section}>

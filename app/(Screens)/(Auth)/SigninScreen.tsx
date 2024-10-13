@@ -11,9 +11,11 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { router } from 'expo-router';
 import { auth, signInWithEmailAndPassword } from '../../config/Firebase';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import colors from "../../theme";
+
 const logo = require('../../asserts/shopslogos/logo.png');
 
-import colors from "../../theme";
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -32,6 +34,20 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={{ padding: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}>
+            <Text>
+              <FeatherIcon
+                color="#000"
+                name="arrow-left"
+                size={24} />
+            </Text>
+          </TouchableOpacity>
+
+        </View>
       <View style={styles.container}>
         <KeyboardAwareScrollView>
           <View style={styles.header}>

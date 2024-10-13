@@ -18,10 +18,10 @@ export default function NotSignedIn({ message }) {
           <View style={styles.btn}>
             <Text style={styles.btnText}>Se connecter</Text>
           </View>
-          
+
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginTop: 30}}>
+          style={{ marginTop: 15 }}>
           <Text style={styles.formFooter}>
             Vous avez déjà un compte ?{' '}
             <Text style={{ textDecorationLine: 'underline' }} onPress={() => router.push('/SigninScreen')}>Se connecter</Text>
@@ -35,13 +35,14 @@ export default function NotSignedIn({ message }) {
 const styles = StyleSheet.create({
 
   content: {
-    width:"95%",
+    width: "95%",
     backgroundColor: "#EDF67D",
-    padding: 20,
+    padding: 30,
+    paddingVertical: 30,
+
     borderRadius: 10,
     justifyContent: 'center', // Centre verticalement
     alignItems: 'center'
-
   },
 
   message: {

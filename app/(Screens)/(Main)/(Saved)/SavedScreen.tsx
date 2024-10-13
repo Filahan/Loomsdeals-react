@@ -92,15 +92,15 @@ export default function SavedScreen() {
               <Text style={styles.sectiontitle}>Catalogues sauvegardés</Text>
               <View style={styles.placeholder}>
                 <View style={styles.placeholderInset}>
-                  <Catalogues 
-                    store_id="" 
-                    category="" 
-                    saved_screen="yes" 
-                    setSaved={setSaved} 
-                    saved={saved} 
-                    setCatalogues={setCatalogues} 
-                    catalogues={catalogues} 
-                    loading={loading} 
+                  <Catalogues
+                    store_id=""
+                    category=""
+                    saved_screen="yes"
+                    setSaved={setSaved}
+                    saved={saved}
+                    setCatalogues={setCatalogues}
+                    catalogues={catalogues}
+                    loading={loading}
                   />
                 </View>
               </View>
@@ -112,13 +112,11 @@ export default function SavedScreen() {
               </View>
             </>
           ) : (
-            <View style={{alignItems:"center"}}>
-              <View>
-              <Image source={saveicon} resizeMode="contain" style={styles.saveicon} /> 
-              </View>
-            <NotSignedIn message={"Veuillez vous connecter pour accéder à votre espace."}/>
+            <View style={{ alignItems: "center" }}>
+              <Image source={saveicon} resizeMode="contain" style={styles.saveicon} />
+              <NotSignedIn message={"Connectez vous pour accéder à votre espace."} />
             </View>
-            
+
           )}
         </View>
       </ScrollView>

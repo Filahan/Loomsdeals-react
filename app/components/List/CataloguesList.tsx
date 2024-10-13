@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Text, // Added for the empty message
+  Text,
+  Button,
+  Modal,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MotiView } from 'moti';
@@ -14,31 +16,9 @@ import { router } from 'expo-router';
 import { auth } from '../../config/Firebase';
 import { getSavedCatalogueIds, removeSavedCatalogueId, saveCatalogueId } from '../../api/saved';
 import colors from '../../theme';
-import { Alert } from 'react-native'; // Assurez-vous d'importer Alert ou une autre bibliothèque de modale
+import NotSignedIn from '../../(Screens)/(Auth)/NotSignedIn';
 
-interface Catalogue {
-  id: string;
-  link: string;
-  title: string;
-  start_date: string;
-  end_date: string;
-  stores: { url: string; stores_categories: { name: string } };
-  store: string;
-  img: string;
-}
-
-interface CataloguesListProps {
-  category: string;
-  store_id: string;
-  saved_screen: string;
-  saved: string[];
-  setSaved: React.Dispatch<React.SetStateAction<string[]>>;
-  catalogues: Catalogue[];
-  setCatalogues: React.Dispatch<React.SetStateAction<Catalogue[]>>;
-  loading: boolean;
-}
-
-const CataloguesList: React.FC<CataloguesListProps> = ({
+const CataloguesList = ({
   category,
   store_id,
   saved_screen,
@@ -49,33 +29,15 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
   loading
 }) => {
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
-
   const userId = auth.currentUser?.uid;
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleSave = useCallback(
-    async (id: string) => {
+    async (id) => {
       try {
-        // Vérifiez si userId est null
         if (!userId) {
-          // Affichez une modale ou une alerte
-          Alert.alert(
-            'Avertissement',
-            'Vous devez être connecté pour sauvegarder un catalogue.',
-            [
-              {
-                text: 'Annuler',
-                style: 'cancel',
-              },
-              {
-                text: 'Se connecter',
-                onPress: () => router.push("/SigninScreen"), // Remplacez 'Login' par le nom de votre écran de connexion
-              }, {
-                text: "S'inscrire",
-                onPress: () => router.push("/SignupScreen"), // Remplacez 'Login' par le nom de votre écran de connexion
-              },
-            ]
-          );
-          return; // Arrêtez l'exécution de la fonction si userId est null
+          setModalVisible(true);
+          return; // Stop execution if userId is null
         }
 
         const isSaved = saved.includes(id);
@@ -93,8 +55,12 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
         console.error('Error saving/removing catalogue:', error);
       }
     },
-    [saved, saved_screen, userId, setCatalogues, setSaved] // Ajoutez setCatalogues et setSaved comme dépendances
+    [saved, saved_screen, userId, setCatalogues, setSaved]
   );
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
 
   useEffect(() => {
     if (!loading && catalogues.length === 0) {
@@ -129,58 +95,67 @@ const CataloguesList: React.FC<CataloguesListProps> = ({
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        {
-          catalogues.map((catalogue) => {
-            if (!catalogue) return null;
-            const { id, link, store, img, stores } = catalogue;
-            const isSaved = saved.includes(id);
-            return (
-              <TouchableOpacity
-                key={id}
-                style={styles.cardWrapper}
-                onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link, end_date: catalogue.end_date } })}
-              >
-                <View style={styles.card}>
-                  <View style={styles.cardLikeWrapper}>
-                    {store && (
-                      <TouchableOpacity>
-                        <Image
-                          resizeMode="cover"
-                          style={styles.cardlogo_img}
-                          source={{ uri: stores.url }}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    <TouchableOpacity onPress={() => handleSave(id)}>
-                      <View style={styles.cardLike}>
-                        <MaterialIcons
-                          color={isSaved ? '#ea266d' : '#222'}
-                          name="save-alt"
-                          size={20}
-                        />
-                      </View>
+        {catalogues.map((catalogue) => {
+          if (!catalogue) return null;
+          const { id, link, store, img, stores } = catalogue;
+          const isSaved = saved.includes(id);
+          return (
+            <TouchableOpacity
+              key={id}
+              style={styles.cardWrapper}
+              onPress={() => router.push({ pathname: '/CatalogueScreen', params: { link, end_date: catalogue.end_date } })}
+            >
+              <View style={styles.card}>
+                <View style={styles.cardLikeWrapper}>
+                  {store && (
+                    <TouchableOpacity>
+                      <Image
+                        resizeMode="cover"
+                        style={styles.cardlogo_img}
+                        source={{ uri: stores.url }}
+                      />
                     </TouchableOpacity>
-                  </View>
-                  <View style={styles.cardTop}>
-                    <Image
-                      resizeMode="contain"
-                      style={styles.cardcatalog_img}
-                      source={{ uri: img }}
-                    />
-                  </View>
+                  )}
+                  <TouchableOpacity onPress={() => handleSave(id)}>
+                    <View style={styles.cardLike}>
+                      <MaterialIcons
+                        color={isSaved ? '#ea266d' : '#222'}
+                        name="save-alt"
+                        size={20}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            );
-          })
-        }
+                <View style={styles.cardTop}>
+                  <Image
+                    resizeMode="contain"
+                    style={styles.cardcatalog_img}
+                    source={{ uri: img }}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
+
+      {/* Modal for displaying login requirement */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableOpacity style={styles.modalContainer} activeOpacity={1} onPress={handleCloseModal}>
+            <NotSignedIn message="Connectez vous pour accéder à votre espace." />
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    // position: 'relative',
     borderRadius: 8,
     borderColor: colors.secondary,
     marginBottom: 16,
@@ -246,18 +221,10 @@ const styles = StyleSheet.create({
   cardWrapper: {
     width: '48%',
   },
-  emptyContainer: {
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  emptyMessage: {
-    fontSize: 16,
-    color: '#888',
-  },
-  nocatalog: {
-    height: 50,
-    marginVertical: 10
   },
 });
 
