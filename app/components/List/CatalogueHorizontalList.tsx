@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   cardWrapper: {
-    width: 200, // Adjust the width as needed for each card
+    width: 150, // Adjust the width as needed for each card
     marginRight: 10,
   },
   card: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   skeletonItem: {
-    width: '48%',
+    width: 150,
     height: 200,
     marginBottom: 10,
     padding: 16,
