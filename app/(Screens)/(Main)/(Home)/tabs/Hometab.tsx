@@ -9,9 +9,7 @@ import {
 import Slider from '../../../../components/Slider';
 import colors from '../../../../theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import ProductCard from '../../../../components/List/ProductsList';
-import ProductCatCarroussel from '../../../../components/ProductCatCarroussel';
-
+import MarketCatalogues from './Homecomponents/MarketCatalogues'
 export default function Hometab() {
   const [refreshing, setRefreshing] = React.useState(false);
   const [key, setKey] = useState(0);
@@ -47,7 +45,7 @@ export default function Hometab() {
           Deals
         </Text>
       </View>
-      <ProductCard />
+      <MarketCatalogues/>
     </ScrollView>
   );
 }
