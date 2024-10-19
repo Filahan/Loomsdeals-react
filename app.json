@@ -8,6 +8,11 @@
       "expo-router"
     ],
     "name": "promapp",
-    "slug": "promapp"
+    "slug": "promapp",
+    "splash": {
+      "image": "./app/asserts/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "red"
+    }
   }
 }

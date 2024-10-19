@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: colors.secondary,
     marginBottom: 16,
-    elevation: 2,
     borderWidth: 1,
   },
   cardLikeWrapper: {
@@ -196,6 +195,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   container: {
+    backgroundColor: "white",
     marginHorizontal: 10,
     flex: 1,
     marginTop: 10,
@@ -211,9 +211,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 16,
     borderRadius: 10,
-    backgroundColor: '#f5f5f5',
+    // backgroundColor: '#f5f5f5',
   },
   row: {
+    backgroundColor:"white",
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',

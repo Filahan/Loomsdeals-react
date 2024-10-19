@@ -282,7 +282,6 @@ const styles = StyleSheet.create({
   },
   sectionBody: {
     borderRadius: 12,
-    elevation: 2,
   },
   /** Profile */
   profile: {

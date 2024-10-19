@@ -114,7 +114,7 @@ export default function SearchScreen() {
                 label: category.name,
                 value: category.name,
               }))}
-              placeholder={{ label: 'Catalogues', value: null }}
+              placeholder={{ label: 'Filtrer', value: null }}
               value={selectedCatalogueCategory}
               style={pickerSelectStyles}
             />
